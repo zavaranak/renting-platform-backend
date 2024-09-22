@@ -1,6 +1,6 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { Currency } from './currency.model';
-import { mockData } from 'src/common/language_codes/mock/mock';
+import { mockData } from 'src/common/mock/mock';
 import { AddCurrencyInput } from './currencyDTO/currency.input_type';
 
 @Resolver(() => Currency)

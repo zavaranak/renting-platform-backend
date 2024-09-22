@@ -1,15 +1,33 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { CurrencyAttribute } from './currency_attributes/currency_attributes.model';
+import { CurrencyAttribute } from './currency_attribute/currency_attribute.model';
 import { Bank } from 'src/bank/bank.model';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
+@Entity({ name: 'currencies' })
 @ObjectType()
 export class Currency {
-  @Field(() => String)
+  @PrimaryGeneratedColumn()
+  @Field()
   id: string;
-  @Field(() => String)
+
+  @Column({ type: 'varchar', nullable: false })
+  @Field()
   symbol: string;
-  @Field(() => [Bank])
-  banks: Bank[];
+
+  @ManyToOne(() => Bank, (bank) => bank.currencies)
+  @Field(() => Bank)
+  banks: Bank;
+
+  @OneToMany(
+    () => CurrencyAttribute,
+    (currencyAttribute) => currencyAttribute.currency,
+  )
   @Field(() => [CurrencyAttribute])
   attributes: CurrencyAttribute[];
 }

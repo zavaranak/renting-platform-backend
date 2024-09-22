@@ -1,6 +1,6 @@
 import { Resolver, Query, Args } from '@nestjs/graphql';
 import { Bank } from './bank.model';
-import { mockData } from 'src/common/language_codes/mock/mock';
+import { mockData } from 'src/common/mock/mock';
 
 @Resolver(() => Bank)
 export class BankResolver {

@@ -1,14 +1,13 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { CountryAttributes } from '../country_attributes/country_attributes.model';
 
 @InputType()
-export class addCountry {
-  @Field(() => String)
+export class AddCountryInput {
+  @Field()
   name: string;
-  @Field(() => String)
-  language: string;
+  @Field()
+  language?: string;
+  @Field()
+  alpha3b?: string;
   @Field(() => [String], { nullable: true })
-  banksId: string[];
-  @Field(() => [CountryAttributes], { nullable: true })
-  attributes: CountryAttributes[];
+  banksId?: string[];
 }

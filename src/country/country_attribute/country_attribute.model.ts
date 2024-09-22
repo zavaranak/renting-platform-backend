@@ -1,10 +1,10 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Bank } from '../bank.model';
+import { Country } from '../country.model';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
-@Entity({ name: 'bank_attributes' })
+@Entity({ name: 'country_attributes' })
 @ObjectType()
-export class BankAttribute {
+export class CountryAttribute {
   @PrimaryGeneratedColumn()
   @Field()
   id: string;
@@ -17,7 +17,7 @@ export class BankAttribute {
   @Field()
   value: string;
 
-  @ManyToOne(() => Bank, (bank) => bank.attributes)
-  @Field(() => Bank)
-  bank: Bank;
+  @ManyToOne(() => Country, (country) => country.attributes)
+  @Field(() => Country)
+  country: Country;
 }

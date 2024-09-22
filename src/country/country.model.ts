@@ -1,17 +1,35 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Bank } from 'src/bank/bank.model';
-import { CountryAttributes } from './country_attributes/country_attributes.model';
+import { CountryAttribute } from './country_attribute/country_attribute.model';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity({ name: 'countries' })
 @ObjectType()
 export class Country {
-  @Field(() => String)
+  @PrimaryGeneratedColumn()
+  @Field()
   id: string;
-  @Field(() => String)
+
+  @Column({ type: 'varchar', nullable: false })
+  @Field()
   name: string;
-  @Field(() => String)
+
+  @Column({ type: 'varchar', nullable: false })
+  @Field()
   language: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  @Field()
+  alpha3b: string;
+
+  @OneToMany(() => Bank, (bank) => bank.country, { nullable: true })
   @Field(() => [Bank], { nullable: true })
   banks: Bank[];
-  @Field(() => [CountryAttributes])
-  attributes: CountryAttributes[];
+
+  @OneToMany(
+    () => CountryAttribute,
+    (countryAttribbute) => countryAttribbute.country,
+  )
+  @Field(() => [CountryAttribute])
+  attributes: CountryAttribute[];
 }

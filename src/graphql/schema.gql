@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type BankAttributes {
+type BankAttribute {
   id: String!
   name: String!
   value: String!
@@ -19,7 +19,7 @@ type CurrencyAttribute {
 type Currency {
   id: String!
   symbol: String!
-  banks: [Bank!]!
+  banks: Bank!
   attributes: [CurrencyAttribute!]!
 }
 
@@ -28,10 +28,10 @@ type Bank {
   name: String!
   country: Country!
   currencies: [Currency!]
-  attributes: [BankAttributes!]
+  attributes: [BankAttribute!]
 }
 
-type CountryAttributes {
+type CountryAttribute {
   id: String!
   name: String!
   value: String!
@@ -42,12 +42,13 @@ type Country {
   id: String!
   name: String!
   language: String!
+  alpha3b: String!
   banks: [Bank!]
-  attributes: [CountryAttributes!]!
+  attributes: [CountryAttribute!]!
 }
 
 type Query {
-  getAllCountries: [Country!]!
+  getAllCountries: [Country!]
   getCountry(id: String!): Country
   getAllBanks: [Bank!]!
   getBank(id: String!): Bank
@@ -56,7 +57,15 @@ type Query {
 }
 
 type Mutation {
+  addCountry(addCountryInput: AddCountryInput!): Country!
   addCurrency(addCurrencyData: AddCurrencyInput!): Currency!
+}
+
+input AddCountryInput {
+  name: String!
+  language: String!
+  alpha3b: String!
+  banksId: [String!]
 }
 
 input AddCurrencyInput {

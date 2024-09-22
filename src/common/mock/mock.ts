@@ -38,7 +38,7 @@ const mockCurencyData = [
   {
     id: 'cu1',
     symbol: 'usd',
-    banks: [mockBankData[0]],
+    banks: mockBankData[0],
     attributes: [],
   },
 ];
@@ -53,7 +53,6 @@ const mockCurencyAttributeData = [
 
 mockCountryData[0].banks.push(mockBankData[0]);
 mockCountryData[0].attributes.push(mockCountryAttributeData[0]);
-// mockCountryAttributeData[0].country=mockCountryData[0]
 mockBankData[0].currencies.push(mockCurencyData[0]);
 mockBankData[0].attributes.push(mockBankAttributeData[0]);
 mockCurencyData[0].attributes.push(mockCurencyAttributeData[0]);
