@@ -1,0 +1,65 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type BankAttributes {
+  id: String!
+  name: String!
+  value: String!
+  bank: Bank!
+}
+
+type CurrencyAttribute {
+  id: String!
+  value: String!
+  name: String!
+  currency: Currency!
+}
+
+type Currency {
+  id: String!
+  symbol: String!
+  banks: [Bank!]!
+  attributes: [CurrencyAttribute!]!
+}
+
+type Bank {
+  id: String!
+  name: String!
+  country: Country!
+  currencies: [Currency!]
+  attributes: [BankAttributes!]
+}
+
+type CountryAttributes {
+  id: String!
+  name: String!
+  value: String!
+  country: Country!
+}
+
+type Country {
+  id: String!
+  name: String!
+  language: String!
+  banks: [Bank!]
+  attributes: [CountryAttributes!]!
+}
+
+type Query {
+  getAllCountries: [Country!]!
+  getCountry(id: String!): Country
+  getAllBanks: [Bank!]!
+  getBank(id: String!): Bank
+  getAllCurrencies: [Currency!]!
+  getCurrency(id: String!): Currency
+}
+
+type Mutation {
+  addCurrency(addCurrencyData: AddCurrencyInput!): Currency!
+}
+
+input AddCurrencyInput {
+  symbol: String!
+  banksId: [String!]!
+}
