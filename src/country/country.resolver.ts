@@ -4,13 +4,18 @@ import { mockData } from 'src/common/mock/mock';
 import { CountryService } from './country.service';
 import { Inject } from '@nestjs/common';
 import { AddCountryInput } from './countryDTO/country.input_type';
+import { LanguageCodeService } from './language_codes/languageCode.service';
 
 @Resolver(() => Country)
 export class CountryResovler {
-  constructor(@Inject(CountryService) private countryService: CountryService) {}
+  constructor(
+    @Inject(CountryService) private countryService: CountryService,
+    private langService: LanguageCodeService,
+  ) {}
 
   @Query(() => [Country], { nullable: true })
   getAllCountries() {
+    this.langService.showLanguage('src/common/language-codes-full.csv');
     return this.countryService.getAllCountries();
   }
   @Query(() => Country, { nullable: true })

@@ -6,10 +6,16 @@ import { Country } from './country.model';
 import { LanguageCodeService } from './language_codes/languageCode.service';
 import { LanguageCode } from './language_codes/language-code.entity';
 import { CountryAttribute } from './country_attribute/country_attribute.model';
+import { LanguageAttribute } from './language_codes/language-codes_attribute/language-codes_attribute.model';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Country, CountryAttribute, LanguageCode]),
+    TypeOrmModule.forFeature([
+      Country,
+      CountryAttribute,
+      LanguageCode,
+      LanguageAttribute,
+    ]),
   ],
   providers: [CountryResovler, CountryService, LanguageCodeService],
 })

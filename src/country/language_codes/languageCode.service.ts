@@ -16,7 +16,14 @@ export class LanguageCodeService {
         isHeader = false;
         continue;
       }
-      console.log(line);
+      const arr = line.split('","').map((s) => s.replace(/"/g, ''));
+      const language = {
+        alpha3b: arr[0],
+        alpha3t: arr[1],
+        alpha2: arr[2],
+        name: arr[3],
+      };
+      console.log(language);
     }
   }
 }
