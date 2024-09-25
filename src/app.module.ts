@@ -4,11 +4,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { join } from 'path';
-import { CountryModule } from './country/country.module';
-import { BankModule } from './bank/bank.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeOrmConfig from './database/typeorm.config';
-import { CurrencyModule } from './currency/currency.module';
 import 'dotenv/config';
 
 @Module({
@@ -21,10 +18,6 @@ import 'dotenv/config';
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     TypeOrmModule.forRoot(typeOrmConfig()),
-
-    CountryModule,
-    BankModule,
-    CurrencyModule,
   ],
   providers: [],
 })
