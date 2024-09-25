@@ -24,7 +24,7 @@ export class Country {
 
   @OneToMany(() => Bank, (bank) => bank.country, { nullable: true })
   @Field(() => [Bank], { nullable: true })
-  banks: Bank[];
+  banks?: Bank[];
 
   @OneToMany(
     () => CountryAttribute,

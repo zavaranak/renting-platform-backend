@@ -1,29 +1,28 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { Country } from './country.model';
-import { mockData } from 'src/common/mock/mock';
 import { CountryService } from './country.service';
 import { Inject } from '@nestjs/common';
 import { AddCountryInput } from './countryDTO/country.input_type';
-import { LanguageCodeService } from './language_codes/languageCode.service';
+import { Response } from 'src/common/Response.model';
 
 @Resolver(() => Country)
 export class CountryResovler {
-  constructor(
-    @Inject(CountryService) private countryService: CountryService,
-    private langService: LanguageCodeService,
-  ) {}
+  constructor(@Inject(CountryService) private countryService: CountryService) {}
 
   @Query(() => [Country], { nullable: true })
   getAllCountries() {
-    this.langService.showLanguage('src/common/language-codes-full.csv');
     return this.countryService.getAllCountries();
   }
   @Query(() => Country, { nullable: true })
   getCountry(@Args('id') id: string) {
-    return mockData.mockCountryData.find((country) => country.id === id);
+    return this.countryService.getCountryById(id);
+  }
+  @Query(() => Country, { nullable: true })
+  getCountry2(@Args('id') id: string) {
+    return this.countryService.getLanguageByName(id);
   }
 
-  @Mutation(() => Country)
+  @Mutation(() => Response)
   addCountry(@Args('addCountryInput') addCountryInput: AddCountryInput) {
     return this.countryService.addCountry(addCountryInput);
   }

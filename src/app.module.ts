@@ -4,7 +4,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { join } from 'path';
-import { LanguageCodeService } from './country/language_codes/languageCode.service';
 import { CountryModule } from './country/country.module';
 import { BankModule } from './bank/bank.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -27,11 +26,6 @@ import 'dotenv/config';
     BankModule,
     CurrencyModule,
   ],
-  providers: [
-    LanguageCodeService,
-    // CountryResovler,
-    // BankResolver,
-    // CurrencyResolver,
-  ],
+  providers: [],
 })
 export class AppModule {}

@@ -47,9 +47,14 @@ type Country {
   attributes: [CountryAttribute!]!
 }
 
+type Response {
+  message: String!
+}
+
 type Query {
   getAllCountries: [Country!]
   getCountry(id: String!): Country
+  getCountry2(id: String!): Country
   getAllBanks: [Bank!]!
   getBank(id: String!): Bank
   getAllCurrencies: [Currency!]!
@@ -57,15 +62,14 @@ type Query {
 }
 
 type Mutation {
-  addCountry(addCountryInput: AddCountryInput!): Country!
+  addCountry(addCountryInput: AddCountryInput!): Response!
   addCurrency(addCurrencyData: AddCurrencyInput!): Currency!
 }
 
 input AddCountryInput {
   name: String!
-  language: String!
-  alpha3b: String!
-  banksId: [String!]
+  language: String
+  alpha3b: String
 }
 
 input AddCurrencyInput {

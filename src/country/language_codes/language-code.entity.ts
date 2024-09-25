@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { LanguageAttribute } from './language-codes_attribute/language-codes_attribute.model';
+import { LanguageAttribute } from './language-codes_attribute/language-codes_attribute.entity';
 
 @Entity('language-codes')
 export class LanguageCode {

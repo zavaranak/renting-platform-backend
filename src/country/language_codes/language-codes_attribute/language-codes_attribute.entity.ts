@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { LanguageCode } from '../language-code.entity';
 
 @Entity('language-attributes')
@@ -13,5 +19,6 @@ export class LanguageAttribute {
   value: string;
 
   @ManyToOne(() => LanguageCode, (languageCode) => languageCode.attributes)
+  @JoinColumn({ name: 'language-code_id' })
   languageCode: LanguageCode;
 }

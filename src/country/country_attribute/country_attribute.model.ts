@@ -1,6 +1,12 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { Country } from '../country.model';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity({ name: 'country_attributes' })
 @ObjectType()
@@ -18,6 +24,7 @@ export class CountryAttribute {
   value: string;
 
   @ManyToOne(() => Country, (country) => country.attributes)
+  @JoinColumn({ name: 'country_id' })
   @Field(() => Country)
   country: Country;
 }

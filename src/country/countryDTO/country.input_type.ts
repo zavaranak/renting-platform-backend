@@ -4,10 +4,10 @@ import { Field, InputType } from '@nestjs/graphql';
 export class AddCountryInput {
   @Field()
   name: string;
-  @Field()
+  @Field({ nullable: true })
   language?: string;
-  @Field()
+  @Field({ nullable: true })
   alpha3b?: string;
-  @Field(() => [String], { nullable: true })
-  banksId?: string[];
+  // @Field(() => [String], { nullable: true })
+  // banksId?: string[];
 }
