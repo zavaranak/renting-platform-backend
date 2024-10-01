@@ -1,0 +1,31 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Tenant {
+  id: Int!
+  username: String!
+  password: String!
+}
+
+type LogInResponseTenant {
+  message: String
+  user: Tenant
+  access_token: String
+}
+
+type Query {
+  findByTenantName(username: String!): Tenant!
+  findAllTenants: [Tenant!]!
+}
+
+type Mutation {
+  tenantLogIn(tenantInput: TenantInput!): LogInResponseTenant!
+  tenantSignUp(tenantInput: TenantInput!): LogInResponseTenant!
+}
+
+input TenantInput {
+  username: String!
+  password: String!
+  action: String!
+}
