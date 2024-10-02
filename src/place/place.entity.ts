@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Booking } from 'src/booking/booking.entity';
 import { Landlord } from 'src/landlord/landlord.entity';
 import {
@@ -8,6 +8,21 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+
+export enum PlaceTypes {
+  HOTEL = 'hotel',
+  HOUSE = 'house',
+  HOMESTAY = 'homestay',
+  APPARTMENT = 'appartment',
+  OFFICE = 'office',
+  COMMERCIAL = 'commercial',
+  WAREHOUSE = 'warehouse',
+  EVENT_VENUE = 'event venue',
+}
+
+registerEnumType(PlaceTypes, {
+  name: 'PlaceTypes',
+});
 
 @ObjectType()
 @Entity()
@@ -28,17 +43,25 @@ export class Place {
   @Field()
   city: string;
 
-  @Column({ type: 'varchar' })
-  @Field()
-  type: string;
+  @Column({ type: 'varchar', array: true })
+  @Field(() => [PlaceTypes])
+  type: PlaceTypes[];
 
   @Column({ type: 'real' })
   @Field()
   area: number;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', nullable: true })
   @Field()
   createdAt: number;
+
+  @Column({ type: 'bigint' })
+  @Field()
+  lastUpdate: number;
+
+  @Column({ type: 'real', nullable: true })
+  @Field()
+  price: number;
 
   @ManyToOne(() => Landlord, (landlord) => landlord.places)
   @Field()

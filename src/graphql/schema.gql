@@ -16,11 +16,24 @@ type Place {
   name: String!
   address: String!
   city: String!
-  type: String!
+  type: [PlaceTypes!]!
   area: Float!
   createdAt: Float!
+  lastUpdate: Float!
+  price: Float!
   landlord: Landlord!
   bookings: [Booking!]!
+}
+
+enum PlaceTypes {
+  HOTEL
+  HOUSE
+  HOMESTAY
+  APPARTMENT
+  OFFICE
+  COMMERCIAL
+  WAREHOUSE
+  EVENT_VENUE
 }
 
 type Booking {
@@ -28,6 +41,9 @@ type Booking {
   createdAt: Float!
   startAt: Float!
   endAt: Float!
+  termUnit: String!
+  period: Float!
+  totalCharge: Float!
   tenant: Tenant!
   place: Place!
 }
@@ -48,6 +64,11 @@ type AuthResponse {
   access_token: String
 }
 
+type PlaceResponse {
+  message: String!
+  place: Place!
+}
+
 type Query {
   findByTenantName(username: String!): Tenant!
   findAllTenants: [Tenant!]!
@@ -58,6 +79,7 @@ type Query {
 type Mutation {
   logIn(userInput: UserInput!): AuthResponse!
   signUp(userInput: UserInput!): AuthResponse!
+  createPlace(placeInput: PlaceInput!): PlaceResponse!
 }
 
 input UserInput {
@@ -76,4 +98,14 @@ enum Roles {
   TENANT
   LANDLORD
   OPERATOR
+}
+
+input PlaceInput {
+  name: String!
+  address: String!
+  city: String!
+  area: Float!
+  price: Float!
+  landlordId: String!
+  type: [PlaceTypes!]!
 }

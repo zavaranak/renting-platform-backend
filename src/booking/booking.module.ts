@@ -5,5 +5,6 @@ import { DatabaseModule } from 'src/database/database.module';
 @Module({
   imports: [DatabaseModule],
   providers: [BookingResolver, BookingService],
+  exports: [BookingService],
 })
 export class BookingModule {}
