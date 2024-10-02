@@ -7,15 +7,17 @@ import { AuthResolver } from './auth.resolver';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigService } from '@nestjs/config';
+import { LandlordModule } from 'src/landlord/landlord.module';
 
 @Module({
   imports: [
     TenantModule,
+    LandlordModule,
     PassportModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (serviceConfig: ConfigService) => ({
-        signOptions: { expiresIn: '120s' },
+        signOptions: { expiresIn: '1d' },
         secret: serviceConfig.get<string>('JWT_KEY'),
       }),
     }),

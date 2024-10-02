@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { TenantService } from './tenant.service';
-import { Tenant } from './entities/tenant.entity';
+import { Tenant } from './tenant.entity';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/graphql.auth-guard';
 

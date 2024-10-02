@@ -2,30 +2,78 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Tenant {
-  id: Int!
+type Landlord {
+  id: String!
   username: String!
   password: String!
+  createdAt: Float!
+  status: String!
+  places: [Place!]!
 }
 
-type LogInResponseTenant {
+type Place {
+  id: String!
+  name: String!
+  address: String!
+  city: String!
+  type: String!
+  area: Float!
+  createdAt: Float!
+  landlord: Landlord!
+  bookings: [Booking!]!
+}
+
+type Booking {
+  id: String!
+  createdAt: Float!
+  startAt: Float!
+  endAt: Float!
+  tenant: Tenant!
+  place: Place!
+}
+
+type Tenant {
+  id: String!
+  username: String!
+  password: String
+  createdAt: Float!
+  status: String!
+  bookings: [Booking!]
+}
+
+type AuthResponse {
   message: String
-  user: Tenant
+  tenant: Tenant
+  landlord: Landlord
   access_token: String
 }
 
 type Query {
   findByTenantName(username: String!): Tenant!
   findAllTenants: [Tenant!]!
+  findByLandlordName(username: String!): Landlord!
+  findAllLandlord: [Landlord!]!
 }
 
 type Mutation {
-  tenantLogIn(tenantInput: TenantInput!): LogInResponseTenant!
-  tenantSignUp(tenantInput: TenantInput!): LogInResponseTenant!
+  logIn(userInput: UserInput!): AuthResponse!
+  signUp(userInput: UserInput!): AuthResponse!
 }
 
-input TenantInput {
+input UserInput {
   username: String!
   password: String!
-  action: String!
+  action: Actions
+  role: Roles
+}
+
+enum Actions {
+  LOG_IN
+  SIGN_UP
+}
+
+enum Roles {
+  TENANT
+  LANDLORD
+  OPERATOR
 }

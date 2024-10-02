@@ -4,12 +4,13 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { join } from 'path';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { TenantModule } from './tenant/tenant.module';
-import { typeOrmConfigs } from './database/typeorm.config';
 import { BookingModule } from './booking/booking.module';
+import { PlaceModule } from './place/place.module';
+import { LandlordModule } from './landlord/landlord.module';
 import 'dotenv/config';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -23,10 +24,12 @@ import 'dotenv/config';
       autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
-    TypeOrmModule.forRoot(typeOrmConfigs[0]),
+    DatabaseModule,
     AuthModule,
     TenantModule,
     BookingModule,
+    PlaceModule,
+    LandlordModule,
   ],
   providers: [],
 })

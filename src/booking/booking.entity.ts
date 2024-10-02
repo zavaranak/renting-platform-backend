@@ -1,5 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Tenant } from 'src/tenant/entities/tenant.entity';
+import { Place } from 'src/place/place.entity';
+import { Tenant } from 'src/tenant/tenant.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
@@ -8,16 +9,24 @@ export class Booking {
   @Field()
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
   @Field()
-  @Field({ defaultValue: () => Date.now() })
-  @Column({ default: () => Date.now() })
+  @Column({ type: 'bigint' })
   createdAt: number;
+
   @Field()
-  @Column()
+  @Column({ type: 'bigint' })
   startAt: number;
+
   @Field()
-  @Column()
+  @Column({ type: 'bigint' })
   endAt: number;
-  @ManyToOne(() => Tenant)
+
+  @Field(() => Tenant)
+  @ManyToOne(() => Tenant, (tenant) => tenant.bookings)
   tenant: Tenant;
+
+  @Field(() => Place)
+  @ManyToOne(() => Place, (place) => place.bookings)
+  place: Place;
 }

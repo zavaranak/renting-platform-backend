@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { TenantInput } from './dto/tenant-auth-input';
-import { LogInResponseTenant } from './dto/login-response';
+import { Roles, UserInput } from './dto/auth-input';
+import { AuthResponse } from './dto/login-response';
 import { UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './graphql.auth-guard';
 
@@ -9,24 +9,31 @@ import { LocalAuthGuard } from './graphql.auth-guard';
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => LogInResponseTenant)
+  @Mutation(() => AuthResponse)
   @UseGuards(LocalAuthGuard)
-  async tenantLogIn(
-    @Args('tenantInput') tenantInput: TenantInput,
-    @Context() context,
-  ) {
-    return this.authService.tenantLogIn(context.user);
+  async logIn(@Args('userInput') userInput: UserInput, @Context() context) {
+    if (userInput.role === Roles.TENANT) {
+      return this.authService.tenantLogIn(context.user);
+    }
+    if (userInput.role === Roles.LANDLORD) {
+      return this.authService.landlordLogIn(context.user);
+    }
   }
 
-  @Mutation(() => LogInResponseTenant)
+  @Mutation(() => AuthResponse)
   @UseGuards(LocalAuthGuard)
-  async tenantSignUp(
-    @Args('tenantInput') tenantInput: TenantInput,
-    @Context() context,
-  ) {
-    return this.authService.tenantSignUp(
-      context.user.username,
-      context.user.password,
-    );
+  async signUp(@Args('userInput') userInput: UserInput, @Context() context) {
+    if (userInput.role === Roles.TENANT) {
+      return this.authService.tenantSignUp(
+        context.user.username,
+        context.user.password,
+      );
+    }
+    if (userInput.role === Roles.LANDLORD) {
+      return this.authService.landlordSignUp(
+        context.user.username,
+        context.user.password,
+      );
+    }
   }
 }
