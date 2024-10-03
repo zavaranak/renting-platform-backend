@@ -1,7 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Place } from './place.entity';
-import { PlaceInput } from './dto/create-place.dto';
+import { PlaceInput } from './dto/create_place.dto';
 import { LandlordService } from 'src/landlord/landlord.service';
 import { PlaceResponse } from './dto/place_response';
 
@@ -13,6 +18,11 @@ export class PlaceService {
     private landlordService: LandlordService,
   ) {
     this.placeRepository = this.datasource.getRepository(Place);
+  }
+
+  async findById(id: string): Promise<Place> {
+    const place = await this.placeRepository.findOneBy({ id });
+    return place;
   }
 
   async createOne(placeInput: PlaceInput): Promise<PlaceResponse> {
@@ -35,8 +45,14 @@ export class PlaceService {
       };
       const newPlace = await this.placeRepository.save(place);
       return { place: newPlace, message: '' };
-    } catch (err) {
-      return { place: null, message: err };
+    } catch (error) {
+      console.log('An error occurred while creating Place', error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occurred while creating Place',
+      );
     }
   }
 

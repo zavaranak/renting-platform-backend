@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { Roles, UserInput } from './dto/auth-input';
-import { AuthResponse } from './dto/login-response';
+import { Roles, UserInput } from './dto/auth_input';
+import { AuthResponse } from './dto/login_response';
 import { UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './graphql.auth-guard';
 

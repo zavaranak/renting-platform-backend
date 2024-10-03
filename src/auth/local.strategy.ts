@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { TenantService } from 'src/tenant/tenant.service';
-import { Actions, Roles } from './dto/auth-input';
+import { Actions, Roles } from './dto/auth_input';
 import { EMAIL_EXISTED, NO_ACTIONS } from 'src/common/constants';
 import { RouterModule } from '@nestjs/core';
 import { LandlordService } from 'src/landlord/landlord.service';

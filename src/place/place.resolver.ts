@@ -1,7 +1,7 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { PlaceService } from './place.service';
 import { PlaceResponse } from './dto/place_response';
-import { PlaceInput } from './dto/create-place.dto';
+import { PlaceInput } from './dto/create_place.dto';
 // import { Place } from './place.entity';
 
 @Resolver()

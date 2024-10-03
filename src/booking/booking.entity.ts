@@ -18,11 +18,15 @@ registerEnumType(TermUnit, { name: 'TermUnit' });
 export class Booking {
   @Field()
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id?: string;
 
   @Field()
   @Column({ type: 'bigint' })
   createdAt: number;
+
+  @Field()
+  @Column({ type: 'bigint' })
+  lastUpdate: number;
 
   @Field()
   @Column({ type: 'bigint' })
