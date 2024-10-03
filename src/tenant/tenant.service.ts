@@ -25,7 +25,7 @@ export class TenantService {
       );
     }
   }
-  async findAllTenants(): Promise<Tenant[]> {
+  async findAll(): Promise<Tenant[]> {
     try {
       return await this.tenantRepository.find({});
     } catch (error) {
@@ -39,7 +39,7 @@ export class TenantService {
     }
   }
 
-  async findByUsername(username: string): Promise<Tenant> {
+  async findOneByUsername(username: string): Promise<Tenant> {
     try {
       const tenant = await this.tenantRepository.findOneBy({ username });
       return tenant;
@@ -53,7 +53,7 @@ export class TenantService {
       );
     }
   }
-  async findById(id: string): Promise<Tenant> {
+  async findOneById(id: string): Promise<Tenant> {
     try {
       const tenant = await this.tenantRepository.findOneBy({ id });
       return tenant;
@@ -68,7 +68,7 @@ export class TenantService {
     }
   }
 
-  async create(username: string, password: string): Promise<Tenant> {
+  async createOne(username: string, password: string): Promise<Tenant> {
     try {
       const tenant: Tenant = {
         username: username,

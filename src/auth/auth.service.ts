@@ -26,7 +26,7 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<AuthResponse> {
-    const tenant = await this.tenantService.create(username, password);
+    const tenant = await this.tenantService.createOne(username, password);
 
     const jwt = this.jwtService.sign({
       username: tenant.username,
@@ -47,7 +47,7 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<AuthResponse> {
-    const landlord = await this.landlordService.create(username, password);
+    const landlord = await this.landlordService.createOne(username, password);
 
     const jwt = this.jwtService.sign({
       username: landlord.username,

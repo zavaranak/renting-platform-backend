@@ -17,14 +17,34 @@ export class LandlordService {
     this.landlordRepository = this.datasource.getRepository(Landlord);
   }
 
-  async findAllLandlords(): Promise<Landlord[]> {
-    return await this.landlordRepository.find();
+  async findAll(): Promise<Landlord[]> {
+    try {
+      return await this.landlordRepository.find();
+    } catch (error) {
+      console.error('An error occured while finding all Landlords: ', error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occurred while finding all Landlords',
+      );
+    }
   }
 
-  async findByUsername(username: string): Promise<Landlord> {
-    return await this.landlordRepository.findOneBy({ username });
+  async findOneByUsername(username: string): Promise<Landlord> {
+    try {
+      return await this.landlordRepository.findOneBy({ username });
+    } catch (error) {
+      console.error('An error occured while finding Landlord: ', error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occurred while finding Landlord',
+      );
+    }
   }
-  async findById(id: string): Promise<Landlord> {
+  async findOneById(id: string): Promise<Landlord> {
     try {
       return await this.landlordRepository.findOneBy({ id });
     } catch (error) {
@@ -38,7 +58,7 @@ export class LandlordService {
     }
   }
 
-  async create(username: string, password: string): Promise<Landlord> {
+  async createOne(username: string, password: string): Promise<Landlord> {
     try {
       const newLandlord = {
         username: username,

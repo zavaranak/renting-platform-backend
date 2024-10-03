@@ -6,14 +6,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-@Resolver(() => Landlord)
+@Resolver(Landlord)
 export class LandlordResolver {
   constructor(private landlordService: LandlordService) {}
 
   @Query(() => Landlord)
   async findByLandlordName(@Args('username') username: string) {
     try {
-      return await this.landlordService.findByUsername(username);
+      return await this.landlordService.findOneByUsername(username);
     } catch (error) {
       console.error('An error occurred while finding Landlord by usename');
       if (error instanceof NotFoundException) {
@@ -26,17 +26,7 @@ export class LandlordResolver {
   }
 
   @Query(() => [Landlord])
-  async findAllLandlord() {
-    try {
-      return await this.landlordService.findAllLandlords;
-    } catch (error) {
-      console.error('An error occured while finding all Landlords: ', error);
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        'An error occurred while finding all Landlords',
-      );
-    }
+  async findAllLandlords() {
+    return await this.landlordService.findAll();
   }
 }

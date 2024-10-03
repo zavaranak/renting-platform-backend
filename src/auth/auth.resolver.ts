@@ -11,7 +11,10 @@ export class AuthResolver {
 
   @Mutation(() => AuthResponse)
   @UseGuards(LocalAuthGuard)
-  async logIn(@Args('userInput') userInput: UserInput, @Context() context) {
+  async logIn(
+    @Args('userInput') userInput: UserInput,
+    @Context() context: any,
+  ) {
     if (userInput.role === Roles.TENANT) {
       return this.authService.tenantLogIn(context.user);
     }
@@ -22,7 +25,10 @@ export class AuthResolver {
 
   @Mutation(() => AuthResponse)
   @UseGuards(LocalAuthGuard)
-  async signUp(@Args('userInput') userInput: UserInput, @Context() context) {
+  async signUp(
+    @Args('userInput') userInput: UserInput,
+    @Context() context: any,
+  ) {
     if (userInput.role === Roles.TENANT) {
       return this.authService.tenantSignUp(
         context.user.username,

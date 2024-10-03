@@ -9,6 +9,7 @@ import { Place } from './place.entity';
 import { PlaceInput } from './dto/create_place.dto';
 import { LandlordService } from 'src/landlord/landlord.service';
 import { PlaceResponse } from './dto/place_response';
+import { PlaceUpdateInput } from './dto/update_place.dto';
 
 @Injectable()
 export class PlaceService {
@@ -20,14 +21,43 @@ export class PlaceService {
     this.placeRepository = this.datasource.getRepository(Place);
   }
 
-  async findById(id: string): Promise<Place> {
-    const place = await this.placeRepository.findOneBy({ id });
-    return place;
+  async findAll(relations: string[]): Promise<Place[]> {
+    try {
+      const places = await this.placeRepository.find({
+        relations: relations,
+      });
+      console.log(places);
+      return places;
+    } catch (error) {
+      console.error('An errror occurred while finding all Places: ', error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occured while findind all Places',
+      );
+    }
+  }
+  async findOneById(id: string, relations: string[]): Promise<Place> {
+    try {
+      return await this.placeRepository.findOne({
+        where: { id },
+        relations: relations,
+      });
+    } catch (error) {
+      console.error('An errror occurred while finding place by id: ', error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occured while findind place by id',
+      );
+    }
   }
 
   async createOne(placeInput: PlaceInput): Promise<PlaceResponse> {
     try {
-      const landlord = await this.landlordService.findById(
+      const landlord = await this.landlordService.findOneById(
         placeInput.landlordId,
       );
 
@@ -56,7 +86,22 @@ export class PlaceService {
     }
   }
 
-  async updateOne() {}
+  async updateOne(placeUpdateInput: PlaceUpdateInput) {
+    const place = await this.findOneById(placeUpdateInput.id, []);
+    try {
+      for (const [key, value] of Object.entries(placeUpdateInput)) {
+        if (key === 'id') continue;
+        place[key] = value;
+      }
+      console.log(place);
+      const updatedPlace = await this.placeRepository.save({ ...place });
+      return { place: updatedPlace, message: 'Updated place' };
+    } catch (error) {
+      console.error(
+        `An error occurred while updating place ${placeUpdateInput.id}`,
+      );
+    }
+  }
 
   async deleteOne() {}
 }

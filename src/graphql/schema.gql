@@ -39,6 +39,7 @@ enum PlaceTypes {
 type Booking {
   id: String!
   createdAt: Float!
+  lastUpdate: Float!
   startAt: Float!
   endAt: Float!
   termUnit: String!
@@ -48,6 +49,33 @@ type Booking {
   place: Place!
 }
 
+type TenantAttribute {
+  id: String!
+  name: TenantAttributeNames!
+  value: String!
+  type: AttributeTypes!
+  tenant: Tenant!
+}
+
+enum TenantAttributeNames {
+  FIRSTNAME
+  LASTNAME
+  MIDDLENAME
+  TEL
+  SEX
+  BIRTH_DAY
+  DOCUMENT
+  COUNTRY
+}
+
+enum AttributeTypes {
+  STRING
+  REAL
+  INTEGER
+  JSON
+  BOOLEAN
+}
+
 type Tenant {
   id: String!
   username: String!
@@ -55,6 +83,7 @@ type Tenant {
   createdAt: Float!
   status: String!
   bookings: [Booking!]
+  attributes: [TenantAttribute!]
 }
 
 type AuthResponse {
@@ -62,6 +91,11 @@ type AuthResponse {
   tenant: Tenant
   landlord: Landlord
   access_token: String
+}
+
+type BookingResponse {
+  message: String!
+  booking: Booking!
 }
 
 type PlaceResponse {
@@ -73,13 +107,19 @@ type Query {
   findByTenantName(username: String!): Tenant!
   findAllTenants: [Tenant!]!
   findByLandlordName(username: String!): Landlord!
-  findAllLandlord: [Landlord!]!
+  findAllLandlords: [Landlord!]!
+  getBookings: [Booking!]!
+  getBookingById(id: String!): Booking!
+  findPlaces: [Place!]!
+  findPlaceById(id: String!): Place!
 }
 
 type Mutation {
   logIn(userInput: UserInput!): AuthResponse!
   signUp(userInput: UserInput!): AuthResponse!
+  createBooking(bookingInput: BookingInput!): BookingResponse!
   createPlace(placeInput: PlaceInput!): PlaceResponse!
+  updatePlace(placeUpdateInput: PlaceUpdateInput!): PlaceResponse!
 }
 
 input UserInput {
@@ -100,6 +140,24 @@ enum Roles {
   OPERATOR
 }
 
+input BookingInput {
+  startAt: Float!
+  endAt: Float!
+  termUnit: TermUnit!
+  period: Float!
+  totalCharge: Float!
+  tenantId: String!
+  placeId: String!
+}
+
+enum TermUnit {
+  HOUR
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
 input PlaceInput {
   name: String!
   address: String!
@@ -108,4 +166,14 @@ input PlaceInput {
   price: Float!
   landlordId: String!
   type: [PlaceTypes!]!
+}
+
+input PlaceUpdateInput {
+  id: String!
+  name: String
+  address: String
+  city: String
+  area: Float
+  price: Float
+  type: [PlaceTypes!]
 }

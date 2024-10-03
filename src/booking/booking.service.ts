@@ -17,10 +17,52 @@ export class BookingService {
   constructor(@Inject('DATA_SOURCE_PSQL') private dataSource: DataSource) {
     this.bookingRepository = this.dataSource.getRepository(Booking);
   }
+
+  async findAll(relations: string[]): Promise<Booking[]> {
+    try {
+      return this.bookingRepository.find({
+        relations: relations,
+      });
+    } catch (error) {
+      console.error(`An error occurred while finding Bookings: `, error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occurred while finding Bookings',
+      );
+    }
+  }
+
+  async findOneById(id: string, relations: string[]): Promise<Booking> {
+    try {
+      return this.bookingRepository.findOne({
+        where: { id },
+        relations: relations,
+      });
+    } catch (error) {
+      console.error(
+        `An error occurred while finding Booking with id ${id}: `,
+        error,
+      );
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occurred while finding Booking',
+      );
+    }
+  }
+
   async createOne(bookingInput: BookingInput) {
     try {
-      const tenant = await this.tenantService.findById(bookingInput.tenantId);
-      const place = await this.placeService.findById(bookingInput.placeId);
+      const tenant = await this.tenantService.findOneById(
+        bookingInput.tenantId,
+      );
+      const place = await this.placeService.findOneById(
+        bookingInput.placeId,
+        [],
+      );
       const currentTime = Date.now();
       const booking: Booking = {
         createdAt: currentTime,

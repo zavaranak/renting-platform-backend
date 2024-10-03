@@ -2,6 +2,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { Booking } from 'src/booking/booking.entity';
 import { UserStatus } from 'src/common/constants';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { TenantAttribute } from './tenant_attribute.entity';
 
 // export enum TenantStatus {
 //   VERIFIED = 'verified',
@@ -35,4 +36,10 @@ export class Tenant {
   @OneToMany(() => Booking, (booking) => booking.tenant, { nullable: true })
   @Field(() => [Booking], { nullable: true })
   bookings?: Booking[];
+
+  @OneToMany(() => TenantAttribute, (attribute) => attribute.tenant, {
+    nullable: true,
+  })
+  @Field(() => [TenantAttribute], { nullable: true })
+  attributes?: TenantAttribute[];
 }

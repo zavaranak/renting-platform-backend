@@ -4,6 +4,7 @@ import { Tenant } from 'src/tenant/tenant.entity';
 import { Booking } from 'src/booking/booking.entity';
 import { Landlord } from 'src/landlord/landlord.entity';
 import { Place } from 'src/place/place.entity';
+import { TenantAttribute } from 'src/tenant/tenant_attribute.entity';
 
 export const databaseProviders = [
   {
@@ -17,7 +18,7 @@ export const databaseProviders = [
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [Tenant, Booking, Landlord, Place],
+        entities: [Tenant, Booking, Landlord, Place, TenantAttribute],
         migrations: ['dist/database/migrations/*{.ts,.js}'],
         synchronize: true,
       });

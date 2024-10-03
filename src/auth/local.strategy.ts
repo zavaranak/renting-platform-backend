@@ -4,7 +4,6 @@ import { Strategy } from 'passport-local';
 import { TenantService } from 'src/tenant/tenant.service';
 import { Actions, Roles } from './dto/auth_input';
 import { EMAIL_EXISTED, NO_ACTIONS } from 'src/common/constants';
-import { RouterModule } from '@nestjs/core';
 import { LandlordService } from 'src/landlord/landlord.service';
 
 @Injectable()
@@ -36,10 +35,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   private async logIn(username: string, password: string, role: Roles) {
     let user: any;
     if (role === Roles.TENANT) {
-      user = await this.tenantService.findByUsername(username);
+      user = await this.tenantService.findOneByUsername(username);
     }
     if (role === Roles.LANDLORD) {
-      user = await this.landlordService.findByUsername(username);
+      user = await this.landlordService.findOneByUsername(username);
     }
     if (user && user.password === password) {
       const { password, ...data } = user;
@@ -50,10 +49,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   private async signUp(username: string, password: string, role: Roles) {
     let user: any;
     if (role === Roles.TENANT) {
-      user = await this.tenantService.findByUsername(username);
+      user = await this.tenantService.findOneByUsername(username);
     }
     if (role === Roles.LANDLORD) {
-      user = await this.landlordService.findByUsername(username);
+      user = await this.landlordService.findOneByUsername(username);
     }
     if (user) {
       throw new Error(EMAIL_EXISTED);
