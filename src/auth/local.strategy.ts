@@ -5,6 +5,7 @@ import { TenantService } from 'src/tenant/tenant.service';
 import { Actions, Roles } from './dto/auth_input';
 import { EMAIL_EXISTED, NO_ACTIONS } from 'src/common/constants';
 import { LandlordService } from 'src/landlord/landlord.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -35,12 +36,23 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   private async logIn(username: string, password: string, role: Roles) {
     let user: any;
     if (role === Roles.TENANT) {
-      user = await this.tenantService.findOneByUsername(username);
+      user = await this.tenantService.getOne({
+        queryValue: username,
+        queryType: 'username',
+      });
     }
     if (role === Roles.LANDLORD) {
-      user = await this.landlordService.findOneByUsername(username);
+      user = await this.landlordService.getOne({
+        queryValue: username,
+        queryType: 'username',
+      });
     }
-    if (user && user.password === password) {
+
+    const isMatch = user
+      ? await bcrypt.compare(password, user.password)
+      : false;
+
+    if (isMatch) {
       const { password, ...data } = user;
       return data;
     } else throw new UnauthorizedException();
@@ -49,10 +61,16 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   private async signUp(username: string, password: string, role: Roles) {
     let user: any;
     if (role === Roles.TENANT) {
-      user = await this.tenantService.findOneByUsername(username);
+      user = await this.tenantService.getOne({
+        queryValue: username,
+        queryType: 'username',
+      });
     }
     if (role === Roles.LANDLORD) {
-      user = await this.landlordService.findOneByUsername(username);
+      user = await this.landlordService.getOne({
+        queryValue: username,
+        queryType: 'username',
+      });
     }
     if (user) {
       throw new Error(EMAIL_EXISTED);

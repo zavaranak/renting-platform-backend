@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { TermUnit } from '../booking.entity';
+import { TermUnit } from 'src/common/constants';
 
 @InputType()
 export class BookingInput {

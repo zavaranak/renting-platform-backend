@@ -8,6 +8,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { PlaceAttribute } from './place_attribute.entity';
 
 export enum PlaceTypes {
   HOTEL = 'hotel',
@@ -29,7 +30,7 @@ registerEnumType(PlaceTypes, {
 export class Place {
   @PrimaryGeneratedColumn('uuid')
   @Field()
-  id: string;
+  id?: string;
 
   @Column({ type: 'varchar' })
   @Field()
@@ -68,6 +69,10 @@ export class Place {
   landlord: Landlord;
 
   @OneToMany(() => Booking, (booking) => booking.place)
-  @Field(() => [Booking])
+  @Field(() => [Booking], { nullable: true })
   bookings: Booking[];
+
+  @OneToMany(() => PlaceAttribute, (attribute) => attribute.place)
+  @Field(() => [PlaceAttribute], { nullable: true })
+  attributes: PlaceAttribute[];
 }

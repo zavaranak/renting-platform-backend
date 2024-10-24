@@ -1,17 +1,8 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Place } from 'src/place/place.entity';
 import { Tenant } from 'src/tenant/tenant.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-
-export enum TermUnit {
-  HOUR = 'hour',
-  DAY = 'day',
-  WEEK = 'weak',
-  MONTH = 'month',
-  YEAR = 'year',
-}
-
-registerEnumType(TermUnit, { name: 'TermUnit' });
+import { TermUnit } from 'src/common/constants';
 
 @Entity()
 @ObjectType()

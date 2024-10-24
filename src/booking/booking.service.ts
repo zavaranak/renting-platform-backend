@@ -8,6 +8,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
 
 @Injectable()
 export class BookingService {
@@ -18,51 +19,16 @@ export class BookingService {
     this.bookingRepository = this.dataSource.getRepository(Booking);
   }
 
-  async findAll(relations: string[]): Promise<Booking[]> {
-    try {
-      return this.bookingRepository.find({
-        relations: relations,
-      });
-    } catch (error) {
-      console.error(`An error occurred while finding Bookings: `, error);
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        'An error occurred while finding Bookings',
-      );
-    }
-  }
-
-  async findOneById(id: string, relations: string[]): Promise<Booking> {
-    try {
-      return this.bookingRepository.findOne({
-        where: { id },
-        relations: relations,
-      });
-    } catch (error) {
-      console.error(
-        `An error occurred while finding Booking with id ${id}: `,
-        error,
-      );
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        'An error occurred while finding Booking',
-      );
-    }
-  }
-
   async createOne(bookingInput: BookingInput) {
     try {
-      const tenant = await this.tenantService.findOneById(
-        bookingInput.tenantId,
-      );
-      const place = await this.placeService.findOneById(
-        bookingInput.placeId,
-        [],
-      );
+      const tenant = await this.tenantService.getOne({
+        queryValue: bookingInput.tenantId,
+        queryType: 'id',
+      });
+      const place = await this.placeService.getOne({
+        queryValue: bookingInput.placeId,
+        queryType: 'id',
+      });
       const currentTime = Date.now();
       const booking: Booking = {
         createdAt: currentTime,
@@ -85,5 +51,27 @@ export class BookingService {
         'An error occurred while creating Booking',
       );
     }
+  }
+
+  async getMany(relations?: string[]): Promise<Booking[]> {
+    const queryParams: QueryParams = {
+      relations: relations ? relations : [],
+    };
+    return await queryMany(this.bookingRepository, queryParams);
+  }
+
+  async getOne(
+    value: string,
+    type: string,
+    where?: any,
+    relations?: string[],
+  ): Promise<Booking> {
+    const queryParams: QueryParams = {
+      queryValue: value,
+      queryType: type,
+      where: where ? where : null,
+      relations: relations ? relations : [],
+    };
+    return await queryOne(this.bookingRepository, queryParams);
   }
 }

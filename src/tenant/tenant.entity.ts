@@ -4,12 +4,6 @@ import { UserStatus } from 'src/common/constants';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { TenantAttribute } from './tenant_attribute.entity';
 
-// export enum TenantStatus {
-//   VERIFIED = 'verified',
-//   NOT_VERIFIRED = 'not_verified',
-//   BLOCKED = 'blocked',
-// }
-
 @Entity()
 @ObjectType()
 export class Tenant {

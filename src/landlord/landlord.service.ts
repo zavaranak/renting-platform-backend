@@ -6,63 +6,26 @@ import {
 } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Landlord } from './landlord.entity';
-import { UserStatus } from 'src/common/constants';
-import { PlaceService } from 'src/place/place.service';
+import { LandlordAttributeNames, UserStatus } from 'src/common/constants';
+import { LandlordAttribute } from './landlord_attribute.entity';
+import { queryMany, queryOne, QueryParams } from 'src/common/query_function';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class LandlordService {
   private landlordRepository: Repository<Landlord>;
-  private placeService: PlaceService;
+  private landlordAttributeRepository: Repository<LandlordAttribute>;
   constructor(@Inject('DATA_SOURCE_PSQL') private datasource: DataSource) {
     this.landlordRepository = this.datasource.getRepository(Landlord);
   }
 
-  async findAll(): Promise<Landlord[]> {
-    try {
-      return await this.landlordRepository.find();
-    } catch (error) {
-      console.error('An error occured while finding all Landlords: ', error);
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        'An error occurred while finding all Landlords',
-      );
-    }
-  }
-
-  async findOneByUsername(username: string): Promise<Landlord> {
-    try {
-      return await this.landlordRepository.findOneBy({ username });
-    } catch (error) {
-      console.error('An error occured while finding Landlord: ', error);
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        'An error occurred while finding Landlord',
-      );
-    }
-  }
-  async findOneById(id: string): Promise<Landlord> {
-    try {
-      return await this.landlordRepository.findOneBy({ id });
-    } catch (error) {
-      console.log('An error occurred while finding Landlord by Id:', error);
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        'An error occurred while finding Landlord',
-      );
-    }
-  }
-
   async createOne(username: string, password: string): Promise<Landlord> {
     try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
       const newLandlord = {
         username: username,
-        password: password,
+        password: hashedPassword,
         createdAt: Date.now(),
         status: UserStatus.VERIFIED,
       };
@@ -78,19 +41,40 @@ export class LandlordService {
     }
   }
 
-  // async addPlace(placeInput: PlaceInput, landlordId: string) {
-  //   try {
-  //     placeInput.landlordId = landlordId;
-  //     return await this.placeService.createOne(placeInput);
-  //   } catch (error) {
-  //     console.log('An error occurred while finding Landlord by Id:', error);
-  //     if (error instanceof NotFoundException) {
-  //       throw error;
-  //     }
-  //     throw new InternalServerErrorException(
-  //       'An error occurred while finding Landlord',
-  //     );
-  //   }
+  async addAttribute(
+    landlordId: string,
+    name: LandlordAttributeNames,
+    value: any,
+  ): Promise<LandlordAttribute> {
+    try {
+      const type = typeof value;
+      const landlord: Landlord = await this.getOne({
+        queryValue: landlordId,
+        queryType: 'id',
+      });
+      const newAttribute: LandlordAttribute = {
+        landlord: landlord,
+        name: name,
+        value: value.toString(),
+        type: type,
+      };
+      return await this.landlordAttributeRepository.save(newAttribute);
+    } catch (error) {
+      console.error('An error occurred while adding attribute to landlord');
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occurred while adding attribute to landlord',
+      );
+    }
+  }
 
-  // }
+  async getMany(queryParams: QueryParams): Promise<Landlord[]> {
+    return await queryMany(this.landlordRepository, queryParams);
+  }
+
+  async getOne(queryParams: QueryParams): Promise<Landlord> {
+    return await queryOne(this.landlordRepository, queryParams);
+  }
 }

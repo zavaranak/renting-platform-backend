@@ -1,7 +1,14 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { UserStatus } from 'src/common/constants';
 import { Place } from 'src/place/place.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
+import { LandlordAttribute } from './landlord_attribute.entity';
 
 @Entity()
 @ObjectType()
@@ -25,4 +32,11 @@ export class Landlord {
   @OneToMany(() => Place, (place) => place.landlord, { nullable: true })
   @Field(() => [Place])
   places: Place[];
+
+  @ManyToOne(
+    () => LandlordAttribute,
+    (landlordAttribute) => landlordAttribute.landlord,
+  )
+  @Field(() => [LandlordAttribute])
+  attributes: LandlordAttribute[];
 }

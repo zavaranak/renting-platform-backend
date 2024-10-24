@@ -2,6 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type LandlordAttribute {
+  id: String!
+  name: LandlordAttributeNames!
+  value: String!
+  type: String!
+  landlord: Landlord!
+}
+
+enum LandlordAttributeNames {
+  FIRSTNAME
+  LASTNAME
+  MIDDLENAME
+  TEL
+  COMPANY
+}
+
 type Landlord {
   id: String!
   username: String!
@@ -9,6 +25,38 @@ type Landlord {
   createdAt: Float!
   status: String!
   places: [Place!]!
+  attributes: [LandlordAttribute!]!
+}
+
+type PlaceAttribute {
+  id: String!
+  name: PlaceAttributeNames!
+  value: Boolean!
+  place: Place!
+}
+
+enum PlaceAttributeNames {
+  PRIVATE_BATHROOM
+  PRIVATE_KITCHEN
+  SHARED_BATHROOM
+  SHARED_KITCHEN
+  LAUNDRY
+  AIR_CONDITIONER
+  WIFI
+  ETHERNET
+  FURNISHED
+  PARKING
+  BALCONY
+  PET_FRIENDLY
+  SMOKING_ALLOWED
+  ELEVATOR
+  GYM
+  POOL
+  HEATING
+  ROOM_SERVICE
+  SECURITY
+  GARDEN
+  PLAYGROUND
 }
 
 type Place {
@@ -22,7 +70,8 @@ type Place {
   lastUpdate: Float!
   price: Float!
   landlord: Landlord!
-  bookings: [Booking!]!
+  bookings: [Booking!]
+  attributes: [PlaceAttribute!]
 }
 
 enum PlaceTypes {
@@ -53,7 +102,7 @@ type TenantAttribute {
   id: String!
   name: TenantAttributeNames!
   value: String!
-  type: AttributeTypes!
+  type: String!
   tenant: Tenant!
 }
 
@@ -66,14 +115,7 @@ enum TenantAttributeNames {
   BIRTH_DAY
   DOCUMENT
   COUNTRY
-}
-
-enum AttributeTypes {
-  STRING
-  REAL
-  INTEGER
-  JSON
-  BOOLEAN
+  AVATAR
 }
 
 type Tenant {
@@ -84,6 +126,16 @@ type Tenant {
   status: String!
   bookings: [Booking!]
   attributes: [TenantAttribute!]
+}
+
+type QueryResponse {
+  message: String!
+  type: ActionStatus!
+}
+
+enum ActionStatus {
+  SUCCESSFUL
+  FAILED
 }
 
 type AuthResponse {
@@ -104,19 +156,21 @@ type PlaceResponse {
 }
 
 type Query {
-  findByTenantName(username: String!): Tenant!
-  findAllTenants: [Tenant!]!
-  findByLandlordName(username: String!): Landlord!
-  findAllLandlords: [Landlord!]!
-  getBookings: [Booking!]!
-  getBookingById(id: String!): Booking!
-  findPlaces: [Place!]!
-  findPlaceById(id: String!): Place!
+  getAllTenants: [Tenant!]!
+  getOneTenant(value: String!, type: String!): Tenant!
+  getOneLandlord(value: String!, type: String!): Landlord!
+  getAllLandlord: [Landlord!]!
+  getOneBooking(value: String!, type: String!): Booking!
+  getAllBookings: [Booking!]!
+  getOnePlace(value: String!, type: String!): Place!
+  getAllPlaces: [Place!]!
 }
 
 type Mutation {
   logIn(userInput: UserInput!): AuthResponse!
   signUp(userInput: UserInput!): AuthResponse!
+  addTenantAtributes(tenantId: String!, attributesInput: [TenantAttributeInput!]!): QueryResponse!
+  uploadImage(tenantId: String!, image: Upload!): QueryResponse!
   createBooking(bookingInput: BookingInput!): BookingResponse!
   createPlace(placeInput: PlaceInput!): PlaceResponse!
   updatePlace(placeUpdateInput: PlaceUpdateInput!): PlaceResponse!
@@ -139,6 +193,14 @@ enum Roles {
   LANDLORD
   OPERATOR
 }
+
+input TenantAttributeInput {
+  name: TenantAttributeNames!
+  value: String!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 input BookingInput {
   startAt: Float!

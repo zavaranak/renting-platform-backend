@@ -5,24 +5,12 @@ import { PlaceInput } from './dto/create_place.dto';
 import { PlaceUpdateInput } from './dto/update_place.dto';
 import { Place } from './place.entity';
 import { GraphQLResolveInfo } from 'graphql';
+import { getRelations } from 'src/common/query_relation_handler';
+import { QueryParams } from 'src/common/query_function';
 
 @Resolver(Place)
 export class PlaceResolver {
   constructor(private readonly placeService: PlaceService) {}
-
-  @Query(() => [Place])
-  async findPlaces(@Info() info: GraphQLResolveInfo) {
-    const relations = this.getRelations(info);
-    return await this.placeService.findAll(relations);
-  }
-  @Query(() => Place)
-  async findPlaceById(
-    @Args('id') id: string,
-    @Info() info: GraphQLResolveInfo,
-  ) {
-    const relations = this.getRelations(info);
-    return await this.placeService.findOneById(id, relations);
-  }
 
   @Mutation(() => PlaceResponse)
   async createPlace(@Args('placeInput') placeInput: PlaceInput) {
@@ -36,16 +24,29 @@ export class PlaceResolver {
     return await this.placeService.updateOne(placeUpdateInput);
   }
 
-  getRelations(info: GraphQLResolveInfo) {
-    const fields = this.getRequestFields(info);
-    const relations = [];
-    fields.includes('landlord') && relations.push('landlord');
-    fields.includes('booking') && relations.push('booking');
-    return relations;
+  @Query(() => Place)
+  async getOnePlace(
+    @Args('value') value: string,
+    @Args('type') type: string,
+    @Info() info,
+  ) {
+    const relations = getRelations(info);
+    const queryParams: QueryParams = {
+      queryType: type,
+      queryValue: value,
+      relations: relations,
+    };
+    return await this.placeService.getOne(queryParams);
   }
-  getRequestFields(info: GraphQLResolveInfo) {
-    return info.fieldNodes[0].selectionSet.selections.map(
-      (selection: any) => selection.name.value,
-    );
+
+  @Query(() => [Place])
+  async getAllPlaces(@Info() info: GraphQLResolveInfo) {
+    const relations = getRelations(info);
+    const queryParams: QueryParams = {
+      // queryType: type,
+      // queryValue: value,
+      relations: relations,
+    };
+    return await this.placeService.getMany(queryParams);
   }
 }
