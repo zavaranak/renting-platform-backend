@@ -1,10 +1,9 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { LandlordAttributeNames } from 'src/common/constants';
+import { LandlordAttributeName } from 'src/common/constants';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Landlord } from './landlord.entity';
 
-registerEnumType(LandlordAttributeNames, { name: 'LandlordAttributeNames' });
-// registerEnumType(AttributeTypes, { name: 'AttributeTypes' });
+registerEnumType(LandlordAttributeName, { name: 'LandlordAttributeNames' });
 @ObjectType()
 @Entity()
 export class LandlordAttribute {
@@ -12,12 +11,12 @@ export class LandlordAttribute {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Field(() => LandlordAttributeNames)
-  @Column({ type: 'enum', enum: LandlordAttributeNames })
-  name: LandlordAttributeNames;
+  @Field(() => LandlordAttributeName)
+  @Column({ type: 'enum', enum: LandlordAttributeName })
+  name: LandlordAttributeName;
 
   @Field()
-  @Column()
+  @Column({ type: 'varchar' })
   value: string;
 
   @Field()

@@ -97,10 +97,7 @@ export class TenantService {
     }
   }
 
-  async getMany(relations?: string[]): Promise<Tenant[]> {
-    const queryParams: QueryParams = {
-      relations: relations ? relations : [],
-    };
+  async getMany(queryParams: QueryParams): Promise<Tenant[]> {
     return await queryMany(this.tenantRepository, queryParams);
   }
 

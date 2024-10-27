@@ -1,32 +1,15 @@
-import { Resolver, Query, Args, Info } from '@nestjs/graphql';
+import { Resolver, Query, Args, Info, Mutation } from '@nestjs/graphql';
 import { Landlord } from './landlord.entity';
 import { LandlordService } from './landlord.service';
 import { GraphQLResolveInfo } from 'graphql';
 import { getRelations } from 'src/common/query_relation_handler';
 import { QueryParams } from 'src/common/query_function';
+import { QueryResponse } from 'src/common/reponse';
+import { LandlordAttributeInput } from './landlord_attribute_input';
 @Resolver(Landlord)
 export class LandlordResolver {
   constructor(private landlordService: LandlordService) {}
 
-  // @Query(() => Landlord)
-  // async findByLandlordName(@Args('username') username: string) {
-  //   try {
-  //     return await this.landlordService.findOneByUsername(username);
-  //   } catch (error) {
-  //     console.error('An error occurred while finding Landlord by usename');
-  //     if (error instanceof NotFoundException) {
-  //       throw error;
-  //     }
-  //     throw new InternalServerErrorException(
-  //       'An error occurred while finding Landlord',
-  //     );
-  //   }
-  // }
-
-  // @Query(() => [Landlord])
-  // async findAllLandlords() {
-  //   return await this.landlordService.findAll();
-  // }
   @Query(() => Landlord)
   async getOneLandlord(
     @Args('value') value: string,
@@ -37,7 +20,7 @@ export class LandlordResolver {
     const queryParams: QueryParams = {
       queryValue: value,
       queryType: type,
-      relations: relations,
+      relations: relations ? relations : [],
     };
     return await this.landlordService.getOne(queryParams);
   }
@@ -46,8 +29,17 @@ export class LandlordResolver {
   async getAllLandlord(@Info() info: GraphQLResolveInfo) {
     const relations = getRelations(info);
     const queryParams: QueryParams = {
-      relations: relations,
+      relations: relations ? relations : [],
     };
     return await this.landlordService.getMany(queryParams);
+  }
+
+  @Mutation(() => QueryResponse)
+  async addLandlordAtributes(
+    @Args('landlordId') lanlordId: string,
+    @Args({ name: 'attributesInput', type: () => [LandlordAttributeInput] })
+    attributesInput: LandlordAttributeInput[],
+  ) {
+    return this.landlordService.addAttributes(lanlordId, attributesInput);
   }
 }

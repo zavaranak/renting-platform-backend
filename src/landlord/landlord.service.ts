@@ -6,10 +6,17 @@ import {
 } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Landlord } from './landlord.entity';
-import { LandlordAttributeNames, UserStatus } from 'src/common/constants';
+import {
+  LandlordAttributeName,
+  ActionStatus,
+  AttributesStatus,
+  UserStatus,
+} from 'src/common/constants';
 import { LandlordAttribute } from './landlord_attribute.entity';
 import { queryMany, queryOne, QueryParams } from 'src/common/query_function';
 import * as bcrypt from 'bcrypt';
+import { LandlordAttributeInput } from './landlord_attribute_input';
+import { QueryResponse } from 'src/common/reponse';
 
 @Injectable()
 export class LandlordService {
@@ -17,6 +24,8 @@ export class LandlordService {
   private landlordAttributeRepository: Repository<LandlordAttribute>;
   constructor(@Inject('DATA_SOURCE_PSQL') private datasource: DataSource) {
     this.landlordRepository = this.datasource.getRepository(Landlord);
+    this.landlordAttributeRepository =
+      this.datasource.getRepository(LandlordAttribute);
   }
 
   async createOne(username: string, password: string): Promise<Landlord> {
@@ -41,26 +50,39 @@ export class LandlordService {
     }
   }
 
-  async addAttribute(
+  async addAttributes(
     landlordId: string,
-    name: LandlordAttributeNames,
-    value: any,
-  ): Promise<LandlordAttribute> {
+    attributes: LandlordAttributeInput[],
+  ): Promise<QueryResponse> {
+    console.log(attributes);
+    const landlord = await this.getOne({
+      queryValue: landlordId,
+      queryType: 'id',
+    });
+    const newAttributes: LandlordAttribute[] = await Promise.all(
+      attributes.map(async (attribute) => {
+        const type =
+          attribute.name === LandlordAttributeName.BIRTH_DAY
+            ? 'date'
+            : 'string';
+        return {
+          name: attribute.name,
+          value: attribute.value,
+          type: type,
+          landlord: landlord,
+        };
+      }),
+    );
     try {
-      const type = typeof value;
-      const landlord: Landlord = await this.getOne({
-        queryValue: landlordId,
-        queryType: 'id',
-      });
-      const newAttribute: LandlordAttribute = {
-        landlord: landlord,
-        name: name,
-        value: value.toString(),
-        type: type,
+      await this.landlordAttributeRepository.save(newAttributes);
+
+      return {
+        message: AttributesStatus.UPDATED,
+        type: ActionStatus.SUCCESSFUL,
       };
-      return await this.landlordAttributeRepository.save(newAttribute);
     } catch (error) {
       console.error('An error occurred while adding attribute to landlord');
+      console.log(error);
       if (error instanceof NotFoundException) {
         throw error;
       }

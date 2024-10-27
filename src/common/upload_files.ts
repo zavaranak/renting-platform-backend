@@ -10,7 +10,6 @@ export async function uploadFileFromStream(
   id: string,
   uploadType: UploadType,
 ): Promise<string> {
-  // const uniqueFilename = `${uuidv4()}-${filename}`;
   const subPath =
     uploadType === UploadType.PROFILE_IMAGE
       ? 'profiles'

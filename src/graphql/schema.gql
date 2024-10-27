@@ -16,6 +16,10 @@ enum LandlordAttributeNames {
   MIDDLENAME
   TEL
   COMPANY
+  BIRTH_DAY
+  AVATAR
+  DOCUMENT
+  COUNTRY
 }
 
 type Landlord {
@@ -25,7 +29,7 @@ type Landlord {
   createdAt: Float!
   status: String!
   places: [Place!]!
-  attributes: [LandlordAttribute!]!
+  attributes: [LandlordAttribute!]
 }
 
 type PlaceAttribute {
@@ -171,6 +175,7 @@ type Mutation {
   signUp(userInput: UserInput!): AuthResponse!
   addTenantAtributes(tenantId: String!, attributesInput: [TenantAttributeInput!]!): QueryResponse!
   uploadImage(tenantId: String!, image: Upload!): QueryResponse!
+  addLandlordAtributes(landlordId: String!, attributesInput: [LandlordAttributeInput!]!): QueryResponse!
   createBooking(bookingInput: BookingInput!): BookingResponse!
   createPlace(placeInput: PlaceInput!): PlaceResponse!
   updatePlace(placeUpdateInput: PlaceUpdateInput!): PlaceResponse!
@@ -201,6 +206,11 @@ input TenantAttributeInput {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+input LandlordAttributeInput {
+  name: LandlordAttributeNames!
+  value: String!
+}
 
 input BookingInput {
   startAt: Float!

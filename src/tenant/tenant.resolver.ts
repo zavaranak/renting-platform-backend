@@ -33,7 +33,10 @@ export class TenantResolver {
   ) {
     console.log(context.req.user);
     const relations = getRelations(info);
-    return this.tenantService.getMany(relations);
+    const queryParams: QueryParams = {
+      relations: relations,
+    };
+    return this.tenantService.getMany(queryParams);
   }
   @Query(() => Tenant)
   @UseGuards(JwtAuthGuard)
@@ -48,7 +51,6 @@ export class TenantResolver {
     const queryParams: QueryParams = {
       queryValue: value,
       queryType: type,
-      // where: where ? where : null,
       relations: relations ? relations : [],
     };
     return this.tenantService.getOne(queryParams);

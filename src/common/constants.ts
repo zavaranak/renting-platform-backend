@@ -33,12 +33,16 @@ export enum TenantAttributeName {
   AVATAR = 'avatar',
 }
 
-export enum LandlordAttributeNames {
+export enum LandlordAttributeName {
   FIRSTNAME = 'first_name',
   LASTNAME = 'last_name',
   MIDDLENAME = 'middle_name',
   TEL = 'tel',
   COMPANY = 'company',
+  BIRTH_DAY = 'birth_day',
+  AVATAR = 'avatar',
+  DOCUMENT = 'document',
+  COUNTRY = 'country',
 }
 
 export enum PlaceAttributeNames {

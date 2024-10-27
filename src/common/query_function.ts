@@ -16,7 +16,7 @@ export async function queryOne<T>(
 ): Promise<T> {
   const { queryValue, queryType, where, relations } = params;
   const queryBuilder = repository.createQueryBuilder('target_entity');
-
+  console.log('testing relation', relations);
   Array.isArray(relations) &&
     relations.forEach((relation, index) => {
       queryBuilder.leftJoinAndSelect(
