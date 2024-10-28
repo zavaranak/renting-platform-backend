@@ -4,6 +4,13 @@ import { join } from 'path';
 import { UploadType } from './constants';
 import { promises as fs } from 'fs';
 
+export interface UploadFile {
+  createReadStream: () => NodeJS.ReadableStream;
+  filename: string;
+  id: string;
+  uploadType: UploadType;
+}
+
 export async function uploadFileFromStream(
   createReadStream: () => NodeJS.ReadableStream,
   filename: string,
@@ -29,14 +36,9 @@ export async function uploadFileFromStream(
   });
 }
 export async function uploadFilesFromStream(
-  uploadedFiles: {
-    createReadStream: () => NodeJS.ReadableStream;
-    filename: string;
-    id: string;
-    uploadType: UploadType;
-  }[],
+  uploadedFiles: UploadFile[],
 ): Promise<string[]> {
-  const result = Promise.all(
+  const result = await Promise.all(
     uploadedFiles.map((file) => {
       return new Promise<string>((resolve, reject) => {
         uploadFileFromStream(

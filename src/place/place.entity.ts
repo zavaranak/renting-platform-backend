@@ -64,6 +64,10 @@ export class Place {
   @Field()
   price: number;
 
+  @Column({ type: 'real', nullable: true })
+  @Field()
+  rating: number;
+
   @ManyToOne(() => Landlord, (landlord) => landlord.places)
   @Field()
   landlord: Landlord;

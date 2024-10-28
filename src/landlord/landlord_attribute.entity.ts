@@ -19,10 +19,6 @@ export class LandlordAttribute {
   @Column({ type: 'varchar' })
   value: string;
 
-  @Field()
-  @Column({ type: 'varchar' })
-  type: string;
-
   @ManyToOne(() => Landlord, (landlord) => landlord.attributes)
   @Field(() => Landlord)
   landlord: Landlord;

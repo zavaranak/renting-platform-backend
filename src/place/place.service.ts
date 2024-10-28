@@ -10,9 +10,20 @@ import { PlaceInput } from './dto/create_place.dto';
 import { LandlordService } from 'src/landlord/landlord.service';
 import { PlaceResponse } from './dto/place_response';
 import { PlaceUpdateInput } from './dto/update_place.dto';
-import { PlaceAttributeNames } from 'src/common/constants';
+import {
+  PlaceAttributeName,
+  ActionStatus,
+  AttributesStatus,
+  UploadType,
+  PhotoExtention,
+} from 'src/common/constants';
 import { PlaceAttribute } from './place_attribute.entity';
 import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
+import { PlaceAttributeInput } from './dto/place_attribute_input';
+import { QueryResponse } from 'src/common/reponse';
+import * as Upload from 'graphql-upload/Upload.js';
+import { UploadFile, uploadFilesFromStream } from 'src/common/upload_files';
+import { extname } from 'path';
 
 @Injectable()
 export class PlaceService {
@@ -23,6 +34,8 @@ export class PlaceService {
     private landlordService: LandlordService,
   ) {
     this.placeRepository = this.datasource.getRepository(Place);
+    this.placeAttributeRepository =
+      this.datasource.getRepository(PlaceAttribute);
   }
 
   async getMany(queryParams: QueryParams): Promise<Place[]> {
@@ -65,6 +78,43 @@ export class PlaceService {
     }
   }
 
+  async addAttributes(
+    placeId: string,
+    attributes: PlaceAttributeInput[],
+  ): Promise<QueryResponse> {
+    console.log(attributes);
+    const place: Place = await this.getOne({
+      queryValue: placeId,
+      queryType: 'id',
+    });
+    const newAttributes: PlaceAttribute[] = await Promise.all(
+      attributes.map(async (attribute) => {
+        return {
+          name: attribute.name,
+          quantity: attribute.quantity,
+          place: place,
+        };
+      }),
+    );
+    try {
+      await this.placeAttributeRepository.save(newAttributes);
+
+      return {
+        message: AttributesStatus.UPDATED,
+        type: ActionStatus.SUCCESSFUL,
+      };
+    } catch (error) {
+      console.error('An error occurred while adding attribute to landlord');
+      console.log(error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occurred while adding attribute to landlord',
+      );
+    }
+  }
+
   async updateOne(placeUpdateInput: PlaceUpdateInput) {
     const place = await this.getOne({
       queryValue: placeUpdateInput.id,
@@ -93,14 +143,14 @@ export class PlaceService {
 
   async addAttribute(
     placeId: string,
-    name: PlaceAttributeNames,
-    value: any,
+    name: PlaceAttributeName,
+    quantity: number,
   ): Promise<PlaceAttribute> {
     try {
       const place = await this.getOne({ queryValue: placeId, queryType: 'id' });
       const newAttribute: PlaceAttribute = {
         name: name,
-        value: value.toString,
+        quantity: quantity,
         place: place,
       };
       return await this.placeAttributeRepository.save(newAttribute);
@@ -113,6 +163,38 @@ export class PlaceService {
         'An error occurred while adding attribute to place',
       );
     }
+  }
+
+  async uploadPhotos(resolvedImages: Upload[]): Promise<QueryResponse> {
+    const placeId = 'testing';
+
+    let imageValidation: boolean = true;
+    const parsedImages: UploadFile[] = [];
+    for (let i = 0; i < resolvedImages.length; i++) {
+      const ext: string = extname(resolvedImages[i].filename).toLowerCase();
+      imageValidation = (Object.values(PhotoExtention) as string[]).includes(
+        ext,
+      );
+      if (!imageValidation) {
+        break;
+      }
+      parsedImages.push({
+        createReadStream: resolvedImages[i].createReadStream,
+        filename: `place-photo-${i}` + ext,
+        id: placeId,
+        uploadType: UploadType.PLACE_IMAGE,
+      });
+    }
+    if (!imageValidation)
+      return {
+        message: `Invalid format of photo:`,
+        type: ActionStatus.FAILED,
+      };
+    await uploadFilesFromStream(parsedImages);
+    return {
+      message: 'Uploaded photos of place',
+      type: ActionStatus.SUCCESSFUL,
+    };
   }
 
   async deleteOne() {}

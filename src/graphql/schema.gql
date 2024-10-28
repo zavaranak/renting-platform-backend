@@ -6,7 +6,6 @@ type LandlordAttribute {
   id: String!
   name: LandlordAttributeNames!
   value: String!
-  type: String!
   landlord: Landlord!
 }
 
@@ -35,7 +34,7 @@ type Landlord {
 type PlaceAttribute {
   id: String!
   name: PlaceAttributeNames!
-  value: Boolean!
+  quantity: Float!
   place: Place!
 }
 
@@ -73,6 +72,7 @@ type Place {
   createdAt: Float!
   lastUpdate: Float!
   price: Float!
+  rating: Float!
   landlord: Landlord!
   bookings: [Booking!]
   attributes: [PlaceAttribute!]
@@ -174,11 +174,14 @@ type Mutation {
   logIn(userInput: UserInput!): AuthResponse!
   signUp(userInput: UserInput!): AuthResponse!
   addTenantAtributes(tenantId: String!, attributesInput: [TenantAttributeInput!]!): QueryResponse!
-  uploadImage(tenantId: String!, image: Upload!): QueryResponse!
+  setTenantAvatar(tenantId: String!, image: Upload!): QueryResponse!
   addLandlordAtributes(landlordId: String!, attributesInput: [LandlordAttributeInput!]!): QueryResponse!
+  setLandlordAvatar(landlordId: String!, image: Upload!): QueryResponse!
   createBooking(bookingInput: BookingInput!): BookingResponse!
   createPlace(placeInput: PlaceInput!): PlaceResponse!
   updatePlace(placeUpdateInput: PlaceUpdateInput!): PlaceResponse!
+  addPlaceAttributes(placeId: String!, placeAttributeInput: [PlaceAttributeInput!]!): QueryResponse!
+  uploadPlacePhotos(images: [Upload!]!): QueryResponse!
 }
 
 input UserInput {
@@ -248,4 +251,9 @@ input PlaceUpdateInput {
   area: Float
   price: Float
   type: [PlaceTypes!]
+}
+
+input PlaceAttributeInput {
+  name: PlaceAttributeNames!
+  quantity: Float!
 }

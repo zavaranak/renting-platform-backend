@@ -45,7 +45,7 @@ export enum LandlordAttributeName {
   COUNTRY = 'country',
 }
 
-export enum PlaceAttributeNames {
+export enum PlaceAttributeName {
   PRIVATE_BATHROOM = 'private_bathroom',
   PRIVATE_KITCHEN = 'private_kitchen',
   SHARED_BATHROOM = 'shared_bathroom',
@@ -68,6 +68,7 @@ export enum PlaceAttributeNames {
   GARDEN = 'garden',
   PLAYGROUND = 'playground',
 }
+
 export enum TermUnit {
   HOUR = 'hour',
   DAY = 'day',
@@ -89,4 +90,14 @@ export enum UploadType {
   PROFILE_IMAGE = 'profile_image',
   PLACE_IMAGE = 'place',
   PLACE_REVIEW_IMAGE = 'place_review',
+}
+
+export enum PhotoExtention {
+  JPG = '.jpg',
+  JPEG = '.jpeg',
+  PNG = '.png',
+  SVG = '.svg',
+  GIF = '.gif',
+  WEBP = '.webp',
+  AVIF = '.avif',
 }

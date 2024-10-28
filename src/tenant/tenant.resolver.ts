@@ -19,7 +19,12 @@ import { extname } from 'path';
 import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import * as Upload from 'graphql-upload/Upload.js';
 import { uploadFileFromStream } from 'src/common/upload_files';
-import { TenantAttributeName, UploadType } from 'src/common/constants';
+import {
+  ActionStatus,
+  PhotoExtention,
+  TenantAttributeName,
+  UploadType,
+} from 'src/common/constants';
 
 @Resolver(Tenant)
 export class TenantResolver {
@@ -66,12 +71,21 @@ export class TenantResolver {
   }
 
   @Mutation(() => QueryResponse)
-  async uploadImage(
+  async setTenantAvatar(
     @Args('tenantId') tenantId: string,
     @Args('image', { type: () => GraphQLUpload }) image: Upload,
   ) {
-    const filename = 'profile-photo' + extname(image.filename);
+    const ext: string = extname(image.filename).toLowerCase();
+    const imageValidation = (
+      Object.values(PhotoExtention) as string[]
+    ).includes(ext);
+    if (!imageValidation)
+      return {
+        message: `Invalid format of photo: ${ext}`,
+        type: ActionStatus.FAILED,
+      };
 
+    const filename = 'profile-photo' + extname(image.filename);
     const imageURL = await uploadFileFromStream(
       image.createReadStream,
       filename,

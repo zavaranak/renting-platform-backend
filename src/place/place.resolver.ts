@@ -7,6 +7,11 @@ import { Place } from './place.entity';
 import { GraphQLResolveInfo } from 'graphql';
 import { getRelations } from 'src/common/query_relation_handler';
 import { QueryParams } from 'src/common/query_function';
+import { QueryResponse } from 'src/common/reponse';
+import { PlaceAttributeInput } from './dto/place_attribute_input';
+
+import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+import * as Upload from 'graphql-upload/Upload.js';
 
 @Resolver(Place)
 export class PlaceResolver {
@@ -43,10 +48,25 @@ export class PlaceResolver {
   async getAllPlaces(@Info() info: GraphQLResolveInfo) {
     const relations = getRelations(info);
     const queryParams: QueryParams = {
-      // queryType: type,
-      // queryValue: value,
       relations: relations,
     };
     return await this.placeService.getMany(queryParams);
+  }
+
+  @Mutation(() => QueryResponse)
+  async addPlaceAttributes(
+    @Args('placeId') placeId: string,
+    @Args({ name: 'placeAttributeInput', type: () => [PlaceAttributeInput] })
+    placeAttributeInput: PlaceAttributeInput[],
+  ) {
+    return await this.placeService.addAttributes(placeId, placeAttributeInput);
+  }
+
+  @Mutation(() => QueryResponse)
+  async uploadPlacePhotos(
+    @Args('images', { type: () => [GraphQLUpload] }) images: Upload[],
+  ): Promise<QueryResponse> {
+    const resolvedImages: Upload[] = await Promise.all(images);
+    return await this.placeService.uploadPhotos(resolvedImages);
   }
 }
