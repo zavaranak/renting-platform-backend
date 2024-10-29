@@ -73,6 +73,8 @@ type Place {
   lastUpdate: Float!
   price: Float!
   rating: Float!
+  photos: [String!]!
+  status: PlaceStatus!
   landlord: Landlord!
   bookings: [Booking!]
   attributes: [PlaceAttribute!]
@@ -89,6 +91,21 @@ enum PlaceTypes {
   EVENT_VENUE
 }
 
+enum PlaceStatus {
+  FOR_RENT
+  NOT_FORENT
+}
+
+type BookingReview {
+  id: String!
+  star: Float!
+  reviewText: String!
+  reviewPhotos: [String!]
+  createdAt: Float!
+  tenant: Tenant!
+  booking: Booking!
+}
+
 type Booking {
   id: String!
   createdAt: Float!
@@ -97,9 +114,17 @@ type Booking {
   endAt: Float!
   termUnit: String!
   period: Float!
+  status: BookingStatus!
   totalCharge: Float!
   tenant: Tenant!
   place: Place!
+  reviews: [BookingReview!]
+}
+
+enum BookingStatus {
+  VERIFIED
+  IN_PROCESS
+  CANCELED
 }
 
 type TenantAttribute {
@@ -134,7 +159,12 @@ type Tenant {
 
 type QueryResponse {
   message: String!
-  type: ActionStatus!
+  tenant: Tenant
+  landlord: Landlord
+  place: Place
+  booking: Booking
+  bookingReview: BookingReview
+  type: ActionStatus
 }
 
 enum ActionStatus {
@@ -147,16 +177,6 @@ type AuthResponse {
   tenant: Tenant
   landlord: Landlord
   access_token: String
-}
-
-type BookingResponse {
-  message: String!
-  booking: Booking!
-}
-
-type PlaceResponse {
-  message: String!
-  place: Place!
 }
 
 type Query {
@@ -177,11 +197,11 @@ type Mutation {
   setTenantAvatar(tenantId: String!, image: Upload!): QueryResponse!
   addLandlordAtributes(landlordId: String!, attributesInput: [LandlordAttributeInput!]!): QueryResponse!
   setLandlordAvatar(landlordId: String!, image: Upload!): QueryResponse!
-  createBooking(bookingInput: BookingInput!): BookingResponse!
-  createPlace(placeInput: PlaceInput!): PlaceResponse!
-  updatePlace(placeUpdateInput: PlaceUpdateInput!): PlaceResponse!
+  createBooking(bookingInput: BookingInput!): QueryResponse!
+  createPlace(placeInput: PlaceInput!): QueryResponse!
+  updatePlace(placeUpdateInput: PlaceUpdateInput!): QueryResponse!
   addPlaceAttributes(placeId: String!, placeAttributeInput: [PlaceAttributeInput!]!): QueryResponse!
-  uploadPlacePhotos(images: [Upload!]!): QueryResponse!
+  uploadPlacePhotos(placeId: String!, images: [Upload!]!): QueryResponse!
 }
 
 input UserInput {
@@ -250,6 +270,7 @@ input PlaceUpdateInput {
   city: String
   area: Float
   price: Float
+  photos: [String!]
   type: [PlaceTypes!]
 }
 

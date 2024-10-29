@@ -7,6 +7,7 @@ import { Place } from 'src/place/place.entity';
 import { TenantAttribute } from 'src/tenant/tenant_attribute.entity';
 import { LandlordAttribute } from 'src/landlord/landlord_attribute.entity';
 import { PlaceAttribute } from 'src/place/place_attribute.entity';
+import { BookingReview } from 'src/booking/booking_review/booking_review.entity';
 
 export const databaseProviders = [
   {
@@ -28,6 +29,7 @@ export const databaseProviders = [
           TenantAttribute,
           LandlordAttribute,
           PlaceAttribute,
+          BookingReview,
         ],
         migrations: ['dist/database/migrations/*{.ts,.js}'],
         synchronize: true,

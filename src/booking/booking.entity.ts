@@ -1,8 +1,19 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Place } from 'src/place/place.entity';
 import { Tenant } from 'src/tenant/tenant.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { TermUnit } from 'src/common/constants';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+import { BookingStatus, TermUnit } from 'src/common/constants';
+import { BookingReview } from './booking_review/booking_review.entity';
+
+registerEnumType(BookingStatus, {
+  name: 'BookingStatus',
+});
 
 @Entity()
 @ObjectType()
@@ -35,6 +46,10 @@ export class Booking {
   @Column({ type: 'real' })
   period: number;
 
+  @Column({ type: 'enum', enum: BookingStatus })
+  @Field(() => BookingStatus)
+  status: BookingStatus;
+
   @Field()
   @Column({ type: 'real' })
   totalCharge: number;
@@ -46,4 +61,10 @@ export class Booking {
   @Field(() => Place)
   @ManyToOne(() => Place, (place) => place.bookings)
   place: Place;
+
+  @OneToMany(() => BookingReview, (booking_review) => booking_review.booking, {
+    nullable: true,
+  })
+  @Field(() => [BookingReview], { nullable: true })
+  reviews?: BookingReview[];
 }

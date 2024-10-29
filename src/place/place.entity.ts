@@ -9,6 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { PlaceAttribute } from './place_attribute.entity';
+import { PlaceStatus } from 'src/common/constants';
 
 export enum PlaceTypes {
   HOTEL = 'hotel',
@@ -23,6 +24,10 @@ export enum PlaceTypes {
 
 registerEnumType(PlaceTypes, {
   name: 'PlaceTypes',
+});
+
+registerEnumType(PlaceStatus, {
+  name: 'PlaceStatus',
 });
 
 @ObjectType()
@@ -67,6 +72,14 @@ export class Place {
   @Column({ type: 'real', nullable: true })
   @Field()
   rating: number;
+
+  @Column({ type: 'varchar', array: true })
+  @Field(() => [String])
+  photos: string[];
+
+  @Column({ type: 'enum', enum: PlaceStatus, default: PlaceStatus.FOR_RENT })
+  @Field(() => PlaceStatus)
+  status: PlaceStatus;
 
   @ManyToOne(() => Landlord, (landlord) => landlord.places)
   @Field()

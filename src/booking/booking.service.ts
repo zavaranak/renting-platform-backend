@@ -9,6 +9,8 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
+import { BookingStatus } from 'src/common/constants';
+import { BookingUpdateInput } from './dto/update_booking.dto';
 
 @Injectable()
 export class BookingService {
@@ -38,6 +40,7 @@ export class BookingService {
         termUnit: bookingInput.termUnit,
         period: bookingInput.period,
         totalCharge: bookingInput.totalCharge,
+        status: BookingStatus.IN_PROCESS,
         tenant: tenant,
         place: place,
       };
@@ -53,25 +56,37 @@ export class BookingService {
     }
   }
 
-  async getMany(relations?: string[]): Promise<Booking[]> {
-    const queryParams: QueryParams = {
-      relations: relations ? relations : [],
-    };
+  async getMany(queryParams: QueryParams): Promise<Booking[]> {
     return await queryMany(this.bookingRepository, queryParams);
   }
 
-  async getOne(
-    value: string,
-    type: string,
-    where?: any,
-    relations?: string[],
-  ): Promise<Booking> {
-    const queryParams: QueryParams = {
-      queryValue: value,
-      queryType: type,
-      where: where ? where : null,
-      relations: relations ? relations : [],
-    };
+  async getOne(queryParams: QueryParams): Promise<Booking> {
     return await queryOne(this.bookingRepository, queryParams);
+  }
+
+  async updateOne(bookingUpdateInput: BookingUpdateInput) {
+    const booking = await this.getOne({
+      queryValue: bookingUpdateInput.id,
+      queryType: 'id',
+    });
+    try {
+      for (const [key, value] of Object.entries(bookingUpdateInput)) {
+        if (key === 'id') continue;
+        booking[key] = value;
+      }
+      console.log(booking);
+      const updatedBooking = await this.bookingRepository.save({ ...booking });
+      return { booking: updatedBooking, message: 'Updated booking' };
+    } catch (error) {
+      console.error(
+        `An error occurred while updating place ${bookingUpdateInput.id}`,
+      );
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occurred while updating booking',
+      );
+    }
   }
 }

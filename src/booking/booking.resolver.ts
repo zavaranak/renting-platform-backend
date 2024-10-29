@@ -1,31 +1,17 @@
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { BookingService } from './booking.service';
 import { BookingInput } from './dto/create_booking.dto';
-import { BookingResponse } from './dto/booking_response';
 import { Booking } from './booking.entity';
 import { GraphQLResolveInfo } from 'graphql';
 import { getRelations } from 'src/common/query_relation_handler';
+import { QueryParams } from 'src/common/query_function';
+import { QueryResponse } from 'src/common/reponse';
 
 @Resolver(Booking)
 export class BookingResolver {
   constructor(private readonly bookingService: BookingService) {}
 
-  // @Query(() => [Booking])
-  // async getBookings(@Info() info: GraphQLResolveInfo) {
-  //   const relations = this.getRelations(info);
-  //   return this.bookingService.findAll(relations);
-  // }
-
-  // @Query(() => Booking)
-  // async getBookingById(
-  //   @Args('id') id: string,
-  //   @Info() info: GraphQLResolveInfo,
-  // ) {
-  //   const relations = this.getRelations(info);
-  //   return this.bookingService.findOneById(id, relations);
-  // }
-
-  @Mutation(() => BookingResponse)
+  @Mutation(() => QueryResponse)
   async createBooking(@Args('bookingInput') bookingInput: BookingInput) {
     return await this.bookingService.createOne(bookingInput);
   }
@@ -37,11 +23,20 @@ export class BookingResolver {
     @Info() info: GraphQLResolveInfo,
   ) {
     const relations = getRelations(info);
-    return await this.bookingService.getOne(value, type, relations);
+    const queryParams: QueryParams = {
+      queryValue: value,
+      queryType: type,
+      relations: relations ? relations : [],
+    };
+    return await this.bookingService.getOne(queryParams);
   }
 
   @Query(() => [Booking])
-  async getAllBookings() {
-    return await this.bookingService.getMany();
+  async getAllBookings(@Info() info: GraphQLResolveInfo) {
+    const relations = getRelations(info);
+    const queryParams: QueryParams = {
+      relations: relations ? relations : [],
+    };
+    return await this.bookingService.getMany(queryParams);
   }
 }

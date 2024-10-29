@@ -15,6 +15,8 @@ export class PlaceUpdateInput {
   area?: number;
   @Field({ nullable: true })
   price?: number;
+  @Field(() => [String], { nullable: true })
+  photos?: string[];
   @Field(() => [PlaceTypes], { nullable: true })
   type?: PlaceTypes[];
 }

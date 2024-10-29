@@ -9,6 +9,7 @@ export interface UploadFile {
   filename: string;
   id: string;
   uploadType: UploadType;
+  placeId?: string; //for review image
 }
 
 export async function uploadFileFromStream(
@@ -16,13 +17,16 @@ export async function uploadFileFromStream(
   filename: string,
   id: string,
   uploadType: UploadType,
+  placeId?: string,
 ): Promise<string> {
   const subPath =
     uploadType === UploadType.PROFILE_IMAGE
       ? 'profiles'
       : uploadType === UploadType.PLACE_IMAGE
         ? 'places'
-        : 'other';
+        : uploadType === UploadType.BOOKING_REVIEW_IMAGE
+          ? `places/${placeId}`
+          : 'other';
   const dirPath = join(process.cwd(), `uploads/${subPath}/${id}`);
   await ensureDirectoryExists(dirPath);
   const filePath = join(dirPath, filename);

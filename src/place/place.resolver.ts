@@ -1,6 +1,5 @@
 import { Args, Mutation, Resolver, Query, Info } from '@nestjs/graphql';
 import { PlaceService } from './place.service';
-import { PlaceResponse } from './dto/place_response';
 import { PlaceInput } from './dto/create_place.dto';
 import { PlaceUpdateInput } from './dto/update_place.dto';
 import { Place } from './place.entity';
@@ -17,12 +16,12 @@ import * as Upload from 'graphql-upload/Upload.js';
 export class PlaceResolver {
   constructor(private readonly placeService: PlaceService) {}
 
-  @Mutation(() => PlaceResponse)
+  @Mutation(() => QueryResponse)
   async createPlace(@Args('placeInput') placeInput: PlaceInput) {
     return await this.placeService.createOne(placeInput);
   }
 
-  @Mutation(() => PlaceResponse)
+  @Mutation(() => QueryResponse)
   async updatePlace(
     @Args('placeUpdateInput') placeUpdateInput: PlaceUpdateInput,
   ) {
@@ -64,9 +63,10 @@ export class PlaceResolver {
 
   @Mutation(() => QueryResponse)
   async uploadPlacePhotos(
+    @Args('placeId') placeId: string,
     @Args('images', { type: () => [GraphQLUpload] }) images: Upload[],
   ): Promise<QueryResponse> {
     const resolvedImages: Upload[] = await Promise.all(images);
-    return await this.placeService.uploadPhotos(resolvedImages);
+    return await this.placeService.uploadPhotos(placeId, resolvedImages);
   }
 }

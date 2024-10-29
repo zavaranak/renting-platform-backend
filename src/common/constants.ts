@@ -1,12 +1,22 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export const EMAIL_EXISTED = 'email is already used';
-export const NO_ACTIONS = 'action is not defined';
+export const EMAIL_EXISTED = 'email_is_already_used';
+export const NO_ACTIONS = 'action_is_not_defined';
 export enum UserStatus {
   VERIFIED = 'verified',
   NOT_VERIFIRED = 'not_verified',
   BLOCKED = 'blocked',
   SOFT_DELETED = 'soft_deleted',
+}
+
+export enum PlaceStatus {
+  FOR_RENT = 'for_rent',
+  NOT_FORENT = 'not_for_rent',
+}
+export enum BookingStatus {
+  VERIFIED = 'verified',
+  IN_PROCESS = 'in_process',
+  CANCELED = 'canceled',
 }
 
 export enum ActionStatus {
@@ -18,7 +28,7 @@ registerEnumType(ActionStatus, { name: 'ActionStatus' });
 
 export enum AttributesStatus {
   UPDATED = 'updated',
-  NOT_UPDATED = 'failed to update',
+  NOT_UPDATED = 'failed_to_update',
 }
 
 export enum TenantAttributeName {
@@ -89,7 +99,7 @@ export enum SourceType {
 export enum UploadType {
   PROFILE_IMAGE = 'profile_image',
   PLACE_IMAGE = 'place',
-  PLACE_REVIEW_IMAGE = 'place_review',
+  BOOKING_REVIEW_IMAGE = 'place_review',
 }
 
 export enum PhotoExtention {

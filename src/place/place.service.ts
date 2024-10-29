@@ -8,14 +8,13 @@ import { DataSource, Repository } from 'typeorm';
 import { Place } from './place.entity';
 import { PlaceInput } from './dto/create_place.dto';
 import { LandlordService } from 'src/landlord/landlord.service';
-import { PlaceResponse } from './dto/place_response';
 import { PlaceUpdateInput } from './dto/update_place.dto';
 import {
-  PlaceAttributeName,
   ActionStatus,
   AttributesStatus,
   UploadType,
   PhotoExtention,
+  PlaceStatus,
 } from 'src/common/constants';
 import { PlaceAttribute } from './place_attribute.entity';
 import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
@@ -46,7 +45,7 @@ export class PlaceService {
     return await queryOne(this.placeRepository, queryParams);
   }
 
-  async createOne(placeInput: PlaceInput): Promise<PlaceResponse> {
+  async createOne(placeInput: PlaceInput): Promise<QueryResponse> {
     try {
       const landlord = await this.landlordService.getOne({
         queryValue: placeInput.landlordId,
@@ -61,12 +60,17 @@ export class PlaceService {
         type: placeInput.type,
         area: placeInput.area,
         price: placeInput.price,
+        status: PlaceStatus.FOR_RENT,
         landlord: landlord,
         createdAt: currentTime,
         lastUpdate: currentTime,
       };
       const newPlace = await this.placeRepository.save(place);
-      return { place: newPlace, message: '' };
+      return {
+        place: newPlace,
+        message: 'Created place',
+        type: ActionStatus.SUCCESSFUL,
+      };
     } catch (error) {
       console.log('An error occurred while creating Place', error);
       if (error instanceof NotFoundException) {
@@ -115,7 +119,7 @@ export class PlaceService {
     }
   }
 
-  async updateOne(placeUpdateInput: PlaceUpdateInput) {
+  async updateOne(placeUpdateInput: PlaceUpdateInput): Promise<QueryResponse> {
     const place = await this.getOne({
       queryValue: placeUpdateInput.id,
       queryType: 'id',
@@ -127,7 +131,11 @@ export class PlaceService {
       }
       console.log(place);
       const updatedPlace = await this.placeRepository.save({ ...place });
-      return { place: updatedPlace, message: 'Updated place' };
+      return {
+        place: updatedPlace,
+        message: 'Updated place',
+        type: ActionStatus.SUCCESSFUL,
+      };
     } catch (error) {
       console.error(
         `An error occurred while updating place ${placeUpdateInput.id}`,
@@ -141,33 +149,10 @@ export class PlaceService {
     }
   }
 
-  async addAttribute(
+  async uploadPhotos(
     placeId: string,
-    name: PlaceAttributeName,
-    quantity: number,
-  ): Promise<PlaceAttribute> {
-    try {
-      const place = await this.getOne({ queryValue: placeId, queryType: 'id' });
-      const newAttribute: PlaceAttribute = {
-        name: name,
-        quantity: quantity,
-        place: place,
-      };
-      return await this.placeAttributeRepository.save(newAttribute);
-    } catch (error) {
-      console.error('An error occurred while adding attribute to place');
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        'An error occurred while adding attribute to place',
-      );
-    }
-  }
-
-  async uploadPhotos(resolvedImages: Upload[]): Promise<QueryResponse> {
-    const placeId = 'testing';
-
+    resolvedImages: Upload[],
+  ): Promise<QueryResponse> {
     let imageValidation: boolean = true;
     const parsedImages: UploadFile[] = [];
     for (let i = 0; i < resolvedImages.length; i++) {
@@ -190,11 +175,11 @@ export class PlaceService {
         message: `Invalid format of photo:`,
         type: ActionStatus.FAILED,
       };
-    await uploadFilesFromStream(parsedImages);
-    return {
-      message: 'Uploaded photos of place',
-      type: ActionStatus.SUCCESSFUL,
-    };
+    const imagesUrl: string[] = await uploadFilesFromStream(parsedImages);
+    return this.updateOne({
+      id: placeId,
+      photos: imagesUrl,
+    });
   }
 
   async deleteOne() {}
