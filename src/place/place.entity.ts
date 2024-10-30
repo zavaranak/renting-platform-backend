@@ -73,8 +73,8 @@ export class Place {
   @Field()
   rating: number;
 
-  @Column({ type: 'varchar', array: true })
-  @Field(() => [String])
+  @Column({ type: 'varchar', array: true, nullable: true })
+  @Field(() => [String], { nullable: true })
   photos: string[];
 
   @Column({ type: 'enum', enum: PlaceStatus, default: PlaceStatus.FOR_RENT })

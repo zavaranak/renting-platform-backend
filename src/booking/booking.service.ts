@@ -9,19 +9,23 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
-import { BookingStatus } from 'src/common/constants';
+import { ActionStatus, BookingStatus } from 'src/common/constants';
 import { BookingUpdateInput } from './dto/update_booking.dto';
+import { QueryResponse } from 'src/common/reponse';
 
 @Injectable()
 export class BookingService {
   private bookingRepository: Repository<Booking>;
-  private tenantService: TenantService;
-  private placeService: PlaceService;
-  constructor(@Inject('DATA_SOURCE_PSQL') private dataSource: DataSource) {
+
+  constructor(
+    @Inject('DATA_SOURCE_PSQL') private dataSource: DataSource,
+    private tenantService: TenantService,
+    private placeService: PlaceService,
+  ) {
     this.bookingRepository = this.dataSource.getRepository(Booking);
   }
 
-  async createOne(bookingInput: BookingInput) {
+  async createOne(bookingInput: BookingInput): Promise<QueryResponse> {
     try {
       const tenant = await this.tenantService.getOne({
         queryValue: bookingInput.tenantId,
@@ -44,7 +48,12 @@ export class BookingService {
         tenant: tenant,
         place: place,
       };
-      return await this.bookingRepository.save(booking);
+      const newBooking = await this.bookingRepository.save(booking);
+      return {
+        booking: newBooking,
+        message: 'Created new Booking',
+        type: ActionStatus.SUCCESSFUL,
+      };
     } catch (error) {
       console.log('An error occurred while creating Booking', error);
       if (error instanceof NotFoundException) {

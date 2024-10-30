@@ -73,7 +73,7 @@ type Place {
   lastUpdate: Float!
   price: Float!
   rating: Float!
-  photos: [String!]!
+  photos: [String!]
   status: PlaceStatus!
   landlord: Landlord!
   bookings: [Booking!]
