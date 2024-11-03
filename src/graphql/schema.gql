@@ -34,7 +34,7 @@ type Landlord {
 type PlaceAttribute {
   id: String!
   name: PlaceAttributeNames!
-  quantity: Float!
+  valueNumber: Float!
   place: Place!
 }
 
@@ -60,6 +60,9 @@ enum PlaceAttributeNames {
   SECURITY
   GARDEN
   PLAYGROUND
+  PRICE_BY_DAY
+  PRICE_BY_WEEK
+  PRICE_BY_MONTH
 }
 
 type Place {
@@ -67,11 +70,12 @@ type Place {
   name: String!
   address: String!
   city: String!
+  country: String!
   type: [PlaceTypes!]!
+  termUnit: [TermUnit!]!
   area: Float!
   createdAt: Float!
   lastUpdate: Float!
-  price: Float!
   rating: Float!
   photos: [String!]
   status: PlaceStatus!
@@ -89,6 +93,12 @@ enum PlaceTypes {
   COMMERCIAL
   WAREHOUSE
   EVENT_VENUE
+}
+
+enum TermUnit {
+  DAY
+  WEEK
+  MONTH
 }
 
 enum PlaceStatus {
@@ -187,7 +197,21 @@ type Query {
   getOneBooking(value: String!, type: String!): Booking!
   getAllBookings: [Booking!]!
   getOnePlace(value: String!, type: String!): Place!
-  getAllPlaces: [Place!]!
+  getAllPlaces(conditions: [Condition!]! = []): [Place!]!
+}
+
+input Condition {
+  key: String!
+  value: String!
+  operator: operator!
+}
+
+enum operator {
+  EQUAL
+  GREATER
+  SMALLER
+  GREATER_AND_EQUAL
+  SMALLER_AND_EQUAL
 }
 
 type Mutation {
@@ -245,22 +269,15 @@ input BookingInput {
   placeId: String!
 }
 
-enum TermUnit {
-  HOUR
-  DAY
-  WEEK
-  MONTH
-  YEAR
-}
-
 input PlaceInput {
   name: String!
   address: String!
   city: String!
+  country: String!
   area: Float!
-  price: Float!
   landlordId: String!
   type: [PlaceTypes!]!
+  termUnit: [TermUnit!]!
 }
 
 input PlaceUpdateInput {
@@ -276,5 +293,6 @@ input PlaceUpdateInput {
 
 input PlaceAttributeInput {
   name: PlaceAttributeNames!
-  quantity: Float!
+  value: String!
+  valueNumber: Float!
 }

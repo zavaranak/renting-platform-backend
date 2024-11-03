@@ -9,7 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { PlaceAttribute } from './place_attribute.entity';
-import { PlaceStatus } from 'src/common/constants';
+import { PlaceStatus, TermUnit } from 'src/common/constants';
 
 export enum PlaceTypes {
   HOTEL = 'hotel',
@@ -48,10 +48,17 @@ export class Place {
   @Column({ type: 'varchar' })
   @Field()
   city: string;
+  @Column({ type: 'varchar' })
+  @Field()
+  country: string;
 
   @Column({ type: 'varchar', array: true })
   @Field(() => [PlaceTypes])
   type: PlaceTypes[];
+
+  @Column({ type: 'varchar', array: true })
+  @Field(() => [TermUnit])
+  termUnit: TermUnit[];
 
   @Column({ type: 'real' })
   @Field()
@@ -67,15 +74,11 @@ export class Place {
 
   @Column({ type: 'real', nullable: true })
   @Field()
-  price: number;
-
-  @Column({ type: 'real', nullable: true })
-  @Field()
-  rating: number;
+  rating?: number;
 
   @Column({ type: 'varchar', array: true, nullable: true })
   @Field(() => [String], { nullable: true })
-  photos: string[];
+  photos?: string[];
 
   @Column({ type: 'enum', enum: PlaceStatus, default: PlaceStatus.FOR_RENT })
   @Field(() => PlaceStatus)
@@ -87,9 +90,9 @@ export class Place {
 
   @OneToMany(() => Booking, (booking) => booking.place)
   @Field(() => [Booking], { nullable: true })
-  bookings: Booking[];
+  bookings?: Booking[];
 
   @OneToMany(() => PlaceAttribute, (attribute) => attribute.place)
   @Field(() => [PlaceAttribute], { nullable: true })
-  attributes: PlaceAttribute[];
+  attributes?: PlaceAttribute[];
 }

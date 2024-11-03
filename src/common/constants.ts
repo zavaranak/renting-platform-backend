@@ -77,14 +77,17 @@ export enum PlaceAttributeName {
   SECURITY = 'security',
   GARDEN = 'garden',
   PLAYGROUND = 'playground',
+  PRICE_BY_DAY = 'price_by_day',
+  PRICE_BY_WEEK = 'price_by_week',
+  PRICE_BY_MONTH = 'price_by_month',
 }
 
 export enum TermUnit {
-  HOUR = 'hour',
+  // HOUR = 'hour',
   DAY = 'day',
   WEEK = 'weak',
   MONTH = 'month',
-  YEAR = 'year',
+  // YEAR = 'year',
 }
 
 registerEnumType(TermUnit, { name: 'TermUnit' });

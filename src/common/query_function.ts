@@ -1,11 +1,31 @@
+import { Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { Repository } from 'typeorm';
+
+export enum operator {
+  EQUAL = '=',
+  GREATER = '>',
+  SMALLER = '<',
+  GREATER_AND_EQUAL = '>=',
+  SMALLER_AND_EQUAL = '<=',
+}
+registerEnumType(operator, { name: 'operator' });
+
+@InputType()
+export class Condition {
+  @Field()
+  key: string;
+  @Field()
+  value: string;
+  @Field(() => operator)
+  operator: operator;
+}
 
 export interface QueryParams {
   take?: number;
   skip?: number;
   queryValue?: string;
   queryType?: string;
-  where?: any;
+  where?: Condition[];
   order?: any;
   relations?: string[];
 }
@@ -58,7 +78,15 @@ export async function queryMany<T>(
     });
   }
   if (where) {
-    queryBuilder.andWhere(where);
+    where.forEach((condition) => {
+      console.log(
+        `target_entity.${condition.key} ${condition.operator} :${condition.key}`,
+      );
+      queryBuilder.andWhere(
+        `target_entity.${condition.key} ${condition.operator} :${condition.key}`,
+        { [condition.key]: condition.value },
+      );
+    });
   }
   if (order) {
     queryBuilder.orderBy(order);

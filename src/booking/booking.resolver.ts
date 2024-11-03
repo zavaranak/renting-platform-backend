@@ -6,6 +6,7 @@ import { GraphQLResolveInfo } from 'graphql';
 import { getRelations } from 'src/common/query_relation_handler';
 import { QueryParams } from 'src/common/query_function';
 import { QueryResponse } from 'src/common/reponse';
+import { Condition } from 'src/common/query_function';
 
 @Resolver(Booking)
 export class BookingResolver {
@@ -32,10 +33,15 @@ export class BookingResolver {
   }
 
   @Query(() => [Booking])
-  async getAllBookings(@Info() info: GraphQLResolveInfo) {
+  async getAllBookings(
+    @Info() info: GraphQLResolveInfo,
+    @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
+    conditions?: Condition[],
+  ) {
     const relations = getRelations(info);
     const queryParams: QueryParams = {
       relations: relations ? relations : [],
+      where: conditions && conditions.length > 0 ? conditions : undefined,
     };
     return await this.bookingService.getMany(queryParams);
   }

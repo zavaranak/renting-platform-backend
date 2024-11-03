@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { PlaceTypes } from '../place.entity';
+import { TermUnit } from 'src/common/constants';
 
 @InputType()
 export class PlaceInput {
@@ -10,11 +11,13 @@ export class PlaceInput {
   @Field()
   city: string;
   @Field()
-  area: number;
+  country: string;
   @Field()
-  price: number;
+  area: number;
   @Field()
   landlordId: string;
   @Field(() => [PlaceTypes])
   type: PlaceTypes[];
+  @Field(() => [TermUnit])
+  termUnit: TermUnit[];
 }

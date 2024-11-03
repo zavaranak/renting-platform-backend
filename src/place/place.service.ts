@@ -53,14 +53,15 @@ export class PlaceService {
       });
 
       const currentTime = Date.now();
-      const place = {
+      const place: Place = {
         name: placeInput.name,
         address: placeInput.address,
         city: placeInput.city,
+        country: placeInput.country,
         type: placeInput.type,
         area: placeInput.area,
-        price: placeInput.price,
         status: PlaceStatus.FOR_RENT,
+        termUnit: placeInput.termUnit,
         landlord: landlord,
         createdAt: currentTime,
         lastUpdate: currentTime,
@@ -95,7 +96,8 @@ export class PlaceService {
       attributes.map(async (attribute) => {
         return {
           name: attribute.name,
-          quantity: attribute.quantity,
+          value: attribute.value,
+          valueNumber: attribute.valueNumber ? attribute.valueNumber : null,
           place: place,
         };
       }),

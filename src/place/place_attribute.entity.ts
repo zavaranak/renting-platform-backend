@@ -16,9 +16,12 @@ export class PlaceAttribute {
   @Field(() => PlaceAttributeName)
   name: PlaceAttributeName;
 
-  @Column({ type: 'smallint' })
+  @Column({ type: 'integer', nullable: true })
   @Field(() => Number)
-  quantity: number;
+  valueNumber?: number;
+
+  @Column({ type: 'varchar' })
+  value: string;
 
   @ManyToOne(() => Place, (place) => place.attributes)
   @Field(() => Place)

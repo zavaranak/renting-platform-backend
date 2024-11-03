@@ -14,7 +14,7 @@ import { getRelations } from 'src/common/query_relation_handler';
 import { GraphQLResolveInfo } from 'graphql';
 import { TenantAttributeInput } from './tenant_attribute_input';
 import { QueryResponse } from 'src/common/reponse';
-import { QueryParams } from 'src/common/query_function';
+import { QueryParams, Condition } from 'src/common/query_function';
 import { extname } from 'path';
 import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import * as Upload from 'graphql-upload/Upload.js';
@@ -35,11 +35,14 @@ export class TenantResolver {
   async getAllTenants(
     @Context() context: any,
     @Info() info: GraphQLResolveInfo,
+    @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
+    conditions?: Condition[],
   ) {
     console.log(context.req.user);
     const relations = getRelations(info);
     const queryParams: QueryParams = {
       relations: relations,
+      where: conditions && conditions.length > 0 ? conditions : undefined,
     };
     return this.tenantService.getMany(queryParams);
   }

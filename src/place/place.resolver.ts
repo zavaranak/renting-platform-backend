@@ -5,7 +5,7 @@ import { PlaceUpdateInput } from './dto/update_place.dto';
 import { Place } from './place.entity';
 import { GraphQLResolveInfo } from 'graphql';
 import { getRelations } from 'src/common/query_relation_handler';
-import { QueryParams } from 'src/common/query_function';
+import { Condition, QueryParams } from 'src/common/query_function';
 import { QueryResponse } from 'src/common/reponse';
 import { PlaceAttributeInput } from './dto/place_attribute_input';
 
@@ -44,10 +44,16 @@ export class PlaceResolver {
   }
 
   @Query(() => [Place])
-  async getAllPlaces(@Info() info: GraphQLResolveInfo) {
+  async getAllPlaces(
+    @Info() info: GraphQLResolveInfo,
+    @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
+    conditions?: Condition[],
+  ) {
+    console.log(conditions);
     const relations = getRelations(info);
     const queryParams: QueryParams = {
       relations: relations,
+      where: conditions && conditions.length > 0 ? conditions : undefined,
     };
     return await this.placeService.getMany(queryParams);
   }

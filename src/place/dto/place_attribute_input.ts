@@ -6,6 +6,9 @@ export class PlaceAttributeInput {
   @Field(() => PlaceAttributeName)
   name: PlaceAttributeName;
 
-  @Field(() => Number)
-  quantity?: number;
+  @Field()
+  value: string;
+
+  @Field()
+  valueNumber?: number;
 }
