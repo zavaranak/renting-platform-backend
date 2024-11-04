@@ -25,6 +25,7 @@ import {
   TenantAttributeName,
   UploadType,
 } from 'src/common/constants';
+import { v4 as uuidv4 } from 'uuid';
 
 @Resolver(Tenant)
 export class TenantResolver {
@@ -77,6 +78,8 @@ export class TenantResolver {
   async setTenantAvatar(
     @Args('tenantId') tenantId: string,
     @Args('image', { type: () => GraphQLUpload }) image: Upload,
+    @Args('avatarId', { nullable: true, defaultValue: undefined })
+    avatarId?: string,
   ) {
     const ext: string = extname(image.filename).toLowerCase();
     const imageValidation = (
@@ -88,13 +91,18 @@ export class TenantResolver {
         type: ActionStatus.FAILED,
       };
 
-    const filename = 'profile-photo' + extname(image.filename);
+    const filename = uuidv4() + extname(image.filename);
     const imageURL = await uploadFileFromStream(
       image.createReadStream,
       filename,
       tenantId,
       UploadType.PROFILE_IMAGE,
     );
+
+    if (avatarId) {
+      return this.tenantService.updateAttribute(avatarId, imageURL.toString());
+    }
+
     return this.tenantService.addAttributes(tenantId, [
       { name: TenantAttributeName.AVATAR, value: imageURL.toString() },
     ]);

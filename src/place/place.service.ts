@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import {
   Inject,
   Injectable,
@@ -167,7 +168,7 @@ export class PlaceService {
       }
       parsedImages.push({
         createReadStream: resolvedImages[i].createReadStream,
-        filename: `place-photo-${i}` + ext,
+        filename: uuidv4() + ext,
         id: placeId,
         uploadType: UploadType.PLACE_IMAGE,
       });

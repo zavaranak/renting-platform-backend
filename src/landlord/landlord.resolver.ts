@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Resolver, Query, Args, Info, Mutation } from '@nestjs/graphql';
 import { Landlord } from './landlord.entity';
 import { LandlordService } from './landlord.service';
@@ -63,6 +64,8 @@ export class LandlordResolver {
   async setLandlordAvatar(
     @Args('landlordId') landlordId: string,
     @Args('image', { type: () => GraphQLUpload }) image: Upload,
+    @Args('avatarId', { nullable: true, defaultValue: undefined })
+    avatarId?: string,
   ) {
     const ext: string = extname(image.filename).toLowerCase();
     const imageValidation = (
@@ -73,14 +76,22 @@ export class LandlordResolver {
         message: `Invalid format of photo: ${ext}`,
         type: ActionStatus.FAILED,
       };
-    const filename = 'profile-photo' + extname(image.filename);
+    const filename = uuidv4() + extname(image.filename);
     const imageURL = await uploadFileFromStream(
       image.createReadStream,
       filename,
       landlordId,
       UploadType.PROFILE_IMAGE,
     );
-    return this.landlordService.addAttributes(landlordId, [
+
+    if (avatarId) {
+      return await this.landlordService.updateAttribute(
+        avatarId,
+        imageURL.toString(),
+      );
+    }
+
+    return await this.landlordService.addAttributes(landlordId, [
       { name: LandlordAttributeName.AVATAR, value: imageURL.toString() },
     ]);
   }

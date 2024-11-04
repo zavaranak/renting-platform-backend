@@ -190,12 +190,12 @@ type AuthResponse {
 }
 
 type Query {
-  getAllTenants: [Tenant!]!
+  getAllTenants(conditions: [Condition!]! = []): [Tenant!]!
   getOneTenant(value: String!, type: String!): Tenant!
   getOneLandlord(value: String!, type: String!): Landlord!
-  getAllLandlord: [Landlord!]!
+  getAllLandlord(conditions: [Condition!]! = []): [Landlord!]!
   getOneBooking(value: String!, type: String!): Booking!
-  getAllBookings: [Booking!]!
+  getAllBookings(conditions: [Condition!]! = []): [Booking!]!
   getOnePlace(value: String!, type: String!): Place!
   getAllPlaces(conditions: [Condition!]! = []): [Place!]!
 }
@@ -218,9 +218,9 @@ type Mutation {
   logIn(userInput: UserInput!): AuthResponse!
   signUp(userInput: UserInput!): AuthResponse!
   addTenantAtributes(tenantId: String!, attributesInput: [TenantAttributeInput!]!): QueryResponse!
-  setTenantAvatar(tenantId: String!, image: Upload!): QueryResponse!
+  setTenantAvatar(tenantId: String!, image: Upload!, avatarId: String): QueryResponse!
   addLandlordAtributes(landlordId: String!, attributesInput: [LandlordAttributeInput!]!): QueryResponse!
-  setLandlordAvatar(landlordId: String!, image: Upload!): QueryResponse!
+  setLandlordAvatar(landlordId: String!, image: Upload!, avatarId: String): QueryResponse!
   createBooking(bookingInput: BookingInput!): QueryResponse!
   createPlace(placeInput: PlaceInput!): QueryResponse!
   updatePlace(placeUpdateInput: PlaceUpdateInput!): QueryResponse!

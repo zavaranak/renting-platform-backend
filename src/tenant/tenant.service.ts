@@ -96,6 +96,23 @@ export class TenantService {
       );
     }
   }
+  async updateAttribute(id: string, updateValue: string) {
+    const target = await this.tenantAttributeRepository.findOneBy({ id: id });
+    target.value = updateValue;
+    await this.tenantAttributeRepository.save(target);
+    return {
+      type: ActionStatus.SUCCESSFUL,
+      message: 'attribute updated',
+    };
+  }
+
+  async deleteAttribute(id: string) {
+    await this.tenantAttributeRepository.delete({ id: id });
+    return {
+      type: ActionStatus.SUCCESSFUL,
+      message: 'attribute updated',
+    };
+  }
 
   async getMany(queryParams: QueryParams): Promise<Tenant[]> {
     return await queryMany(this.tenantRepository, queryParams);
