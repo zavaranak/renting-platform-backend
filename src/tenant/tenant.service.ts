@@ -17,6 +17,7 @@ import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
 import { TenantAttributeInput } from './tenant_attribute_input';
 import { QueryResponse } from 'src/common/reponse';
 import * as bcrypt from 'bcrypt';
+import { AttributeUpdateInput } from 'src/common/attribute_update_input';
 
 @Injectable()
 export class TenantService {
@@ -102,15 +103,35 @@ export class TenantService {
     await this.tenantAttributeRepository.save(target);
     return {
       type: ActionStatus.SUCCESSFUL,
-      message: 'attribute updated',
+      message: 'Updated',
+    };
+  }
+  async updateAttributes(updateInputArray: AttributeUpdateInput[]) {
+    await Promise.all(
+      updateInputArray.map(async (updateInput) => {
+        const target = await this.tenantAttributeRepository.findOneBy({
+          id: updateInput.id,
+        });
+        target.value = updateInput.value;
+        return this.tenantAttributeRepository.save(target);
+      }),
+    );
+
+    return {
+      type: ActionStatus.SUCCESSFUL,
+      message: 'Updated',
     };
   }
 
-  async deleteAttribute(id: string) {
-    await this.tenantAttributeRepository.delete({ id: id });
+  async deleteAttributes(ids: string[]) {
+    await Promise.all(
+      ids.map((id) => {
+        this.tenantAttributeRepository.delete({ id: id });
+      }),
+    );
     return {
       type: ActionStatus.SUCCESSFUL,
-      message: 'attribute updated',
+      message: 'Deleted',
     };
   }
 

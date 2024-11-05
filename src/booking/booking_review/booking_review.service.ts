@@ -8,6 +8,7 @@ import { ActionStatus, PhotoExtention, UploadType } from 'src/common/constants';
 import { TenantService } from 'src/tenant/tenant.service';
 import { BookingService } from '../booking.service';
 import { QueryResponse } from 'src/common/reponse';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class BookingReviewService {
@@ -38,7 +39,7 @@ export class BookingReviewService {
         }
         parsedImages.push({
           createReadStream: resolvedImages[i].createReadStream,
-          filename: `${bookingReviewInput.bookingId}-review-${i}` + ext,
+          filename: uuidv4() + ext,
           id: bookingReviewInput.bookingId,
           uploadType: UploadType.BOOKING_REVIEW_IMAGE,
           placeId: bookingReviewInput.placeId,

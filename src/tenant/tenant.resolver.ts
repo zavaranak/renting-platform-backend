@@ -26,6 +26,7 @@ import {
   UploadType,
 } from 'src/common/constants';
 import { v4 as uuidv4 } from 'uuid';
+import { AttributeUpdateInput } from 'src/common/attribute_update_input';
 
 @Resolver(Tenant)
 export class TenantResolver {
@@ -72,6 +73,21 @@ export class TenantResolver {
     attributesInput: TenantAttributeInput[],
   ) {
     return this.tenantService.addAttributes(tenantId, attributesInput);
+  }
+
+  @Mutation(() => QueryResponse)
+  async removeTenantAttributes(
+    @Args({ name: 'attributeIds', type: () => [String] })
+    attributeIds: string[],
+  ) {
+    return this.tenantService.deleteAttributes(attributeIds);
+  }
+  @Mutation(() => QueryResponse)
+  async updateTenantAttributes(
+    @Args({ name: 'attibuteUpdateInput', type: () => [AttributeUpdateInput] })
+    attibuteUpdateInput: AttributeUpdateInput[],
+  ) {
+    return this.tenantService.updateAttributes(attibuteUpdateInput);
   }
 
   @Mutation(() => QueryResponse)
