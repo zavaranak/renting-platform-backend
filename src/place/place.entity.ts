@@ -1,4 +1,4 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Booking } from 'src/booking/booking.entity';
 import { Landlord } from 'src/landlord/landlord.entity';
 import {
@@ -9,26 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { PlaceAttribute } from './place_attribute.entity';
-import { PlaceStatus, TermUnit } from 'src/common/constants';
-
-export enum PlaceTypes {
-  HOTEL = 'hotel',
-  HOUSE = 'house',
-  HOMESTAY = 'homestay',
-  APPARTMENT = 'appartment',
-  OFFICE = 'office',
-  COMMERCIAL = 'commercial',
-  WAREHOUSE = 'warehouse',
-  EVENT_VENUE = 'event venue',
-}
-
-registerEnumType(PlaceTypes, {
-  name: 'PlaceTypes',
-});
-
-registerEnumType(PlaceStatus, {
-  name: 'PlaceStatus',
-});
+import { PlaceStatus, TermUnit, PlaceTypes } from 'src/common/constants';
 
 @ObjectType()
 @Entity()

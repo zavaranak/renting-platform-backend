@@ -12,6 +12,7 @@ export enum UserStatus {
 export enum PlaceStatus {
   FOR_RENT = 'for_rent',
   NOT_FORENT = 'not_for_rent',
+  OCCUPIED = 'occupied',
 }
 export enum BookingStatus {
   VERIFIED = 'verified',
@@ -77,17 +78,37 @@ export enum PlaceAttributeName {
   SECURITY = 'security',
   GARDEN = 'garden',
   PLAYGROUND = 'playground',
+  PRICE_BY_HOUR = 'price_by_hour',
   PRICE_BY_DAY = 'price_by_day',
   PRICE_BY_WEEK = 'price_by_week',
   PRICE_BY_MONTH = 'price_by_month',
 }
 
+export enum PlaceTypes {
+  HOTEL = 'hotel',
+  HOUSE = 'house',
+  HOMESTAY = 'homestay',
+  APPARTMENT = 'appartment',
+  OFFICE = 'office',
+  COMMERCIAL = 'commercial',
+  WAREHOUSE = 'warehouse',
+  EVENT_VENUE = 'event venue',
+}
+
+registerEnumType(PlaceTypes, {
+  name: 'PlaceTypes',
+});
+
+registerEnumType(PlaceStatus, {
+  name: 'PlaceStatus',
+});
+
 export enum TermUnit {
-  // HOUR = 'hour',
+  HOUR = 'hour',
   DAY = 'day',
   WEEK = 'weak',
   MONTH = 'month',
-  // YEAR = 'year',
+  YEAR = 'year',
 }
 
 registerEnumType(TermUnit, { name: 'TermUnit' });
