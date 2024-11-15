@@ -38,7 +38,7 @@ export class LandlordResolver {
   }
 
   @Query(() => [Landlord])
-  async getAllLandlord(
+  async getLandlords(
     @Info() info: GraphQLResolveInfo,
     @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
     conditions?: Condition[],

@@ -44,7 +44,7 @@ export class PlaceResolver {
   }
 
   @Query(() => [Place])
-  async getAllPlaces(
+  async getPlaces(
     @Info() info: GraphQLResolveInfo,
     @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
     conditions?: Condition[],

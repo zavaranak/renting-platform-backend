@@ -82,17 +82,23 @@ export enum PlaceAttributeName {
   PRICE_BY_DAY = 'price_by_day',
   PRICE_BY_WEEK = 'price_by_week',
   PRICE_BY_MONTH = 'price_by_month',
+  MAX_GUEST = 'max_guest',
 }
 
 export enum PlaceTypes {
-  HOTEL = 'hotel',
   HOUSE = 'house',
-  HOMESTAY = 'homestay',
-  APPARTMENT = 'appartment',
+  APARTMENT = 'apartment',
+  DORMITORY = 'dormitory',
+  STUDIO = 'studio',
+  HOTEL = 'hotel',
   OFFICE = 'office',
-  COMMERCIAL = 'commercial',
-  WAREHOUSE = 'warehouse',
-  EVENT_VENUE = 'event venue',
+  WORKSHOP = 'workshop',
+  FACTORY = 'fatory',
+  // STUDIO = 'studio',
+  WAREHOURSE = 'warehourse',
+  SHOPHOUSE = 'shop house',
+  COWORKING_SPACE = 'coworking space',
+  EVENT_SPACE = 'event space',
 }
 
 registerEnumType(PlaceTypes, {

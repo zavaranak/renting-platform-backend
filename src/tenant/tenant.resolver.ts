@@ -34,7 +34,7 @@ export class TenantResolver {
 
   @Query(() => [Tenant])
   @UseGuards(JwtAuthGuard)
-  async getAllTenants(
+  async getTenants(
     @Context() context: any,
     @Info() info: GraphQLResolveInfo,
     @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
