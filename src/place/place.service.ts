@@ -24,6 +24,8 @@ import { QueryResponse } from 'src/common/reponse';
 import * as Upload from 'graphql-upload/Upload.js';
 import { UploadFile, uploadFilesFromStream } from 'src/common/upload_files';
 import { extname } from 'path';
+import dayjs from 'dayjs';
+import { AttributeUpdateInput } from 'src/common/attribute_update_input';
 
 @Injectable()
 export class PlaceService {
@@ -53,7 +55,7 @@ export class PlaceService {
         queryType: 'id',
       });
 
-      const currentTime = Date.now();
+      const currentTime = dayjs().valueOf();
       const place: Place = {
         name: placeInput.name,
         address: placeInput.address,
@@ -128,6 +130,7 @@ export class PlaceService {
       queryType: 'id',
     });
     try {
+      place.lastUpdate = dayjs().valueOf();
       for (const [key, value] of Object.entries(placeUpdateInput)) {
         if (key === 'id') continue;
         place[key] = value;
@@ -186,4 +189,45 @@ export class PlaceService {
   }
 
   async deleteOne() {}
+
+  async updateAttributes(updateInputArray: AttributeUpdateInput[]) {
+    try {
+      await Promise.all(
+        updateInputArray.map(async (updateInput) => {
+          const target = await this.placeAttributeRepository.findOneBy({
+            id: updateInput.id,
+          });
+          if (updateInput.value) {
+            target.value = updateInput.value;
+          }
+          if (updateInput.valueNumber) {
+            target.valueNumber = updateInput.valueNumber;
+          }
+          return this.placeAttributeRepository.save(target);
+        }),
+      );
+
+      return {
+        type: ActionStatus.SUCCESSFUL,
+        message: 'Updated',
+      };
+    } catch (e) {
+      console.error(e);
+      return {
+        type: ActionStatus.FAILED,
+        message: 'Not updated',
+      };
+    }
+  }
+  async deleteAttributes(ids: string[]) {
+    await Promise.all(
+      ids.map((id) => {
+        this.placeAttributeRepository.delete({ id: id });
+      }),
+    );
+    return {
+      type: ActionStatus.SUCCESSFUL,
+      message: 'Deleted',
+    };
+  }
 }

@@ -18,6 +18,7 @@ import { TenantAttributeInput } from './tenant_attribute_input';
 import { QueryResponse } from 'src/common/reponse';
 import * as bcrypt from 'bcrypt';
 import { AttributeUpdateInput } from 'src/common/attribute_update_input';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class TenantService {
@@ -47,7 +48,7 @@ export class TenantService {
       const tenant: Tenant = {
         username: username,
         password: hashedPassword,
-        createdAt: Date.now(),
+        createdAt: dayjs().valueOf(),
         status: UserStatus.VERIFIED,
       };
       return await this.tenantRepository.save(tenant);
@@ -107,20 +108,28 @@ export class TenantService {
     };
   }
   async updateAttributes(updateInputArray: AttributeUpdateInput[]) {
-    await Promise.all(
-      updateInputArray.map(async (updateInput) => {
-        const target = await this.tenantAttributeRepository.findOneBy({
-          id: updateInput.id,
-        });
-        target.value = updateInput.value;
-        return this.tenantAttributeRepository.save(target);
-      }),
-    );
+    try {
+      await Promise.all(
+        updateInputArray.map(async (updateInput) => {
+          const target = await this.tenantAttributeRepository.findOneBy({
+            id: updateInput.id,
+          });
+          target.value = updateInput.value;
+          return this.tenantAttributeRepository.save(target);
+        }),
+      );
 
-    return {
-      type: ActionStatus.SUCCESSFUL,
-      message: 'Updated',
-    };
+      return {
+        type: ActionStatus.SUCCESSFUL,
+        message: 'Updated',
+      };
+    } catch (e) {
+      console.error(e);
+      return {
+        type: ActionStatus.FAILED,
+        message: 'Not updated',
+      };
+    }
   }
 
   async deleteAttributes(ids: string[]) {

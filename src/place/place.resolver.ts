@@ -8,9 +8,10 @@ import { getRelations } from 'src/common/query_relation_handler';
 import { Condition, QueryParams } from 'src/common/query_function';
 import { QueryResponse } from 'src/common/reponse';
 import { PlaceAttributeInput } from './dto/place_attribute_input';
+import { AttributeUpdateInput } from 'src/common/attribute_update_input';
 
-import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
-import * as Upload from 'graphql-upload/Upload.js';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+import Upload from 'graphql-upload/Upload.js';
 
 @Resolver(Place)
 export class PlaceResolver {
@@ -65,6 +66,22 @@ export class PlaceResolver {
     placeAttributeInput: PlaceAttributeInput[],
   ) {
     return await this.placeService.addAttributes(placeId, placeAttributeInput);
+  }
+
+  @Mutation(() => QueryResponse)
+  async updatePlaceAttributes(
+    @Args({ name: 'attibuteUpdateInput', type: () => [AttributeUpdateInput] })
+    attibuteUpdateInput: AttributeUpdateInput[],
+  ) {
+    return this.placeService.updateAttributes(attibuteUpdateInput);
+  }
+
+  @Mutation(() => QueryResponse)
+  async removePlaceAttributes(
+    @Args({ name: 'attributeIds', type: () => [String] })
+    attributeIds: string[],
+  ) {
+    return this.placeService.deleteAttributes(attributeIds);
   }
 
   @Mutation(() => QueryResponse)

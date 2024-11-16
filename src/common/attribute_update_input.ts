@@ -4,6 +4,8 @@ import { Field, InputType } from '@nestjs/graphql';
 export class AttributeUpdateInput {
   @Field()
   id: string;
-  @Field()
-  value: string;
+  @Field({ nullable: true })
+  value?: string;
+  @Field({ nullable: true })
+  valueNumber?: number;
 }

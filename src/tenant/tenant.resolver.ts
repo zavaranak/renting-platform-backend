@@ -16,8 +16,8 @@ import { TenantAttributeInput } from './tenant_attribute_input';
 import { QueryResponse } from 'src/common/reponse';
 import { QueryParams, Condition } from 'src/common/query_function';
 import { extname } from 'path';
-import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
-import * as Upload from 'graphql-upload/Upload.js';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+import Upload from 'graphql-upload/Upload.js';
 import { uploadFileFromStream } from 'src/common/upload_files';
 import {
   ActionStatus,

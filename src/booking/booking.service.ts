@@ -12,6 +12,7 @@ import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
 import { ActionStatus, BookingStatus } from 'src/common/constants';
 import { BookingUpdateInput } from './dto/update_booking.dto';
 import { QueryResponse } from 'src/common/reponse';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class BookingService {
@@ -35,7 +36,7 @@ export class BookingService {
         queryValue: bookingInput.placeId,
         queryType: 'id',
       });
-      const currentTime = Date.now();
+      const currentTime = dayjs().valueOf();
       const booking: Booking = {
         createdAt: currentTime,
         lastUpdate: currentTime,
