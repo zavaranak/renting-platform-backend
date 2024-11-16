@@ -15,8 +15,9 @@ import {
 } from 'src/common/constants';
 import { uploadFileFromStream } from 'src/common/upload_files';
 import { extname } from 'path';
-import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
-import * as Upload from 'graphql-upload/Upload.js';
+import { AttributeUpdateInput } from 'src/common/attribute_update_input';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+import Upload from 'graphql-upload/Upload.js';
 
 @Resolver(Landlord)
 export class LandlordResolver {
@@ -38,7 +39,7 @@ export class LandlordResolver {
   }
 
   @Query(() => [Landlord])
-  async getAllLandlord(
+  async getLandlords(
     @Info() info: GraphQLResolveInfo,
     @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
     conditions?: Condition[],
@@ -58,6 +59,21 @@ export class LandlordResolver {
     attributesInput: LandlordAttributeInput[],
   ) {
     return this.landlordService.addAttributes(lanlordId, attributesInput);
+  }
+
+  @Mutation(() => QueryResponse)
+  async removeLandlordAttributes(
+    @Args({ name: 'attributeIds', type: () => [String] })
+    attributeIds: string[],
+  ) {
+    return this.landlordService.deleteAttributes(attributeIds);
+  }
+  @Mutation(() => QueryResponse)
+  async updateLandlordAttributes(
+    @Args({ name: 'attibuteUpdateInput', type: () => [AttributeUpdateInput] })
+    attibuteUpdateInput: AttributeUpdateInput[],
+  ) {
+    return this.landlordService.updateAttributes(attibuteUpdateInput);
   }
 
   @Mutation(() => QueryResponse)

@@ -1,6 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { PlaceTypes } from '../place.entity';
-import { TermUnit } from 'src/common/constants';
+import { TermUnit, PlaceTypes } from 'src/common/constants';
 
 @InputType()
 export class PlaceInput {

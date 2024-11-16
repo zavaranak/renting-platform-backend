@@ -12,11 +12,13 @@ import {
   AttributesStatus,
   UserStatus,
 } from 'src/common/constants';
+import { AttributeUpdateInput } from 'src/common/attribute_update_input';
 import { LandlordAttribute } from './landlord_attribute.entity';
 import { queryMany, queryOne, QueryParams } from 'src/common/query_function';
 import * as bcrypt from 'bcrypt';
 import { LandlordAttributeInput } from './landlord_attribute_input';
 import { QueryResponse } from 'src/common/reponse';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class LandlordService {
@@ -35,7 +37,7 @@ export class LandlordService {
       const newLandlord = {
         username: username,
         password: hashedPassword,
-        createdAt: Date.now(),
+        createdAt: dayjs().valueOf(),
         status: UserStatus.VERIFIED,
       };
       return await this.landlordRepository.save(newLandlord);
@@ -102,11 +104,48 @@ export class LandlordService {
     };
   }
 
+  async updateAttributes(updateInputArray: AttributeUpdateInput[]) {
+    try {
+      await Promise.all(
+        updateInputArray.map(async (updateInput) => {
+          const target = await this.landlordAttributeRepository.findOneBy({
+            id: updateInput.id,
+          });
+          target.value = updateInput.value;
+          return this.landlordAttributeRepository.save(target);
+        }),
+      );
+
+      return {
+        type: ActionStatus.SUCCESSFUL,
+        message: 'Updated',
+      };
+    } catch (e) {
+      console.error(e);
+      return {
+        type: ActionStatus.FAILED,
+        message: 'Not updated',
+      };
+    }
+  }
+
   async deleteAttribute(id: string) {
     await this.landlordAttributeRepository.delete({ id: id });
     return {
       type: ActionStatus.SUCCESSFUL,
       message: 'attribute updated',
+    };
+  }
+
+  async deleteAttributes(ids: string[]) {
+    await Promise.all(
+      ids.map((id) => {
+        this.landlordAttributeRepository.delete({ id: id });
+      }),
+    );
+    return {
+      type: ActionStatus.SUCCESSFUL,
+      message: 'Deleted',
     };
   }
 

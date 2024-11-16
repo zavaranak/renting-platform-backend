@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import * as graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
+// import * as graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 

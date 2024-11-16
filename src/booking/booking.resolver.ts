@@ -33,7 +33,7 @@ export class BookingResolver {
   }
 
   @Query(() => [Booking])
-  async getAllBookings(
+  async getBookings(
     @Info() info: GraphQLResolveInfo,
     @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
     conditions?: Condition[],

@@ -60,9 +60,11 @@ enum PlaceAttributeNames {
   SECURITY
   GARDEN
   PLAYGROUND
+  PRICE_BY_HOUR
   PRICE_BY_DAY
   PRICE_BY_WEEK
   PRICE_BY_MONTH
+  MAX_GUEST
 }
 
 type Place {
@@ -85,25 +87,32 @@ type Place {
 }
 
 enum PlaceTypes {
-  HOTEL
   HOUSE
-  HOMESTAY
-  APPARTMENT
+  APARTMENT
+  DORMITORY
+  STUDIO
+  HOTEL
   OFFICE
-  COMMERCIAL
-  WAREHOUSE
-  EVENT_VENUE
+  WORKSHOP
+  FACTORY
+  WAREHOURSE
+  SHOPHOUSE
+  COWORKING_SPACE
+  EVENT_SPACE
 }
 
 enum TermUnit {
+  HOUR
   DAY
   WEEK
   MONTH
+  YEAR
 }
 
 enum PlaceStatus {
   FOR_RENT
   NOT_FORENT
+  OCCUPIED
 }
 
 type BookingReview {
@@ -190,14 +199,14 @@ type AuthResponse {
 }
 
 type Query {
-  getAllTenants(conditions: [Condition!]! = []): [Tenant!]!
+  getTenants(conditions: [Condition!]! = []): [Tenant!]!
   getOneTenant(value: String!, type: String!): Tenant!
   getOneLandlord(value: String!, type: String!): Landlord!
-  getAllLandlord(conditions: [Condition!]! = []): [Landlord!]!
+  getLandlords(conditions: [Condition!]! = []): [Landlord!]!
   getOneBooking(value: String!, type: String!): Booking!
-  getAllBookings(conditions: [Condition!]! = []): [Booking!]!
+  getBookings(conditions: [Condition!]! = []): [Booking!]!
   getOnePlace(value: String!, type: String!): Place!
-  getAllPlaces(conditions: [Condition!]! = []): [Place!]!
+  getPlaces(conditions: [Condition!]! = []): [Place!]!
 }
 
 input Condition {
@@ -222,11 +231,15 @@ type Mutation {
   updateTenantAttributes(attibuteUpdateInput: [AttributeUpdateInput!]!): QueryResponse!
   setTenantAvatar(tenantId: String!, image: Upload!, avatarId: String): QueryResponse!
   addLandlordAtributes(landlordId: String!, attributesInput: [LandlordAttributeInput!]!): QueryResponse!
+  removeLandlordAttributes(attributeIds: [String!]!): QueryResponse!
+  updateLandlordAttributes(attibuteUpdateInput: [AttributeUpdateInput!]!): QueryResponse!
   setLandlordAvatar(landlordId: String!, image: Upload!, avatarId: String): QueryResponse!
   createBooking(bookingInput: BookingInput!): QueryResponse!
   createPlace(placeInput: PlaceInput!): QueryResponse!
   updatePlace(placeUpdateInput: PlaceUpdateInput!): QueryResponse!
   addPlaceAttributes(placeId: String!, placeAttributeInput: [PlaceAttributeInput!]!): QueryResponse!
+  updatePlaceAttributes(attibuteUpdateInput: [AttributeUpdateInput!]!): QueryResponse!
+  removePlaceAttributes(attributeIds: [String!]!): QueryResponse!
   uploadPlacePhotos(placeId: String!, images: [Upload!]!): QueryResponse!
 }
 
@@ -255,7 +268,8 @@ input TenantAttributeInput {
 
 input AttributeUpdateInput {
   id: String!
-  value: String!
+  value: String
+  valueNumber: Float
 }
 
 """The `Upload` scalar type represents a file upload."""
