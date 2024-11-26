@@ -199,6 +199,7 @@ type AuthResponse {
 }
 
 type Query {
+  verifyUser: AuthResponse!
   getTenants(conditions: [Condition!]! = []): [Tenant!]!
   getOneTenant(value: String!, type: String!): Tenant!
   getOneLandlord(value: String!, type: String!): Landlord!
@@ -221,6 +222,7 @@ enum operator {
   SMALLER
   GREATER_AND_EQUAL
   SMALLER_AND_EQUAL
+  INCLUDE
 }
 
 type Mutation {

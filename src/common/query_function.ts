@@ -7,6 +7,7 @@ export enum operator {
   SMALLER = '<',
   GREATER_AND_EQUAL = '>=',
   SMALLER_AND_EQUAL = '<=',
+  INCLUDE = 'INCLUDE',
 }
 registerEnumType(operator, { name: 'operator' });
 
@@ -79,13 +80,17 @@ export async function queryMany<T>(
   }
   if (where) {
     where.forEach((condition) => {
-      console.log(
-        `target_entity.${condition.key} ${condition.operator} :${condition.key}`,
-      );
-      queryBuilder.andWhere(
-        `target_entity.${condition.key} ${condition.operator} :${condition.key}`,
-        { [condition.key]: condition.value },
-      );
+      if (condition.operator == operator.INCLUDE) {
+        queryBuilder.andWhere(
+          `:${condition.key} = ANY(target_entity.${condition.key})`,
+          { [condition.key]: condition.value },
+        );
+      } else {
+        queryBuilder.andWhere(
+          `target_entity.${condition.key} ${condition.operator} :${condition.key}`,
+          { [condition.key]: condition.value },
+        );
+      }
     });
   }
   if (order) {

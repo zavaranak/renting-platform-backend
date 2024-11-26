@@ -25,4 +25,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const request = ctx.getContext().req;
     return request;
   }
+  handleRequest(err: any, user: any) {
+    if (err || !user) {
+      return null;
+    }
+    return user;
+  }
 }

@@ -94,7 +94,6 @@ export enum PlaceTypes {
   OFFICE = 'office',
   WORKSHOP = 'workshop',
   FACTORY = 'fatory',
-  // STUDIO = 'studio',
   WAREHOURSE = 'warehourse',
   SHOPHOUSE = 'shop house',
   COWORKING_SPACE = 'coworking space',
@@ -112,7 +111,7 @@ registerEnumType(PlaceStatus, {
 export enum TermUnit {
   HOUR = 'hour',
   DAY = 'day',
-  WEEK = 'weak',
+  WEEK = 'week',
   MONTH = 'month',
   YEAR = 'year',
 }
