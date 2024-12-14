@@ -140,3 +140,14 @@ export enum PhotoExtention {
   WEBP = '.webp',
   AVIF = '.avif',
 }
+
+export enum NotificationType {
+  TENANT_NEW_REQUEST = 'tenant sends new request',
+  TENANT_CANCEL_REQUEST = 'tenant cancels request',
+  TENANT_ACCEPT_REQUEST = 'tenant accepts request',
+  LANDLORD_NEW_REQUEST = 'landlord sends new request',
+  LANDLORD_CANCEL_REQUEST = 'landlord cancels request',
+  LANDLORD_ACCEPT_REQUEST = 'landlord accepts request',
+}
+
+registerEnumType(NotificationType, { name: 'NotificationType' });

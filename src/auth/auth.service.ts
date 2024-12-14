@@ -60,4 +60,9 @@ export class AuthService {
     });
     return { landlord: landlord, access_token: jwt };
   }
+
+  async verifyJwt(token: string) {
+    const data = await this.jwtService.verify(token);
+    return data;
+  }
 }

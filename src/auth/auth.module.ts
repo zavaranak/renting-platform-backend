@@ -22,6 +22,7 @@ import { LandlordModule } from 'src/landlord/landlord.module';
       }),
     }),
   ],
+  exports: [AuthService],
   providers: [AuthService, LocalStrategy, AuthResolver, JwtStrategy],
 })
 export class AuthModule {}
