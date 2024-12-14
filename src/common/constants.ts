@@ -151,3 +151,10 @@ export enum NotificationType {
 }
 
 registerEnumType(NotificationType, { name: 'NotificationType' });
+
+export interface NotificationData {
+  target: string;
+  type: NotificationType;
+  bookingId?: string;
+  placeId?: string;
+}
