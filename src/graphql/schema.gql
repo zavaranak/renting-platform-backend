@@ -176,6 +176,31 @@ type Tenant {
   attributes: [TenantAttribute!]
 }
 
+type Notification {
+  id: String!
+  type: NotificationType!
+  createdAt: Float!
+  target: String!
+  bookingId: String!
+  placeId: String!
+  targetRole: Roles!
+}
+
+enum NotificationType {
+  TENANT_NEW_REQUEST
+  TENANT_CANCEL_REQUEST
+  TENANT_ACCEPT_REQUEST
+  LANDLORD_NEW_REQUEST
+  LANDLORD_CANCEL_REQUEST
+  LANDLORD_ACCEPT_REQUEST
+}
+
+enum Roles {
+  TENANT
+  LANDLORD
+  OPERATOR
+}
+
 type QueryResponse {
   message: String!
   tenant: Tenant
@@ -183,6 +208,7 @@ type QueryResponse {
   place: Place
   booking: Booking
   bookingReview: BookingReview
+  notifications: [Notification!]
   type: ActionStatus
 }
 
@@ -199,6 +225,7 @@ type AuthResponse {
 }
 
 type Query {
+  verifyUser: AuthResponse!
   getTenants(conditions: [Condition!]! = []): [Tenant!]!
   getOneTenant(value: String!, type: String!): Tenant!
   getOneLandlord(value: String!, type: String!): Landlord!
@@ -207,6 +234,7 @@ type Query {
   getBookings(conditions: [Condition!]! = []): [Booking!]!
   getOnePlace(value: String!, type: String!): Place!
   getPlaces(conditions: [Condition!]! = []): [Place!]!
+  getNotifications: QueryResponse!
 }
 
 input Condition {
@@ -221,6 +249,7 @@ enum operator {
   SMALLER
   GREATER_AND_EQUAL
   SMALLER_AND_EQUAL
+  INCLUDE
 }
 
 type Mutation {
@@ -253,12 +282,6 @@ input UserInput {
 enum Actions {
   LOG_IN
   SIGN_UP
-}
-
-enum Roles {
-  TENANT
-  LANDLORD
-  OPERATOR
 }
 
 input TenantAttributeInput {

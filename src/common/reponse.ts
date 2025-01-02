@@ -5,6 +5,7 @@ import { Landlord } from 'src/landlord/landlord.entity';
 import { Place } from 'src/place/place.entity';
 import { Booking } from 'src/booking/booking.entity';
 import { BookingReview } from 'src/booking/booking_review/booking_review.entity';
+import { Notification } from 'src/notifcation/notification.entity';
 
 @ObjectType()
 export class QueryResponse {
@@ -20,6 +21,9 @@ export class QueryResponse {
   booking?: Booking;
   @Field(() => BookingReview, { nullable: true })
   bookingReview?: BookingReview;
+
+  @Field(() => [Notification], { nullable: true })
+  notifications?: Notification[];
   @Field(() => ActionStatus, { nullable: true })
   type: ActionStatus;
 }

@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { TenantService } from 'src/tenant/tenant.service';
 import { Landlord } from 'src/landlord/landlord.entity';
 import { LandlordService } from 'src/landlord/landlord.service';
+import { Roles } from './dto/auth_input';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,8 @@ export class AuthService {
   async tenantLogIn(tenant: Tenant): Promise<AuthResponse> {
     const jwt = this.jwtService.sign({
       username: tenant.username,
-      sub: tenant.id,
+      id: tenant.id,
+      role: Roles.TENANT,
     });
     return { tenant: tenant, access_token: jwt };
   }
@@ -30,7 +32,8 @@ export class AuthService {
 
     const jwt = this.jwtService.sign({
       username: tenant.username,
-      sub: tenant.id,
+      id: tenant.id,
+      role: Roles.TENANT,
     });
     return { tenant: tenant, access_token: jwt };
   }
@@ -38,7 +41,8 @@ export class AuthService {
   async landlordLogIn(landlord: Landlord): Promise<AuthResponse> {
     const jwt = this.jwtService.sign({
       username: landlord.username,
-      sub: landlord.id,
+      id: landlord.id,
+      role: Roles.LANDLORD,
     });
     return { landlord: landlord, access_token: jwt };
   }
@@ -51,8 +55,14 @@ export class AuthService {
 
     const jwt = this.jwtService.sign({
       username: landlord.username,
-      sub: landlord.id,
+      id: landlord.id,
+      role: Roles.LANDLORD,
     });
     return { landlord: landlord, access_token: jwt };
+  }
+
+  async verifyJwt(token: string) {
+    const data = await this.jwtService.verify(token);
+    return data;
   }
 }

@@ -94,7 +94,6 @@ export enum PlaceTypes {
   OFFICE = 'office',
   WORKSHOP = 'workshop',
   FACTORY = 'fatory',
-  // STUDIO = 'studio',
   WAREHOURSE = 'warehourse',
   SHOPHOUSE = 'shop house',
   COWORKING_SPACE = 'coworking space',
@@ -112,7 +111,7 @@ registerEnumType(PlaceStatus, {
 export enum TermUnit {
   HOUR = 'hour',
   DAY = 'day',
-  WEEK = 'weak',
+  WEEK = 'week',
   MONTH = 'month',
   YEAR = 'year',
 }
@@ -140,4 +139,22 @@ export enum PhotoExtention {
   GIF = '.gif',
   WEBP = '.webp',
   AVIF = '.avif',
+}
+
+export enum NotificationType {
+  TENANT_NEW_REQUEST = 'tenant sends request',
+  TENANT_CANCEL_REQUEST = 'tenant cancels request',
+  TENANT_ACCEPT_REQUEST = 'tenant accepts request',
+  LANDLORD_NEW_REQUEST = 'landlord sends request',
+  LANDLORD_CANCEL_REQUEST = 'landlord cancels request',
+  LANDLORD_ACCEPT_REQUEST = 'landlord accepts request',
+}
+
+registerEnumType(NotificationType, { name: 'NotificationType' });
+
+export interface NotificationData {
+  target: string;
+  type: NotificationType;
+  bookingId?: string;
+  placeId?: string;
 }

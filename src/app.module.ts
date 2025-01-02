@@ -11,6 +11,9 @@ import { PlaceModule } from './place/place.module';
 import { LandlordModule } from './landlord/landlord.module';
 import 'dotenv/config';
 import { DatabaseModule } from './database/database.module';
+import { AppGateway } from './app.gateway';
+// import { NotificationService } from './notifcation/notification.service';
+import { NotificationModule } from './notifcation/notification.module';
 
 @Module({
   imports: [
@@ -30,7 +33,8 @@ import { DatabaseModule } from './database/database.module';
     BookingModule,
     PlaceModule,
     LandlordModule,
+    NotificationModule,
   ],
-  providers: [],
+  providers: [AppGateway],
 })
 export class AppModule {}
