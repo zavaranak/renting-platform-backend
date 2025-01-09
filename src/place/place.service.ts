@@ -18,7 +18,14 @@ import {
   PlaceStatus,
 } from 'src/common/constants';
 import { PlaceAttribute } from './place_attribute.entity';
-import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
+import {
+  queryMany,
+  QueryParams,
+  queryOne,
+  queryDistinct,
+  Condition,
+  operator,
+} from 'src/common/query_function';
 import { PlaceAttributeInput } from './dto/place_attribute_input';
 import { QueryResponse } from 'src/common/reponse';
 import * as Upload from 'graphql-upload/Upload.js';
@@ -57,10 +64,10 @@ export class PlaceService {
 
       const currentTime = dayjs().valueOf();
       const place: Place = {
-        name: placeInput.name,
-        address: placeInput.address,
-        city: placeInput.city,
-        country: placeInput.country,
+        name: placeInput.name.toLowerCase(),
+        address: placeInput.address.toLowerCase(),
+        city: placeInput.city.toLowerCase(),
+        country: placeInput.country.toLowerCase(),
         type: placeInput.type,
         area: placeInput.area,
         status: PlaceStatus.FOR_RENT,
@@ -99,7 +106,7 @@ export class PlaceService {
       attributes.map(async (attribute) => {
         return {
           name: attribute.name,
-          value: attribute.value,
+          value: attribute.value.toLowerCase(),
           valueNumber: attribute.valueNumber ? attribute.valueNumber : null,
           place: place,
         };
@@ -133,7 +140,7 @@ export class PlaceService {
       place.lastUpdate = dayjs().valueOf();
       for (const [key, value] of Object.entries(placeUpdateInput)) {
         if (key === 'id') continue;
-        place[key] = value;
+        place[key] = value.toLowerCase();
       }
       const updatedPlace = await this.placeRepository.save({ ...place });
       return {
@@ -197,7 +204,7 @@ export class PlaceService {
             id: updateInput.id,
           });
           if (updateInput.value) {
-            target.value = updateInput.value;
+            target.value = updateInput.value.toLowerCase();
           }
           if (updateInput.valueNumber) {
             target.valueNumber = updateInput.valueNumber;
@@ -228,5 +235,34 @@ export class PlaceService {
       type: ActionStatus.SUCCESSFUL,
       message: 'Deleted',
     };
+  }
+
+  async getCountries() {
+    const data = await queryDistinct(this.placeRepository, 'country');
+    const countries = data.map((record) => record['country']);
+
+    const reponse: QueryResponse = {
+      type: ActionStatus.SUCCESSFUL,
+      message: 'Countries',
+      customData: countries,
+    };
+    return reponse;
+  }
+  async getCities(country: string) {
+    const condition: Condition = {
+      key: 'country',
+      value: country,
+      operator: operator.EQUAL,
+    };
+    const conditions = country ? [condition] : null;
+    const data = await queryDistinct(this.placeRepository, 'city', conditions);
+    console.log(data);
+    const cities = data.map((record) => record['city']);
+    const reponse: QueryResponse = {
+      type: ActionStatus.SUCCESSFUL,
+      message: 'Cities',
+      customData: cities,
+    };
+    return reponse;
   }
 }

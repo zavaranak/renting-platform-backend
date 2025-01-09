@@ -30,7 +30,7 @@ export class Pagination {
 }
 @InputType()
 export class QueryManyInput {
-  @Field()
+  @Field(() => [Condition])
   conditions: Condition[];
   @Field({ defaultValue: { skip: 0, take: 20 } })
   pagination: Pagination;
@@ -117,4 +117,29 @@ export async function queryMany<T>(
     queryBuilder.skip(skip);
   }
   return await queryBuilder.getMany();
+}
+
+export async function queryDistinct<T>(
+  repository: Repository<T>,
+  column: string,
+  conditions?: Condition[],
+): Promise<any> {
+  const queryBuilder = repository.createQueryBuilder('target_entity');
+  queryBuilder.select(`DISTINCT target_entity.${column}`);
+  if (conditions) {
+    conditions.forEach((condition) => {
+      if (condition.operator == operator.INCLUDE) {
+        queryBuilder.andWhere(
+          `:${condition.key} = ANY(target_entity.${condition.key})`,
+          { [condition.key]: condition.value },
+        );
+      } else {
+        queryBuilder.andWhere(
+          `target_entity.${condition.key} ${condition.operator} :${condition.key}`,
+          { [condition.key]: condition.value },
+        );
+      }
+    });
+  }
+  return queryBuilder.getRawMany();
 }

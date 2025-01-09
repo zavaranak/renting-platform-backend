@@ -75,7 +75,7 @@ export class TenantService {
           attribute.name === TenantAttributeName.BIRTH_DAY ? 'date' : 'string';
         return {
           name: attribute.name,
-          value: attribute.value,
+          value: attribute.value.toLowerCase(),
           type: type,
           tenant: tenant,
         };
@@ -100,7 +100,7 @@ export class TenantService {
   }
   async updateAttribute(id: string, updateValue: string) {
     const target = await this.tenantAttributeRepository.findOneBy({ id: id });
-    target.value = updateValue;
+    target.value = updateValue.toLowerCase();
     await this.tenantAttributeRepository.save(target);
     return {
       type: ActionStatus.SUCCESSFUL,
@@ -114,7 +114,7 @@ export class TenantService {
           const target = await this.tenantAttributeRepository.findOneBy({
             id: updateInput.id,
           });
-          target.value = updateInput.value;
+          target.value = updateInput.value.toLowerCase();
           return this.tenantAttributeRepository.save(target);
         }),
       );

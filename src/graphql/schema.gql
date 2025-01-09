@@ -209,6 +209,7 @@ type QueryResponse {
   booking: Booking
   bookingReview: BookingReview
   notifications: [Notification!]
+  customData: [String!]
   type: ActionStatus
 }
 
@@ -233,7 +234,9 @@ type Query {
   getOneBooking(value: String!, type: String!): Booking!
   getBookings(conditions: [Condition!]! = []): [Booking!]!
   getOnePlace(value: String!, type: String!): Place!
-  getPlaces(conditions: [Condition!]! = []): [Place!]!
+  getCountries: QueryResponse!
+  getCities(country_name: String): QueryResponse!
+  getPlaces(query_many_input: QueryManyInput! = {}): [Place!]!
   getNotifications: QueryResponse!
 }
 
@@ -250,6 +253,16 @@ enum operator {
   GREATER_AND_EQUAL
   SMALLER_AND_EQUAL
   INCLUDE
+}
+
+input QueryManyInput {
+  conditions: [Condition!]!
+  pagination: Pagination! = {take: 20, skip: 0}
+}
+
+input Pagination {
+  take: Float!
+  skip: Float!
 }
 
 type Mutation {

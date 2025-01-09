@@ -24,6 +24,9 @@ export class QueryResponse {
 
   @Field(() => [Notification], { nullable: true })
   notifications?: Notification[];
+  @Field(() => [String], { nullable: true })
+  customData?: String[];
+
   @Field(() => ActionStatus, { nullable: true })
   type: ActionStatus;
 }

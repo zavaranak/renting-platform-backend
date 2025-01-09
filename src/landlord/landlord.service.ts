@@ -69,7 +69,7 @@ export class LandlordService {
             : 'string';
         return {
           name: attribute.name,
-          value: attribute.value,
+          value: attribute.value.toLowerCase(),
           type: type,
           landlord: landlord,
         };
@@ -96,7 +96,7 @@ export class LandlordService {
 
   async updateAttribute(id: string, updateValue: string) {
     const target = await this.landlordAttributeRepository.findOneBy({ id: id });
-    target.value = updateValue;
+    target.value = updateValue.toLowerCase();
     await this.landlordAttributeRepository.save(target);
     return {
       type: ActionStatus.SUCCESSFUL,
@@ -111,7 +111,7 @@ export class LandlordService {
           const target = await this.landlordAttributeRepository.findOneBy({
             id: updateInput.id,
           });
-          target.value = updateInput.value;
+          target.value = updateInput.value.toLowerCase();
           return this.landlordAttributeRepository.save(target);
         }),
       );
