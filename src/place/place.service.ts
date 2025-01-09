@@ -135,7 +135,6 @@ export class PlaceService {
         if (key === 'id') continue;
         place[key] = value;
       }
-      console.log(place);
       const updatedPlace = await this.placeRepository.save({ ...place });
       return {
         place: updatedPlace,

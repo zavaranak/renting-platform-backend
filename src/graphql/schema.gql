@@ -81,7 +81,7 @@ type Place {
   rating: Float!
   photos: [String!]
   status: PlaceStatus!
-  landlord: Landlord!
+  landlord: Landlord
   bookings: [Booking!]
   attributes: [PlaceAttribute!]
 }

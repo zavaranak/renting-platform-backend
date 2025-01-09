@@ -21,9 +21,22 @@ export class Condition {
   operator: operator;
 }
 
+@InputType()
+export class Pagination {
+  @Field()
+  take: number;
+  @Field()
+  skip: number;
+}
+@InputType()
+export class QueryManyInput {
+  @Field()
+  conditions: Condition[];
+  @Field({ defaultValue: { skip: 0, take: 20 } })
+  pagination: Pagination;
+}
 export interface QueryParams {
-  take?: number;
-  skip?: number;
+  pagination?: Pagination;
   queryValue?: string;
   queryType?: string;
   where?: Condition[];
@@ -61,7 +74,8 @@ export async function queryMany<T>(
   repository: Repository<T>,
   params: QueryParams,
 ): Promise<T[]> {
-  const { take, skip, queryValue, queryType, where, order, relations } = params;
+  const { pagination, queryValue, queryType, where, order, relations } = params;
+  const { take, skip } = pagination;
   const queryBuilder = repository.createQueryBuilder('target_entity');
 
   console.log('relations:', relations);

@@ -53,7 +53,7 @@ export class Place {
   @Field()
   lastUpdate: number;
 
-  @Column({ type: 'real', nullable: true })
+  @Column({ type: 'real', nullable: true, default:0 })
   @Field()
   rating?: number;
 
@@ -66,7 +66,7 @@ export class Place {
   status: PlaceStatus;
 
   @ManyToOne(() => Landlord, (landlord) => landlord.places)
-  @Field()
+  @Field({nullable:true})
   landlord: Landlord;
 
   @OneToMany(() => Booking, (booking) => booking.place)

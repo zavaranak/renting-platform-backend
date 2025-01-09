@@ -5,7 +5,12 @@ import { PlaceUpdateInput } from './dto/update_place.dto';
 import { Place } from './place.entity';
 import { GraphQLResolveInfo } from 'graphql';
 import { getRelations } from 'src/common/query_relation_handler';
-import { Condition, QueryParams } from 'src/common/query_function';
+import {
+  Condition,
+  QueryParams,
+  Pagination,
+  QueryManyInput,
+} from 'src/common/query_function';
 import { QueryResponse } from 'src/common/reponse';
 import { PlaceAttributeInput } from './dto/place_attribute_input';
 import { AttributeUpdateInput } from 'src/common/attribute_update_input';
@@ -47,14 +52,20 @@ export class PlaceResolver {
   @Query(() => [Place])
   async getPlaces(
     @Info() info: GraphQLResolveInfo,
-    @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
-    conditions?: Condition[],
+    @Args({
+      name: 'query_many_input',
+      type: () => QueryManyInput,
+      defaultValue: [],
+    })
+    args?: QueryManyInput,
   ) {
+    const { conditions, pagination } = args;
     console.log(conditions);
     const relations = getRelations(info);
     const queryParams: QueryParams = {
       relations: relations,
       where: conditions && conditions.length > 0 ? conditions : undefined,
+      pagination: pagination,
     };
     return await this.placeService.getMany(queryParams);
   }
