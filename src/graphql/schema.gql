@@ -35,6 +35,7 @@ type PlaceAttribute {
   id: String!
   name: PlaceAttributeNames!
   valueNumber: Float!
+  value: String!
   place: Place!
 }
 
@@ -236,12 +237,13 @@ type Query {
   getOnePlace(value: String!, type: String!): Place!
   getCountries: QueryResponse!
   getCities(country_name: String): QueryResponse!
-  getPlaces(query_many_input: QueryManyInput! = {}): [Place!]!
+  getPlaces(query_many_input: QueryManyInput!): [Place!]!
   getNotifications: QueryResponse!
 }
 
 input Condition {
   key: String!
+  attributeName: PlaceAttributeNames
   value: String!
   operator: operator!
 }
@@ -257,12 +259,24 @@ enum operator {
 
 input QueryManyInput {
   conditions: [Condition!]!
-  pagination: Pagination! = {take: 20, skip: 0}
+  pagination: Pagination! = {take: 100, skip: 0}
+  orderBy: [QueryOrder!]
 }
 
 input Pagination {
   take: Float!
   skip: Float!
+}
+
+input QueryOrder {
+  attributeName: PlaceAttributeNames
+  by: String!
+  order: order!
+}
+
+enum order {
+  asc
+  desc
 }
 
 type Mutation {

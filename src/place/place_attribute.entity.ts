@@ -20,6 +20,7 @@ export class PlaceAttribute {
   @Field(() => Number)
   valueNumber?: number;
 
+  @Field(() => String)
   @Column({ type: 'varchar' })
   value: string;
 

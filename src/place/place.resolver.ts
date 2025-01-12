@@ -5,12 +5,7 @@ import { PlaceUpdateInput } from './dto/update_place.dto';
 import { Place } from './place.entity';
 import { GraphQLResolveInfo } from 'graphql';
 import { getRelations } from 'src/common/query_relation_handler';
-import {
-  Condition,
-  QueryParams,
-  Pagination,
-  QueryManyInput,
-} from 'src/common/query_function';
+import { QueryParams, QueryManyInput } from 'src/common/query_function';
 import { QueryResponse } from 'src/common/reponse';
 import { PlaceAttributeInput } from './dto/place_attribute_input';
 import { AttributeUpdateInput } from 'src/common/attribute_update_input';
@@ -40,11 +35,12 @@ export class PlaceResolver {
     @Args('type') type: string,
     @Info() info,
   ) {
-    const relations = getRelations(info);
+    const { relations, fields } = getRelations(info);
     const queryParams: QueryParams = {
       queryType: type,
       queryValue: value,
       relations: relations,
+      entityFields: fields,
     };
     return await this.placeService.getOne(queryParams);
   }
@@ -66,17 +62,20 @@ export class PlaceResolver {
     @Args({
       name: 'query_many_input',
       type: () => QueryManyInput,
-      defaultValue: [],
     })
     args?: QueryManyInput,
   ) {
-    const { conditions, pagination } = args;
-    console.log(conditions);
-    const relations = getRelations(info);
+    const { conditions, pagination, orderBy } = args;
+    const { relations, fields, relationFields, subRelationFields } =
+      getRelations(info);
     const queryParams: QueryParams = {
       relations: relations,
-      where: conditions && conditions.length > 0 ? conditions : undefined,
+      conditions: conditions && conditions.length > 0 ? conditions : undefined,
       pagination: pagination,
+      entityFields: fields,
+      relationFields: relationFields,
+      subRelationFields: subRelationFields,
+      orders: orderBy,
     };
     return await this.placeService.getMany(queryParams);
   }

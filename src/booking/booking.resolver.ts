@@ -23,11 +23,12 @@ export class BookingResolver {
     @Args('type') type: string,
     @Info() info: GraphQLResolveInfo,
   ) {
-    const relations = getRelations(info);
+    const { relations, fields } = getRelations(info);
     const queryParams: QueryParams = {
       queryValue: value,
       queryType: type,
       relations: relations ? relations : [],
+      entityFields: fields,
     };
     return await this.bookingService.getOne(queryParams);
   }
@@ -38,10 +39,11 @@ export class BookingResolver {
     @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
     conditions?: Condition[],
   ) {
-    const relations = getRelations(info);
+    const { relations, fields } = getRelations(info);
     const queryParams: QueryParams = {
       relations: relations ? relations : [],
-      where: conditions && conditions.length > 0 ? conditions : undefined,
+      entityFields: fields,
+      conditions: conditions && conditions.length > 0 ? conditions : undefined,
     };
     return await this.bookingService.getMany(queryParams);
   }

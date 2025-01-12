@@ -4,7 +4,7 @@ import { NotificationService } from './notification.service';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/graphql.auth-guard';
 import { QueryResponse } from 'src/common/reponse';
-import { operator, QueryParams } from 'src/common/query_function';
+import { Operator, QueryParams } from 'src/common/query_function';
 import { ActionStatus } from 'src/common/constants';
 
 @Resolver()
@@ -34,11 +34,11 @@ export class NotificationResolver {
     const queryParams: QueryParams = {
       queryValue: id,
       queryType: 'target',
-      where: [
+      conditions: [
         {
           key: 'targetRole',
           value: role,
-          operator: operator.EQUAL,
+          operator: Operator.EQUAL,
         },
       ],
     };

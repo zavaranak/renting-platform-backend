@@ -41,10 +41,11 @@ export class TenantResolver {
     conditions?: Condition[],
   ) {
     console.log(context.req.user);
-    const relations = getRelations(info);
+    const { relations, fields } = getRelations(info);
     const queryParams: QueryParams = {
       relations: relations,
-      where: conditions && conditions.length > 0 ? conditions : undefined,
+      entityFields: fields,
+      conditions: conditions && conditions.length > 0 ? conditions : undefined,
     };
     return this.tenantService.getMany(queryParams);
   }
@@ -57,11 +58,12 @@ export class TenantResolver {
     @Context() context: any,
   ) {
     console.log(context.req.user);
-    const relations = getRelations(info);
+    const { relations, fields } = getRelations(info);
     const queryParams: QueryParams = {
       queryValue: value,
       queryType: type,
       relations: relations ? relations : [],
+      entityFields: fields,
     };
     return this.tenantService.getOne(queryParams);
   }

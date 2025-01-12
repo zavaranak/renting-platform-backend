@@ -24,7 +24,7 @@ import {
   queryOne,
   queryDistinct,
   Condition,
-  operator,
+  Operator,
 } from 'src/common/query_function';
 import { PlaceAttributeInput } from './dto/place_attribute_input';
 import { QueryResponse } from 'src/common/reponse';
@@ -252,7 +252,7 @@ export class PlaceService {
     const condition: Condition = {
       key: 'country',
       value: country,
-      operator: operator.EQUAL,
+      operator: Operator.EQUAL,
     };
     const conditions = country ? [condition] : null;
     const data = await queryDistinct(this.placeRepository, 'city', conditions);
