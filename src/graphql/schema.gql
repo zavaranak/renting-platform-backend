@@ -80,6 +80,7 @@ type Place {
   createdAt: Float!
   lastUpdate: Float!
   rating: Float!
+  distanceFromCenter: Float!
   photos: [String!]
   status: PlaceStatus!
   landlord: Landlord
@@ -228,7 +229,7 @@ type AuthResponse {
 
 type Query {
   verifyUser: AuthResponse!
-  getTenants(conditions: [Condition!]! = []): [Tenant!]!
+  getTenants(query_many_input: QueryManyInput!): [Tenant!]!
   getOneTenant(value: String!, type: String!): Tenant!
   getOneLandlord(value: String!, type: String!): Landlord!
   getLandlords(conditions: [Condition!]! = []): [Landlord!]!
@@ -241,11 +242,56 @@ type Query {
   getNotifications: QueryResponse!
 }
 
+input QueryManyInput {
+  conditions: [Condition!]!
+  pagination: Pagination! = {take: 100, skip: 0}
+  orderBy: [QueryOrder!]
+}
+
 input Condition {
   key: String!
-  attributeName: PlaceAttributeNames
+  attributeName: attributeName
   value: String!
   operator: operator!
+}
+
+enum attributeName {
+  PRIVATE_BATHROOM
+  PRIVATE_KITCHEN
+  SHARED_BATHROOM
+  SHARED_KITCHEN
+  LAUNDRY
+  AIR_CONDITIONER
+  WIFI
+  ETHERNET
+  FURNISHED
+  PARKING
+  BALCONY
+  PET_FRIENDLY
+  SMOKING_ALLOWED
+  ELEVATOR
+  GYM
+  POOL
+  HEATING
+  ROOM_SERVICE
+  SECURITY
+  GARDEN
+  PLAYGROUND
+  PRICE_BY_HOUR
+  PRICE_BY_DAY
+  PRICE_BY_WEEK
+  PRICE_BY_MONTH
+  MAX_GUEST
+  FIRSTNAME
+  LASTNAME
+  MIDDLENAME
+  TEL
+  SEX
+  BIRTH_DAY
+  DOCUMENT
+  COUNTRY
+  AVATAR
+  COMPANY
 }
 
 enum operator {
@@ -257,19 +303,13 @@ enum operator {
   INCLUDE
 }
 
-input QueryManyInput {
-  conditions: [Condition!]!
-  pagination: Pagination! = {take: 100, skip: 0}
-  orderBy: [QueryOrder!]
-}
-
 input Pagination {
   take: Float!
   skip: Float!
 }
 
 input QueryOrder {
-  attributeName: PlaceAttributeNames
+  attributeName: attributeName
   by: String!
   order: order!
 }

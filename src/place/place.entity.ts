@@ -53,9 +53,13 @@ export class Place {
   @Field()
   lastUpdate: number;
 
-  @Column({ type: 'real', nullable: true, default:0 })
+  @Column({ type: 'real', nullable: true, default: 0 })
   @Field()
   rating?: number;
+
+  @Column({ type: 'real', nullable: true, default: 0 })
+  @Field()
+  distanceFromCenter?: number;
 
   @Column({ type: 'varchar', array: true, nullable: true })
   @Field(() => [String], { nullable: true })
@@ -66,7 +70,7 @@ export class Place {
   status: PlaceStatus;
 
   @ManyToOne(() => Landlord, (landlord) => landlord.places)
-  @Field({nullable:true})
+  @Field({ nullable: true })
   landlord: Landlord;
 
   @OneToMany(() => Booking, (booking) => booking.place)

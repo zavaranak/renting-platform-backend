@@ -13,8 +13,7 @@ export const RELATIONS = [
 
 export function getRelations(info: GraphQLResolveInfo) {
   // const fields = [];
-  const { mainFields, relationFields, subRelationFields } =
-    getRequestFields(info);
+  const { mainFields } = getRequestFields(info);
   const relations = [];
   const entity_field = [];
 
@@ -22,7 +21,9 @@ export function getRelations(info: GraphQLResolveInfo) {
     if (RELATIONS.includes(field)) {
       RELATIONS.push(field);
     } else {
-      entity_field.push(MAIN_TABLE + '.' + field);
+      if (field != '__typename') {
+        entity_field.push(MAIN_TABLE + '.' + field);
+      }
     }
   });
 
@@ -36,8 +37,8 @@ export function getRelations(info: GraphQLResolveInfo) {
   return {
     relations: relations,
     fields: entity_field,
-    relationFields: relationFields,
-    subRelationFields: subRelationFields,
+    // relationFields: relationFields,
+    // subRelationFields: subRelationFields,
   };
 }
 function getRequestFields(info: GraphQLResolveInfo) {
@@ -57,32 +58,31 @@ function getRequestFields(info: GraphQLResolveInfo) {
     if (selection.selectionSet) {
       selection.selectionSet.selections.map((selection2: any) => {
         const relationFieldValue = selection2.name.value;
-        if (!relationFields.has(mainFieldValue)) {
-          relationFields.set(mainFieldValue, [selection2.name.value]);
-        } else {
-          const relationFieldArray = relationFields.get(mainFieldValue);
-          relationFieldArray.push(relationFieldValue);
-          relationFields.set(mainFieldValue, relationFieldArray);
-        }
+        // if (!relationFields.has(mainFieldValue)) {
+        //   relationFields.set(mainFieldValue, [selection2.name.value]);
+        // } else {
+        //   const relationFieldArray = relationFields.get(mainFieldValue);
+        //   relationFieldArray.push(relationFieldValue);
+        //   relationFields.set(mainFieldValue, relationFieldArray);
+        // }
         // handle field subrelation layer
-        if (selection2.selectionSet) {
-          selection2.selectionSet.selections.map((selection3: any) => {
-            const subRelationFieldValue = selection3.name.value;
-            if (!relationFields.has(subRelationFieldValue)) {
-              subRelationFields.set(relationFieldValue, [
-                selection3.name.value,
-              ]);
-            } else {
-              const subRelationFieldArray =
-                subRelationFields.get(relationFieldValue);
-              subRelationFieldArray.push(subRelationFieldValue);
-              subRelationFields.set(relationFieldValue, subRelationFieldArray);
-            }
-          });
-        }
+        // if (selection2.selectionSet) {
+        //   selection2.selectionSet.selections.map((selection3: any) => {
+        //     const subRelationFieldValue = selection3.name.value;
+        //     if (!relationFields.has(subRelationFieldValue)) {
+        //       subRelationFields.set(relationFieldValue, [
+        //         selection3.name.value,
+        //       ]);
+        //     } else {
+        //       const subRelationFieldArray =
+        //         subRelationFields.get(relationFieldValue);
+        //       subRelationFieldArray.push(subRelationFieldValue);
+        //       subRelationFields.set(relationFieldValue, subRelationFieldArray);
+        //     }
+        //   });
+        // }
       });
     }
   });
-  console.log(mainFields, relationFields, subRelationFields);
-  return { mainFields, relationFields, subRelationFields };
+  return { mainFields };
 }

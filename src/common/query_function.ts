@@ -1,6 +1,8 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
-import { QueryBuilder, Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 import {
+  AbstractAttributesName,
+  AbstractAttributesType,
   LandlordAttributeName,
   PlaceAttributeName,
   TenantAttributeName,
@@ -25,13 +27,14 @@ const attributeTable = 'attributes';
 
 registerEnumType(Operator, { name: 'operator' });
 registerEnumType(Order, { name: 'order' });
+registerEnumType(AbstractAttributesName, { name: 'attributeName' });
 
 @InputType()
 export class Condition {
   @Field()
   key: string;
-  @Field(() => PlaceAttributeName, { nullable: true })
-  attributeName?: PlaceAttributeName;
+  @Field(() => AbstractAttributesName, { nullable: true })
+  attributeName?: AbstractAttributesType;
   @Field()
   value: string;
   @Field(() => Operator)
@@ -48,8 +51,8 @@ export class Pagination {
 
 @InputType()
 export class QueryOrder {
-  @Field(() => PlaceAttributeName, { nullable: true })
-  attributeName?: PlaceAttributeName;
+  @Field(() => AbstractAttributesName, { nullable: true })
+  attributeName?: AbstractAttributesType;
   @Field()
   by: string;
   @Field(() => Order)
@@ -72,23 +75,15 @@ export interface QueryParams {
   conditions?: Condition[];
   orders?: QueryOrder[];
   relations?: string[];
-  relationFields?: Map<string, string[]>;
-  subRelationFields?: Map<string, string[]>;
+  // relationFields?: Map<string, string[]>;
+  // subRelationFields?: Map<string, string[]>;
 }
 
 export async function queryOne<T>(
   repository: Repository<T>,
   params: QueryParams,
 ): Promise<T> {
-  const {
-    queryValue,
-    queryType,
-    conditions,
-    relations,
-    entityFields,
-    relationFields,
-    subRelationFields,
-  } = params;
+  const { queryValue, queryType, conditions, relations, entityFields } = params;
   const queryBuilder = repository.createQueryBuilder(MAIN_TABLE);
 
   Array.isArray(entityFields) &&
@@ -119,6 +114,7 @@ export async function queryMany<T>(
   repository: Repository<T>,
   params: QueryParams,
 ): Promise<T[]> {
+  console.log(params);
   const attributesMap = new Map<PlaceAttributeName, boolean>();
   const {
     pagination,
@@ -128,13 +124,11 @@ export async function queryMany<T>(
     orders,
     relations,
     entityFields,
-    relationFields,
   } = params;
   const { take, skip } = pagination;
 
   const queryBuilder = repository.createQueryBuilder(MAIN_TABLE);
 
-  console.log(entityFields);
   Array.isArray(entityFields) &&
     entityFields.length > 0 &&
     queryBuilder.select(entityFields);
@@ -144,7 +138,10 @@ export async function queryMany<T>(
       queryValue,
     });
   }
-
+  Array.isArray(relations) &&
+    relations.forEach((relation) => {
+      queryBuilder.leftJoinAndSelect(MAIN_TABLE + '.' + relation, relation);
+    });
   if (conditions) {
     conditions.forEach((condition) => {
       const { operator, value, attributeName } = condition;
@@ -181,23 +178,13 @@ export async function queryMany<T>(
       }
     });
   }
-
-  console.log(attributesMap);
-
   if (take) {
     queryBuilder.take(take);
   }
   if (skip) {
     queryBuilder.skip(skip);
   }
-  Array.isArray(relations) &&
-    relations.forEach((relation) => {
-      const fields = relationFields.get(relation);
-      if (fields && fields.length > 0) {
-        // const selectedFields = fields.map((field) => relation + '.' + field);
-        queryBuilder.leftJoinAndSelect(MAIN_TABLE + '.' + relation, relation);
-      }
-    });
+
   if (orders) {
     orders.forEach((orderBy: QueryOrder, index: number) => {
       const { order, by, attributeName } = orderBy;
@@ -205,16 +192,26 @@ export async function queryMany<T>(
         ? by.split('.')
         : [MAIN_TABLE, by];
       if (table == MAIN_TABLE) {
-        queryBuilder.addOrderBy(table + '.' + column, orderBy.order);
+        if (!entityFields.includes(column)) {
+          queryBuilder.addSelect(MAIN_TABLE + '.' + column);
+        }
+        queryBuilder.addOrderBy(table + '.' + column, order);
       } else if (RELATIONS.includes(table)) {
-        console.log(table, column);
+        var sqlType = '';
+        if (Object.values(PlaceAttributeName).includes(attributeName)) {
+          sqlType = 'place_attribute_name_enum';
+        }
+        if (Object.values(TenantAttributeName).includes(attributeName)) {
+          sqlType = 'tenant_attribute_name_enum';
+        }
+        if (Object.values(LandlordAttributeName).includes(attributeName)) {
+          sqlType = 'landlord_attribute_name_enum';
+        }
+        const query = `${table}.name = :value::${sqlType}`;
         if (relations.includes(table)) {
-          queryBuilder.andWhere(
-            `${table}.name = :value::place_attribute_name_enum`,
-            {
-              value: attributeName,
-            },
-          );
+          queryBuilder.andWhere(query, {
+            value: attributeName,
+          });
         } else {
           relations.push(table);
           queryBuilder.leftJoinAndSelect(

@@ -158,3 +158,17 @@ export interface NotificationData {
   bookingId?: string;
   placeId?: string;
 }
+
+// export enum AbstractAttributesName {PlaceAttributeName}
+
+export const AbstractAttributesName = {
+  ...PlaceAttributeName,
+  ...TenantAttributeName,
+  ...LandlordAttributeName,
+};
+
+// export type AbstractAttributesName = typeof PlaceAttributeName;
+
+export type AbstractAttributesType = typeof PlaceAttributeName &
+  typeof TenantAttributeName &
+  typeof LandlordAttributeName;

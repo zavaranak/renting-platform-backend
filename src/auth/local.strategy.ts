@@ -6,6 +6,7 @@ import { Actions, Roles } from './dto/auth_input';
 import { EMAIL_EXISTED, NO_ACTIONS } from 'src/common/constants';
 import { LandlordService } from 'src/landlord/landlord.service';
 import * as bcrypt from 'bcrypt';
+import { MAIN_TABLE } from 'src/common/query_function';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -39,12 +40,22 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       user = await this.tenantService.getOne({
         queryValue: username,
         queryType: 'username',
+        entityFields: [
+          MAIN_TABLE + '.username',
+          MAIN_TABLE + '.password',
+          MAIN_TABLE + '.id',
+        ],
       });
     }
     if (role === Roles.LANDLORD) {
       user = await this.landlordService.getOne({
         queryValue: username,
         queryType: 'username',
+        entityFields: [
+          MAIN_TABLE + '.username',
+          MAIN_TABLE + '.password',
+          MAIN_TABLE + '.id',
+        ],
       });
     }
 
@@ -61,16 +72,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   private async signUp(username: string, password: string, role: Roles) {
     let user: any;
     if (role === Roles.TENANT) {
-      user = await this.tenantService.getOne({
-        queryValue: username,
-        queryType: 'username',
-      });
+      user = await this.tenantService.checkExist(username);
     }
     if (role === Roles.LANDLORD) {
-      user = await this.landlordService.getOne({
-        queryValue: username,
-        queryType: 'username',
-      });
+      user = await this.landlordService.checkExist(username);
     }
     if (user) {
       throw new Error(EMAIL_EXISTED);

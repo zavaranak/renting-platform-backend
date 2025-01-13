@@ -14,7 +14,13 @@ import {
 } from 'src/common/constants';
 import { AttributeUpdateInput } from 'src/common/attribute_update_input';
 import { LandlordAttribute } from './landlord_attribute.entity';
-import { queryMany, queryOne, QueryParams } from 'src/common/query_function';
+import {
+  Operator,
+  queryDistinct,
+  queryMany,
+  queryOne,
+  QueryParams,
+} from 'src/common/query_function';
 import * as bcrypt from 'bcrypt';
 import { LandlordAttributeInput } from './landlord_attribute_input';
 import { QueryResponse } from 'src/common/reponse';
@@ -155,5 +161,17 @@ export class LandlordService {
 
   async getOne(queryParams: QueryParams): Promise<Landlord> {
     return await queryOne(this.landlordRepository, queryParams);
+  }
+
+  async checkExist(username: string): Promise<boolean> {
+    const check = await queryDistinct(this.landlordRepository, 'username', [
+      {
+        key: 'username',
+        value: username,
+        operator: Operator.EQUAL,
+      },
+    ]);
+    if (Array.isArray(check) && check.length > 0) return true;
+    return false;
   }
 }

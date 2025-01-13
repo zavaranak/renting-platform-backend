@@ -14,7 +14,11 @@ import { getRelations } from 'src/common/query_relation_handler';
 import { GraphQLResolveInfo } from 'graphql';
 import { TenantAttributeInput } from './tenant_attribute_input';
 import { QueryResponse } from 'src/common/reponse';
-import { QueryParams, Condition } from 'src/common/query_function';
+import {
+  QueryParams,
+  Condition,
+  QueryManyInput,
+} from 'src/common/query_function';
 import { extname } from 'path';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import Upload from 'graphql-upload/Upload.js';
@@ -33,19 +37,23 @@ export class TenantResolver {
   constructor(private readonly tenantService: TenantService) {}
 
   @Query(() => [Tenant])
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async getTenants(
-    @Context() context: any,
+    // @Context() context: any,
     @Info() info: GraphQLResolveInfo,
-    @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
-    conditions?: Condition[],
+    // @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
+    // conditions?: Condition[],
+    @Args({ name: 'query_many_input', type: () => QueryManyInput })
+    args: QueryManyInput,
   ) {
-    console.log(context.req.user);
     const { relations, fields } = getRelations(info);
+    const { conditions, orderBy, pagination } = args;
     const queryParams: QueryParams = {
       relations: relations,
       entityFields: fields,
       conditions: conditions && conditions.length > 0 ? conditions : undefined,
+      orders: orderBy,
+      pagination: pagination,
     };
     return this.tenantService.getMany(queryParams);
   }

@@ -13,7 +13,13 @@ import {
 } from 'src/common/constants';
 import { DataSource, Repository } from 'typeorm';
 import { TenantAttribute } from './tenant_attribute.entity';
-import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
+import {
+  queryMany,
+  QueryParams,
+  queryOne,
+  queryDistinct,
+  Operator,
+} from 'src/common/query_function';
 import { TenantAttributeInput } from './tenant_attribute_input';
 import { QueryResponse } from 'src/common/reponse';
 import * as bcrypt from 'bcrypt';
@@ -150,5 +156,17 @@ export class TenantService {
 
   async getOne(queryParams: QueryParams): Promise<Tenant> {
     return await queryOne(this.tenantRepository, queryParams);
+  }
+
+  async checkExist(username: string): Promise<boolean> {
+    const check = await queryDistinct(this.tenantRepository, 'username', [
+      {
+        key: 'username',
+        value: username,
+        operator: Operator.EQUAL,
+      },
+    ]);
+    if (Array.isArray(check) && check.length > 0) return true;
+    return false;
   }
 }

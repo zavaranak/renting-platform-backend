@@ -65,16 +65,14 @@ export class PlaceResolver {
     })
     args?: QueryManyInput,
   ) {
+    console.log(args);
     const { conditions, pagination, orderBy } = args;
-    const { relations, fields, relationFields, subRelationFields } =
-      getRelations(info);
+    const { relations, fields } = getRelations(info);
     const queryParams: QueryParams = {
       relations: relations,
       conditions: conditions && conditions.length > 0 ? conditions : undefined,
       pagination: pagination,
       entityFields: fields,
-      relationFields: relationFields,
-      subRelationFields: subRelationFields,
       orders: orderBy,
     };
     return await this.placeService.getMany(queryParams);
