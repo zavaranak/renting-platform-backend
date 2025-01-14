@@ -80,6 +80,7 @@ type Place {
   createdAt: Float!
   lastUpdate: Float!
   rating: Float!
+  priority: Float!
   distanceFromCenter: Float!
   photos: [String!]
   status: PlaceStatus!
@@ -237,7 +238,8 @@ type Query {
   getBookings(conditions: [Condition!]! = []): [Booking!]!
   getOnePlace(value: String!, type: String!): Place!
   getCountries: QueryResponse!
-  getCities(country_name: String): QueryResponse!
+  getCitiesByCountryName(country_name: String): QueryResponse!
+  getCities: QueryResponse!
   getPlaces(query_many_input: QueryManyInput!): [Place!]!
   getNotifications: QueryResponse!
 }

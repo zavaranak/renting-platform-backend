@@ -248,7 +248,7 @@ export class PlaceService {
     };
     return reponse;
   }
-  async getCities(country: string) {
+  async getCitiesByCountry(country: string) {
     const condition: Condition = {
       key: 'country',
       value: country,
@@ -256,6 +256,20 @@ export class PlaceService {
     };
     const conditions = country ? [condition] : null;
     const data = await queryDistinct(this.placeRepository, 'city', conditions);
+    console.log(data);
+    const cities = data.map((record) => record['city']);
+    const reponse: QueryResponse = {
+      type: ActionStatus.SUCCESSFUL,
+      message: 'Cities',
+      customData: cities,
+    };
+    return reponse;
+  }
+
+  async getCities() {
+    const data = await queryDistinct(this.placeRepository, 'city', null, [
+      'country',
+    ]);
     console.log(data);
     const cities = data.map((record) => record['city']);
     const reponse: QueryResponse = {

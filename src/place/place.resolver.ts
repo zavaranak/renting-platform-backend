@@ -49,11 +49,15 @@ export class PlaceResolver {
     return await this.placeService.getCountries();
   }
   @Query(() => QueryResponse)
-  async getCities(
+  async getCitiesByCountryName(
     @Args({ name: 'country_name', type: () => String, nullable: true })
     country?: string,
   ) {
-    return await this.placeService.getCities(country);
+    return await this.placeService.getCitiesByCountry(country);
+  }
+  @Query(() => QueryResponse)
+  async getCities() {
+    return await this.placeService.getCities();
   }
 
   @Query(() => [Place])

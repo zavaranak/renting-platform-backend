@@ -57,6 +57,10 @@ export class Place {
   @Field()
   rating?: number;
 
+  @Column({ type: 'int', nullable: true, default: 0 })
+  @Field()
+  priority?: number;
+
   @Column({ type: 'real', nullable: true, default: 0 })
   @Field()
   distanceFromCenter?: number;

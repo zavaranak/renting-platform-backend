@@ -234,9 +234,16 @@ export async function queryDistinct<T>(
   repository: Repository<T>,
   column: string,
   conditions?: Condition[],
+  optinonalColumns?: string[],
 ): Promise<any> {
+  const fields = [`DISTINCT ${MAIN_TABLE}.${column}`];
   const queryBuilder = repository.createQueryBuilder(MAIN_TABLE);
-  queryBuilder.select(`DISTINCT ${MAIN_TABLE}.${column}`);
+  if (optinonalColumns && optinonalColumns.length > 0) {
+    optinonalColumns.forEach((column) => {
+      fields.push(`DISTINCT ${MAIN_TABLE}.${column}`);
+    });
+  }
+  queryBuilder.select(fields);
   if (conditions) {
     conditions.forEach((condition) => {
       if (condition.operator == Operator.INCLUDE) {
