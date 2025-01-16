@@ -165,15 +165,13 @@ export async function queryMany<T>(
           queryBuilder.andWhere(query, { [column]: value });
         } else {
           attributesMap.set(attributeName, true);
-          queryBuilder.leftJoin(
+          queryBuilder.leftJoinAndSelect(
             MAIN_TABLE + '.' + table,
             attributeName,
-            query,
-            {
-              [column]: value,
-            },
           );
-          // queryBuilder.orderBy(attributeName + '.' + 'valueNumber', 'ASC');
+          queryBuilder.andWhere(query, {
+            [column]: column == 'valueNumber' ? Number(value) : value,
+          });
         }
       }
     });
@@ -184,17 +182,12 @@ export async function queryMany<T>(
   if (skip) {
     queryBuilder.skip(skip);
   }
-
   if (orders) {
     orders.forEach((orderBy: QueryOrder, index: number) => {
       const { order, by, attributeName } = orderBy;
-      const [table, column] = by.includes('.')
-        ? by.split('.')
-        : [MAIN_TABLE, by];
+      var [table, column] = by.includes('.') ? by.split('.') : [MAIN_TABLE, by];
       if (table == MAIN_TABLE) {
-        if (!entityFields.includes(column)) {
-          queryBuilder.addSelect(MAIN_TABLE + '.' + column);
-        }
+        queryBuilder.addSelect(table + '.' + column);
         queryBuilder.addOrderBy(table + '.' + column, order);
       } else if (RELATIONS.includes(table)) {
         var sqlType = '';
@@ -212,6 +205,8 @@ export async function queryMany<T>(
           queryBuilder.andWhere(query, {
             value: attributeName,
           });
+        } else if (attributesMap.get(attributeName)) {
+          table = attributeName;
         } else {
           relations.push(table);
           queryBuilder.leftJoinAndSelect(
