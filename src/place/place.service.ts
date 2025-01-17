@@ -271,7 +271,9 @@ export class PlaceService {
       'country',
     ]);
     console.log(data);
-    const cities = data.map((record) => record['city']);
+    const cities = data.map((record) => {
+      return record['city'] + '|' + record['country'];
+    });
     const reponse: QueryResponse = {
       type: ActionStatus.SUCCESSFUL,
       message: 'Cities',
