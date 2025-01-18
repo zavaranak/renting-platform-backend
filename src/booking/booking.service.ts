@@ -84,7 +84,6 @@ export class BookingService {
         if (key === 'id') continue;
         booking[key] = value;
       }
-      console.log(booking);
       const updatedBooking = await this.bookingRepository.save({ ...booking });
       return { booking: updatedBooking, message: 'Updated booking' };
     } catch (error) {
