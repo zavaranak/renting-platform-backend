@@ -281,4 +281,10 @@ export class PlaceService {
     };
     return reponse;
   }
+  async checkExistById(placeId: string): Promise<Boolean> {
+    const exists = await this.placeRepository.exists({
+      where: { id: placeId },
+    });
+    return exists;
+  }
 }

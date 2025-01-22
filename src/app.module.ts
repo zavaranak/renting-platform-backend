@@ -6,7 +6,6 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { TenantModule } from './tenant/tenant.module';
-import { BookingModule } from './booking/booking.module';
 import { PlaceModule } from './place/place.module';
 import { LandlordModule } from './landlord/landlord.module';
 import 'dotenv/config';
@@ -14,6 +13,7 @@ import { DatabaseModule } from './database/database.module';
 import { AppGateway } from './app.gateway';
 // import { NotificationService } from './notifcation/notification.service';
 import { NotificationModule } from './notifcation/notification.module';
+import { BookingModule } from '@booking/booking.module';
 
 @Module({
   imports: [
@@ -30,10 +30,13 @@ import { NotificationModule } from './notifcation/notification.module';
     DatabaseModule,
     AuthModule,
     TenantModule,
-    BookingModule,
     PlaceModule,
     LandlordModule,
     NotificationModule,
+    BookingModule,
+    // ActiveBookingModule,
+    // CompletedBookingModule,
+    // PendingBookingModule,
   ],
   providers: [AppGateway],
 })

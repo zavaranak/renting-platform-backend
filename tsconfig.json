@@ -17,6 +17,16 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@booking/*": ["src/booking/*"],
+      "@tenant/*": ["src/tenant/*"],
+      "@landlord/*": ["src/landlord/*"],
+      "@place/*": ["src/place/*"],
+      "@auth/*": ["src/auth/*"],
+      "@database": ["src/database/*"],
+      "@common": ["src/common/*"],
+      "@graphql": ["src/graphql/*"],
+    }
   }
 }

@@ -2,33 +2,34 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type LandlordAttribute {
+type TenantAttribute {
   id: String!
-  name: LandlordAttributeNames!
+  name: TenantAttributeNames!
   value: String!
-  landlord: Landlord!
+  type: String!
+  tenant: Tenant!
 }
 
-enum LandlordAttributeNames {
+enum TenantAttributeNames {
   FIRSTNAME
   LASTNAME
   MIDDLENAME
   TEL
-  COMPANY
+  SEX
   BIRTH_DAY
-  AVATAR
   DOCUMENT
   COUNTRY
+  AVATAR
 }
 
-type Landlord {
+type Tenant {
   id: String!
   username: String!
-  password: String!
+  password: String
   createdAt: Float!
   status: String!
-  places: [Place!]!
-  attributes: [LandlordAttribute!]
+  bookings: [String!]
+  attributes: [TenantAttribute!]
 }
 
 type PlaceAttribute {
@@ -85,7 +86,6 @@ type Place {
   photos: [String!]
   status: PlaceStatus!
   landlord: Landlord
-  bookings: [Booking!]
   attributes: [PlaceAttribute!]
 }
 
@@ -118,17 +118,36 @@ enum PlaceStatus {
   OCCUPIED
 }
 
-type BookingReview {
+type LandlordAttribute {
   id: String!
-  star: Float!
-  reviewText: String!
-  reviewPhotos: [String!]
-  createdAt: Float!
-  tenant: Tenant!
-  booking: Booking!
+  name: LandlordAttributeNames!
+  value: String!
+  landlord: Landlord!
 }
 
-type Booking {
+enum LandlordAttributeNames {
+  FIRSTNAME
+  LASTNAME
+  MIDDLENAME
+  TEL
+  COMPANY
+  BIRTH_DAY
+  AVATAR
+  DOCUMENT
+  COUNTRY
+}
+
+type Landlord {
+  id: String!
+  username: String!
+  password: String!
+  createdAt: Float!
+  status: String!
+  places: [Place!]
+  attributes: [LandlordAttribute!]
+}
+
+type CompletedBooking {
   id: String!
   createdAt: Float!
   lastUpdate: Float!
@@ -139,44 +158,23 @@ type Booking {
   status: BookingStatus!
   totalCharge: Float!
   tenant: Tenant!
-  place: Place!
+  placeId: String!
   reviews: [BookingReview!]
 }
 
 enum BookingStatus {
-  VERIFIED
-  IN_PROCESS
   CANCELED
+  COMPLETED
 }
 
-type TenantAttribute {
+type BookingReview {
   id: String!
-  name: TenantAttributeNames!
-  value: String!
-  type: String!
-  tenant: Tenant!
-}
-
-enum TenantAttributeNames {
-  FIRSTNAME
-  LASTNAME
-  MIDDLENAME
-  TEL
-  SEX
-  BIRTH_DAY
-  DOCUMENT
-  COUNTRY
-  AVATAR
-}
-
-type Tenant {
-  id: String!
-  username: String!
-  password: String
+  star: Float!
+  reviewText: String!
+  reviewPhotos: [String!]
   createdAt: Float!
-  status: String!
-  bookings: [Booking!]
-  attributes: [TenantAttribute!]
+  tenant: Tenant!
+  booking: CompletedBooking!
 }
 
 type Notification {
@@ -204,12 +202,41 @@ enum Roles {
   OPERATOR
 }
 
+type ActiveBooking {
+  id: String!
+  createdAt: Float!
+  lastUpdate: Float!
+  startAt: Float!
+  endAt: Float!
+  termUnit: String!
+  period: Float!
+  totalCharge: Float!
+  tenantId: String!
+  placeId: String!
+}
+
+type PendingBooking {
+  id: String!
+  createdAt: Float!
+  lastUpdate: Float!
+  startAt: Float!
+  endAt: Float!
+  termUnit: String!
+  period: Float!
+  totalCharge: Float!
+  tenantId: Tenant!
+  placeId: String!
+  updateBy: String!
+}
+
 type QueryResponse {
   message: String!
   tenant: Tenant
   landlord: Landlord
   place: Place
-  booking: Booking
+  completedBooking: CompletedBooking
+  activeBooking: ActiveBooking
+  pendingBooking: PendingBooking
   bookingReview: BookingReview
   notifications: [Notification!]
   customData: [String!]
@@ -234,8 +261,6 @@ type Query {
   getOneTenant(value: String!, type: String!): Tenant!
   getOneLandlord(value: String!, type: String!): Landlord!
   getLandlords(conditions: [Condition!]! = []): [Landlord!]!
-  getOneBooking(value: String!, type: String!): Booking!
-  getBookings(conditions: [Condition!]! = []): [Booking!]!
   getOnePlace(value: String!, type: String!): Place!
   getCountries: QueryResponse!
   getCitiesByCountryName(country_name: String): QueryResponse!
@@ -332,13 +357,17 @@ type Mutation {
   removeLandlordAttributes(attributeIds: [String!]!): QueryResponse!
   updateLandlordAttributes(attibuteUpdateInput: [AttributeUpdateInput!]!): QueryResponse!
   setLandlordAvatar(landlordId: String!, image: Upload!, avatarId: String): QueryResponse!
-  createBooking(bookingInput: BookingInput!): QueryResponse!
   createPlace(placeInput: PlaceInput!): QueryResponse!
   updatePlace(placeUpdateInput: PlaceUpdateInput!): QueryResponse!
   addPlaceAttributes(placeId: String!, placeAttributeInput: [PlaceAttributeInput!]!): QueryResponse!
   updatePlaceAttributes(attibuteUpdateInput: [AttributeUpdateInput!]!): QueryResponse!
   removePlaceAttributes(attributeIds: [String!]!): QueryResponse!
   uploadPlacePhotos(placeId: String!, images: [Upload!]!): QueryResponse!
+  createBooking(bookingInput: BookingInput!): QueryResponse!
+  activateBooking(pendingBookingId: String!): QueryResponse!
+  cancelPendingBooking(pendingBookingId: String!): QueryResponse!
+  cancelActiveBooking(activeBookingId: String!): QueryResponse!
+  completeActiveBooking(activeBookingId: String!): QueryResponse!
 }
 
 input UserInput {
@@ -372,16 +401,6 @@ input LandlordAttributeInput {
   value: String!
 }
 
-input BookingInput {
-  startAt: Float!
-  endAt: Float!
-  termUnit: TermUnit!
-  period: Float!
-  totalCharge: Float!
-  tenantId: String!
-  placeId: String!
-}
-
 input PlaceInput {
   name: String!
   address: String!
@@ -408,4 +427,14 @@ input PlaceAttributeInput {
   name: PlaceAttributeNames!
   value: String!
   valueNumber: Float!
+}
+
+input BookingInput {
+  startAt: Float!
+  endAt: Float!
+  termUnit: TermUnit!
+  period: Float!
+  totalCharge: Float!
+  tenantId: String!
+  placeId: String!
 }

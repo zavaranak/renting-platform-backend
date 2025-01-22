@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Tenant } from 'src/tenant/tenant.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Booking } from '../booking.entity';
+import { CompletedBooking } from '@booking/completed_booking/completed-booking.entity';
 
 @Entity()
 @ObjectType()
@@ -30,7 +30,7 @@ export class BookingReview {
   @Field(() => Tenant)
   tenant: Tenant;
 
-  @ManyToOne(() => Booking, (booking) => booking.reviews)
-  @Field(() => Booking)
-  booking: Booking;
+  @ManyToOne(() => CompletedBooking, (booking) => booking.reviews)
+  @Field(() => CompletedBooking)
+  booking: CompletedBooking;
 }

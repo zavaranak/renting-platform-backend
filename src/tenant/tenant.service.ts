@@ -158,6 +158,25 @@ export class TenantService {
     return await queryOne(this.tenantRepository, queryParams);
   }
 
+  async updateBooking(tenantId: string, bookingId: string) {
+    try {
+      const updateCheck = await this.tenantRepository
+        .createQueryBuilder()
+        .update()
+        .set({ bookings: () => `array_append(bookings, :newBookingID)` })
+        .where(`id = :id`, { id: tenantId })
+        .setParameter('newBookingID', bookingId)
+        .execute();
+      if (updateCheck.affected === 0) {
+        throw new Error(`Tenant with id ${tenantId} not found.`);
+      }
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
+
   async checkExist(username: string): Promise<boolean> {
     const check = await queryDistinct(this.tenantRepository, 'username', [
       {
@@ -168,5 +187,11 @@ export class TenantService {
     ]);
     if (Array.isArray(check) && check.length > 0) return true;
     return false;
+  }
+  async checkExistById(tenantId: string): Promise<boolean> {
+    const exists = await this.tenantRepository.exists({
+      where: { id: tenantId },
+    });
+    return exists;
   }
 }

@@ -1,5 +1,4 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Booking } from 'src/booking/booking.entity';
 import { UserStatus } from 'src/common/constants';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { TenantAttribute } from './tenant_attribute.entity';
@@ -27,9 +26,9 @@ export class Tenant {
   @Field()
   status: UserStatus;
 
-  @OneToMany(() => Booking, (booking) => booking.tenant, { nullable: true })
-  @Field(() => [Booking], { nullable: true })
-  bookings?: Booking[];
+  @Column({ type: 'varchar', array: true, nullable: true })
+  @Field(() => [String], { nullable: true })
+  bookings?: string[];
 
   @OneToMany(() => TenantAttribute, (attribute) => attribute.tenant, {
     nullable: true,

@@ -1,5 +1,4 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Booking } from 'src/booking/booking.entity';
 import { Landlord } from 'src/landlord/landlord.entity';
 import {
   Entity,
@@ -74,12 +73,8 @@ export class Place {
   status: PlaceStatus;
 
   @ManyToOne(() => Landlord, (landlord) => landlord.places)
-  @Field({ nullable: true })
+  @Field(() => Landlord, { nullable: true })
   landlord: Landlord;
-
-  @OneToMany(() => Booking, (booking) => booking.place)
-  @Field(() => [Booking], { nullable: true })
-  bookings?: Booking[];
 
   @OneToMany(() => PlaceAttribute, (attribute) => attribute.place)
   @Field(() => [PlaceAttribute], { nullable: true })

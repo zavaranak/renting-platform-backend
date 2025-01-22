@@ -22,11 +22,9 @@ export class Landlord {
   @Field()
   @Column({ type: 'enum', enum: UserStatus, default: UserStatus.VERIFIED })
   status: UserStatus;
-
   @OneToMany(() => Place, (place) => place.landlord, { nullable: true })
-  @Field(() => [Place])
+  @Field(() => [Place], { nullable: true })
   places: Place[];
-
   @OneToMany(() => LandlordAttribute, (attribute) => attribute.landlord, {
     nullable: true,
   })

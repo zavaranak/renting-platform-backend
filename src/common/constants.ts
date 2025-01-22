@@ -15,9 +15,8 @@ export enum PlaceStatus {
   OCCUPIED = 'occupied',
 }
 export enum BookingStatus {
-  VERIFIED = 'verified',
-  IN_PROCESS = 'in_process',
   CANCELED = 'canceled',
+  COMPLETED = 'completed',
 }
 
 export enum ActionStatus {
