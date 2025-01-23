@@ -1,5 +1,5 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
-import { Repository } from 'typeorm';
+import { Brackets, Equal, Repository } from 'typeorm';
 import {
   AbstractAttributesName,
   AbstractAttributesType,
@@ -8,6 +8,8 @@ import {
   TenantAttributeName,
 } from './constants';
 import { RELATIONS } from './query_relation_handler';
+import { PendingBooking } from '@booking/pending_booking/pending-booking.entity';
+import { ActiveBooking } from '@booking/active_booking/active-booking.entity';
 
 export enum Operator {
   EQUAL = '=',
@@ -24,6 +26,13 @@ export enum Order {
 
 export const MAIN_TABLE = 'mainTable';
 const attributeTable = 'attributes';
+@InputType()
+export class SelectedDate {
+  @Field()
+  end: number;
+  @Field()
+  start: number;
+}
 
 registerEnumType(Operator, { name: 'operator' });
 registerEnumType(Order, { name: 'order' });
@@ -66,7 +75,10 @@ export class QueryManyInput {
   pagination: Pagination;
   @Field(() => [QueryOrder], { nullable: true })
   orderBy?: [QueryOrder];
+  @Field(() => SelectedDate, { nullable: true })
+  selectedDate?: SelectedDate;
 }
+
 export interface QueryParams {
   entityFields?: string[];
   pagination?: Pagination;
@@ -75,6 +87,7 @@ export interface QueryParams {
   conditions?: Condition[];
   orders?: QueryOrder[];
   relations?: string[];
+  selectedDate?: SelectedDate;
   // relationFields?: Map<string, string[]>;
   // subRelationFields?: Map<string, string[]>;
 }
@@ -124,6 +137,7 @@ export async function queryMany<T>(
     orders,
     relations,
     entityFields,
+    selectedDate,
   } = params;
   const { take, skip } = pagination;
 
@@ -175,6 +189,21 @@ export async function queryMany<T>(
         }
       }
     });
+  }
+
+  if (selectedDate.end && selectedDate.start) {
+    const activeBookingTable = 'active_booking';
+    queryBuilder.andWhere(
+      `
+      NOT EXISTS (
+      SELECT 1 
+      FROM ${activeBookingTable} 
+      WHERE ${activeBookingTable}."placeId" = ${MAIN_TABLE}.id 
+      AND (${activeBookingTable}."startAt" < :selected_end 
+      AND ${activeBookingTable}."endAt" > :selected_start))
+      `,
+      { selected_start: selectedDate.start, selected_end: selectedDate.end },
+    );
   }
   if (take) {
     queryBuilder.take(take);

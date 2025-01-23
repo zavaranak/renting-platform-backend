@@ -171,3 +171,12 @@ export const AbstractAttributesName = {
 export type AbstractAttributesType = typeof PlaceAttributeName &
   typeof TenantAttributeName &
   typeof LandlordAttributeName;
+
+export enum PaymentStatus {
+  PAID_CARD = 'paid-card',
+  UNPAID_CARD = 'unpaid-card ',
+  PAID_ON_SPOT = 'paid-on-spot',
+  UNPAID_ON_SPOT = 'unpaid-on-spot',
+}
+
+registerEnumType(PaymentStatus, { name: 'PaymentStatus' });

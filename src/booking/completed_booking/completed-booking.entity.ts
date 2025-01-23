@@ -52,7 +52,7 @@ export class CompletedBooking {
   @ManyToOne(() => Tenant, (tenant) => tenant.bookings)
   tenant: Tenant;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'uuid' })
   @Field()
   placeId: string;
 

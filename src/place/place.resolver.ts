@@ -70,7 +70,7 @@ export class PlaceResolver {
     args?: QueryManyInput,
   ) {
     console.log(args);
-    const { conditions, pagination, orderBy } = args;
+    const { conditions, pagination, orderBy, selectedDate } = args;
     const { relations, fields } = getRelations(info);
     const queryParams: QueryParams = {
       relations: relations,
@@ -78,6 +78,7 @@ export class PlaceResolver {
       pagination: pagination,
       entityFields: fields,
       orders: orderBy,
+      selectedDate: selectedDate,
     };
     return await this.placeService.getMany(queryParams);
   }

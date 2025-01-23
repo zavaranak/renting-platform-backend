@@ -208,7 +208,7 @@ type ActiveBooking {
   lastUpdate: Float!
   startAt: Float!
   endAt: Float!
-  termUnit: String!
+  termUnit: TermUnit!
   period: Float!
   totalCharge: Float!
   tenantId: String!
@@ -273,6 +273,7 @@ input QueryManyInput {
   conditions: [Condition!]!
   pagination: Pagination! = {take: 100, skip: 0}
   orderBy: [QueryOrder!]
+  selectedDate: SelectedDate
 }
 
 input Condition {
@@ -344,6 +345,11 @@ input QueryOrder {
 enum order {
   asc
   desc
+}
+
+input SelectedDate {
+  end: Float!
+  start: Float!
 }
 
 type Mutation {
