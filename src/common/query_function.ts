@@ -191,10 +191,11 @@ export async function queryMany<T>(
     });
   }
 
-  if (selectedDate.end && selectedDate.start) {
-    const activeBookingTable = 'active_booking';
-    queryBuilder.andWhere(
-      `
+  if (selectedDate)
+    if (selectedDate.end && selectedDate.start) {
+      const activeBookingTable = 'active_booking';
+      queryBuilder.andWhere(
+        `
       NOT EXISTS (
       SELECT 1 
       FROM ${activeBookingTable} 
@@ -202,9 +203,9 @@ export async function queryMany<T>(
       AND (${activeBookingTable}."startAt" < :selected_end 
       AND ${activeBookingTable}."endAt" > :selected_start))
       `,
-      { selected_start: selectedDate.start, selected_end: selectedDate.end },
-    );
-  }
+        { selected_start: selectedDate.start, selected_end: selectedDate.end },
+      );
+    }
   if (take) {
     queryBuilder.take(take);
   }
