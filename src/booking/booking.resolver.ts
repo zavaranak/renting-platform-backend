@@ -20,6 +20,7 @@ export class BookingResolver {
 
   @Mutation(() => QueryResponse)
   async createBooking(@Args('bookingInput') bookingInput: BookingInput) {
+    console.log(bookingInput);
     return await this.pendingBookingService.createOne(bookingInput);
   }
 

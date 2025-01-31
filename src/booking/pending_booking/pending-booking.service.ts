@@ -68,13 +68,13 @@ export class PendingBookingService {
         tenantId: tenantId,
         placeId: placeId,
       };
-      const newActiveBooking =
+      const newPendingBooking =
         await this.pendingBookingRepository.save(booking);
 
-      await this.tenantService.updateBooking(tenantId, newActiveBooking.id);
+      await this.tenantService.updateBooking(tenantId, newPendingBooking.id);
 
       return {
-        activeBooking: newActiveBooking,
+        pendingBooking: newPendingBooking,
         message: 'Created new Booking',
         type: ActionStatus.SUCCESSFUL,
       };
