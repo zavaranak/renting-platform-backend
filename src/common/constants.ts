@@ -172,11 +172,15 @@ export type AbstractAttributesType = typeof PlaceAttributeName &
   typeof TenantAttributeName &
   typeof LandlordAttributeName;
 
-export enum PaymentStatus {
-  PAID_CARD = 'paid-card',
-  UNPAID_CARD = 'unpaid-card ',
-  PAID_ON_SPOT = 'paid-on-spot',
-  UNPAID_ON_SPOT = 'unpaid-on-spot',
+export enum Payment {
+  CASH,
+  CARD,
 }
 
-registerEnumType(PaymentStatus, { name: 'PaymentStatus' });
+registerEnumType(Payment, { name: 'Payment' });
+
+export enum Gender {
+  MALE,
+  FEMALE,
+}
+registerEnumType(Gender, { name: 'Gender' });

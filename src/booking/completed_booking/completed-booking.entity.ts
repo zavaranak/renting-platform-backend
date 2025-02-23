@@ -48,9 +48,13 @@ export class CompletedBooking {
   @Column({ type: 'real' })
   totalCharge: number;
 
-  @Field(() => Tenant)
-  @ManyToOne(() => Tenant, (tenant) => tenant.bookings)
-  tenant: Tenant;
+  @Field({ nullable: true })
+  @Column({ type: 'bigint', nullable: true })
+  paidDate: number;
+
+  @Field()
+  @Column({ type: 'uuid' })
+  tenantId: string;
 
   @Column({ type: 'uuid' })
   @Field()

@@ -1,12 +1,12 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { TermUnit } from 'src/common/constants';
+import { Payment, TermUnit } from 'src/common/constants';
 
 @InputType()
 export class BookingInput {
-  @Field()
-  startAt: number;
-  @Field()
-  endAt: number;
+  @Field({ nullable: true })
+  startAt?: number;
+  @Field({ nullable: true })
+  endAt?: number;
   @Field(() => TermUnit)
   termUnit: TermUnit;
   @Field()
@@ -17,4 +17,6 @@ export class BookingInput {
   tenantId: string;
   @Field()
   placeId: string;
+  @Field(() => Payment)
+  payment: Payment;
 }

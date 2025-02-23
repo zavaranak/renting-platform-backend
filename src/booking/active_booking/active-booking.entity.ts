@@ -1,7 +1,7 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Tenant } from 'src/tenant/tenant.entity';
 import { Entity, Column, ManyToOne, PrimaryColumn } from 'typeorm';
-import { TermUnit, PaymentStatus } from 'src/common/constants';
+import { TermUnit, Payment } from 'src/common/constants';
 
 @Entity()
 @ObjectType()
@@ -39,14 +39,18 @@ export class ActiveBooking {
   totalCharge: number;
 
   @Field()
-  @Column({ type: 'varchar' })
+  @Column({ type: 'uuid' })
   tenantId: string;
 
-  // @Field(() => PaymentStatus)
-  // @Column({ type: 'enum', enum: PaymentStatus })
-  // payment: PaymentStatus;
+  @Field(() => Payment)
+  @Column({ type: 'enum', enum: Payment })
+  payment: Payment;
 
   @Field()
   @Column({ type: 'uuid' })
   placeId: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'bigint', nullable: true })
+  paidDate: number;
 }

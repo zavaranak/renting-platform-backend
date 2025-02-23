@@ -157,7 +157,8 @@ type CompletedBooking {
   period: Float!
   status: BookingStatus!
   totalCharge: Float!
-  tenant: Tenant!
+  paidDate: Float
+  tenantId: String!
   placeId: String!
   reviews: [BookingReview!]
 }
@@ -212,7 +213,14 @@ type ActiveBooking {
   period: Float!
   totalCharge: Float!
   tenantId: String!
+  payment: Payment!
   placeId: String!
+  paidDate: Float
+}
+
+enum Payment {
+  CASH
+  CARD
 }
 
 type PendingBooking {
@@ -224,8 +232,9 @@ type PendingBooking {
   termUnit: String!
   period: Float!
   totalCharge: Float!
-  tenantId: Tenant!
+  tenantId: String!
   placeId: String!
+  payment: Payment!
   updateBy: String!
 }
 
@@ -436,11 +445,12 @@ input PlaceAttributeInput {
 }
 
 input BookingInput {
-  startAt: Float!
-  endAt: Float!
+  startAt: Float
+  endAt: Float
   termUnit: TermUnit!
   period: Float!
   totalCharge: Float!
   tenantId: String!
   placeId: String!
+  payment: Payment!
 }

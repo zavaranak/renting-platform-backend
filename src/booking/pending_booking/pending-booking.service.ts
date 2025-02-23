@@ -41,6 +41,7 @@ export class PendingBookingService {
         totalCharge,
         tenantId,
         placeId,
+        payment,
       } = bookingInput;
       const tenantExists = await this.tenantService.checkExistById(tenantId);
       const placeExists = await this.placeService.checkExistById(placeId);
@@ -67,6 +68,7 @@ export class PendingBookingService {
         totalCharge: totalCharge,
         tenantId: tenantId,
         placeId: placeId,
+        payment: payment,
       };
       const newPendingBooking =
         await this.pendingBookingRepository.save(booking);

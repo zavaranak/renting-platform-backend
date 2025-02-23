@@ -140,7 +140,7 @@ export class PlaceService {
       place.lastUpdate = dayjs().valueOf();
       for (const [key, value] of Object.entries(placeUpdateInput)) {
         if (key === 'id') continue;
-        place[key] = value.toLowerCase();
+        place[key] = typeof value == 'string' ? value.toLowerCase() : value;
       }
       const updatedPlace = await this.placeRepository.save({ ...place });
       return {
@@ -150,13 +150,14 @@ export class PlaceService {
       };
     } catch (error) {
       console.error(
-        `An error occurred while updating place ${placeUpdateInput.id}`,
+        `An error occurred while updating place ${placeUpdateInput.id}: ${error}`,
       );
       if (error instanceof NotFoundException) {
         throw error;
       }
       throw new InternalServerErrorException(
-        'An error occurred while updating place',
+        'An error occurred while updating place:',
+        error,
       );
     }
   }
@@ -168,9 +169,9 @@ export class PlaceService {
     let imageValidation: boolean = true;
     const parsedImages: UploadFile[] = [];
     for (let i = 0; i < resolvedImages.length; i++) {
-      const ext: string = extname(resolvedImages[i].filename).toLowerCase();
+      const ext: string = extname(resolvedImages[i].filename);
       imageValidation = (Object.values(PhotoExtention) as string[]).includes(
-        ext,
+        ext.toLowerCase(),
       );
       if (!imageValidation) {
         break;
