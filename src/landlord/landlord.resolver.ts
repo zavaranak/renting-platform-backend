@@ -4,7 +4,7 @@ import { Landlord } from './landlord.entity';
 import { LandlordService } from './landlord.service';
 import { GraphQLResolveInfo } from 'graphql';
 import { getRelations } from 'src/common/query_relation_handler';
-import { QueryParams, Condition } from 'src/common/query_function';
+import { QueryParams, QueryManyInput } from 'src/common/query_function';
 import { QueryResponse } from 'src/common/reponse';
 import { LandlordAttributeInput } from './landlord_attribute_input';
 import {
@@ -42,14 +42,20 @@ export class LandlordResolver {
   @Query(() => [Landlord])
   async getLandlords(
     @Info() info: GraphQLResolveInfo,
-    @Args({ name: 'conditions', type: () => [Condition], defaultValue: [] })
-    conditions?: Condition[],
+    @Args({
+      name: 'query_many_input',
+      type: () => QueryManyInput,
+    })
+    args?: QueryManyInput,
   ) {
     const { relations, fields } = getRelations(info);
+    const { conditions, pagination, orderBy } = args;
     const queryParams: QueryParams = {
       relations: relations ? relations : [],
       entityFields: fields,
       conditions: conditions && conditions.length > 0 ? conditions : undefined,
+      pagination: pagination,
+      orders: orderBy,
     };
     return await this.landlordService.getMany(queryParams);
   }

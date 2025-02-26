@@ -69,7 +69,7 @@ export class PlaceResolver {
     })
     args?: QueryManyInput,
   ) {
-    console.log(args);
+    // console.log(args);
     const { conditions, pagination, orderBy, selectedDate } = args;
     const { relations, fields } = getRelations(info);
     const queryParams: QueryParams = {

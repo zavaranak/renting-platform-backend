@@ -69,10 +69,10 @@ export class QueryOrder {
 }
 @InputType()
 export class QueryManyInput {
-  @Field(() => [Condition])
-  conditions: Condition[];
-  @Field({ defaultValue: { skip: 0, take: 100 } })
-  pagination: Pagination;
+  @Field(() => [Condition], { nullable: true })
+  conditions?: Condition[];
+  @Field({ defaultValue: { skip: 0, take: 100 }, nullable: true })
+  pagination?: Pagination;
   @Field(() => [QueryOrder], { nullable: true })
   orderBy?: [QueryOrder];
   @Field(() => SelectedDate, { nullable: true })
@@ -105,6 +105,7 @@ export async function queryOne<T>(
 
   Array.isArray(relations) &&
     relations.forEach((relation, index) => {
+      console.log(relation);
       queryBuilder.leftJoinAndSelect(
         `${MAIN_TABLE}.${relation}`,
         `relation${index}`,
@@ -158,11 +159,13 @@ export async function queryMany<T>(
     });
   if (conditions) {
     conditions.forEach((condition) => {
+      //for each condition
       const { operator, value, attributeName } = condition;
       const [table, column] = condition.key.includes('.')
         ? condition.key.split('.')
         : [MAIN_TABLE, condition.key];
-      if (table == MAIN_TABLE) {
+      //MAIN TABLE
+      if (table != 'attributes') {
         const query =
           operator == Operator.INCLUDE
             ? `:${column} = ANY(${table}.${column})`
@@ -170,23 +173,29 @@ export async function queryMany<T>(
         queryBuilder.andWhere(query, {
           [column]: value,
         });
-      } else if (RELATIONS.includes(table)) {
-        const query =
-          operator == Operator.INCLUDE
-            ? `:${column} = ANY(${attributeName}.${column})`
-            : `${attributeName}.${column} ${operator} :${column}`;
-        if (attributesMap.get(attributeName)) {
-          queryBuilder.andWhere(query, { [column]: value });
+      } else if (table == 'attributes') {
+        //handle attributes
+        var query = '';
+        if (column == 'name') {
+          const enum_name = getAttributeEnum(attributeName);
+          query = `${attributeName}.${column} ${operator} :${column}::${enum_name}`;
         } else {
-          attributesMap.set(attributeName, true);
-          queryBuilder.leftJoinAndSelect(
-            MAIN_TABLE + '.' + table,
-            attributeName,
-          );
-          queryBuilder.andWhere(query, {
-            [column]: column == 'valueNumber' ? Number(value) : value,
-          });
+          query = `${attributeName}.${column} ${operator} :${column}`;
         }
+        attributesMap.set(attributeName, true);
+        queryBuilder.leftJoinAndSelect(MAIN_TABLE + '.' + table, attributeName);
+        queryBuilder.andWhere(query, {
+          [column]: column == 'valueNumber' ? Number(value) : value,
+        });
+        //  else {
+        //   const query =
+        //     operator == Operator.INCLUDE
+        //       ? `:${column} = ANY(${table}.${column})`
+        //       : `${table}.${column} ${operator} :${column}`;
+        //   queryBuilder.andWhere(query, {
+        //     [column]: value,
+        //   });
+        // }
       }
     });
   }
@@ -220,16 +229,7 @@ export async function queryMany<T>(
         queryBuilder.addSelect(table + '.' + column);
         queryBuilder.addOrderBy(table + '.' + column, order);
       } else if (RELATIONS.includes(table)) {
-        var sqlType = '';
-        if (Object.values(PlaceAttributeName).includes(attributeName)) {
-          sqlType = 'place_attribute_name_enum';
-        }
-        if (Object.values(TenantAttributeName).includes(attributeName)) {
-          sqlType = 'tenant_attribute_name_enum';
-        }
-        if (Object.values(LandlordAttributeName).includes(attributeName)) {
-          sqlType = 'landlord_attribute_name_enum';
-        }
+        var sqlType = getAttributeEnum(attributeName);
         const query = `${table}.name = :value::${sqlType}`;
         if (relations.includes(table)) {
           queryBuilder.andWhere(query, {
@@ -254,6 +254,18 @@ export async function queryMany<T>(
   }
   return await queryBuilder.getMany();
 }
+
+const getAttributeEnum = (attributeName: any) => {
+  if (Object.values(PlaceAttributeName).includes(attributeName)) {
+    return 'place_attribute_name_enum';
+  }
+  if (Object.values(TenantAttributeName).includes(attributeName)) {
+    return 'tenant_attribute_name_enum';
+  }
+  if (Object.values(LandlordAttributeName).includes(attributeName)) {
+    return 'landlord_attribute_name_enum';
+  }
+};
 
 export async function queryDistinct<T>(
   repository: Repository<T>,

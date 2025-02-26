@@ -269,7 +269,7 @@ type Query {
   getTenants(query_many_input: QueryManyInput!): [Tenant!]!
   getOneTenant(value: String!, type: String!): Tenant!
   getOneLandlord(value: String!, type: String!): Landlord!
-  getLandlords(conditions: [Condition!]! = []): [Landlord!]!
+  getLandlords(query_many_input: QueryManyInput!): [Landlord!]!
   getOnePlace(value: String!, type: String!): Place!
   getCountries: QueryResponse!
   getCitiesByCountryName(country_name: String): QueryResponse!
@@ -279,8 +279,8 @@ type Query {
 }
 
 input QueryManyInput {
-  conditions: [Condition!]!
-  pagination: Pagination! = {take: 100, skip: 0}
+  conditions: [Condition!]
+  pagination: Pagination = {take: 100, skip: 0}
   orderBy: [QueryOrder!]
   selectedDate: SelectedDate
 }
