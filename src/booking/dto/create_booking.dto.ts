@@ -19,4 +19,6 @@ export class BookingInput {
   placeId: string;
   @Field(() => Payment)
   payment: Payment;
+  @Field(() => [String], { nullable: true })
+  guests?: string[];
 }

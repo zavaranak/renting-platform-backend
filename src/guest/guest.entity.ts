@@ -1,12 +1,12 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Gender } from '../common/constants';
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Gender } from '@common/constants';
+import { Entity, Column, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
-export class Profile {
+export class Guest {
   @Field()
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id?: string;
 
   @Field()

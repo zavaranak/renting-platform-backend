@@ -18,15 +18,17 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "moduleResolution": "node",
     "paths": {
       "@booking/*": ["src/booking/*"],
       "@tenant/*": ["src/tenant/*"],
+      "@guest/*": ["src/guest/*"],
       "@landlord/*": ["src/landlord/*"],
       "@place/*": ["src/place/*"],
       "@auth/*": ["src/auth/*"],
-      "@database": ["src/database/*"],
-      "@common": ["src/common/*"],
-      "@graphql": ["src/graphql/*"],
+      "@database/*": ["src/database/*"],
+      "@common/*": ["src/common/*"],
+      "@graphql/*": ["src/graphql/*"],
     }
   }
 }

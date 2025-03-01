@@ -65,4 +65,8 @@ export class CompletedBooking {
   })
   @Field(() => [BookingReview], { nullable: true })
   reviews?: BookingReview[];
+
+  @Field(() => [String], { nullable: true })
+  @Column({ nullable: true, type: 'varchar', array: true })
+  guests?: string[];
 }

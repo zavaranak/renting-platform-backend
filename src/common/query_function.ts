@@ -105,7 +105,6 @@ export async function queryOne<T>(
 
   Array.isArray(relations) &&
     relations.forEach((relation, index) => {
-      console.log(relation);
       queryBuilder.leftJoinAndSelect(
         `${MAIN_TABLE}.${relation}`,
         `relation${index}`,
@@ -113,11 +112,11 @@ export async function queryOne<T>(
     });
 
   if (queryValue && queryType) {
-    queryBuilder.where(`${MAIN_TABLE}.${queryType} = :queryValue`, {
+    const query = `${MAIN_TABLE}.${queryType} = :queryValue`;
+    queryBuilder.andWhere(query, {
       queryValue,
     });
   }
-
   if (conditions) {
     queryBuilder.andWhere(conditions);
   }
@@ -140,7 +139,7 @@ export async function queryMany<T>(
     entityFields,
     selectedDate,
   } = params;
-  const { take, skip } = pagination;
+  const { take, skip } = pagination ? pagination : { take: 100, skip: 0 };
 
   const queryBuilder = repository.createQueryBuilder(MAIN_TABLE);
 

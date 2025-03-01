@@ -53,4 +53,8 @@ export class ActiveBooking {
   @Field({ nullable: true })
   @Column({ type: 'bigint', nullable: true })
   paidDate: number;
+
+  @Field(() => [String], { nullable: true })
+  @Column({ nullable: true, type: 'varchar', array: true })
+  guests?: string[];
 }

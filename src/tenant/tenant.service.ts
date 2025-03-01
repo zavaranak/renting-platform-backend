@@ -155,6 +155,7 @@ export class TenantService {
   }
 
   async getOne(queryParams: QueryParams): Promise<Tenant> {
+    // console.log(queryParams);
     return await queryOne(this.tenantRepository, queryParams);
   }
 

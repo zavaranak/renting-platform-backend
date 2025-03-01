@@ -11,6 +11,7 @@ import { Notification } from 'src/notifcation/notification.entity';
 import { ActiveBooking } from '@booking/active_booking/active-booking.entity';
 import { PendingBooking } from '@booking/pending_booking/pending-booking.entity';
 import { CompletedBooking } from '@booking/completed_booking/completed-booking.entity';
+import { Guest } from 'src/guest/guest.entity';
 
 export const databaseProviders = [
   {
@@ -36,6 +37,7 @@ export const databaseProviders = [
           PlaceAttribute,
           BookingReview,
           Notification,
+          Guest,
         ],
         migrations: ['dist/database/migrations/*{.ts,.js}'],
         synchronize: true,

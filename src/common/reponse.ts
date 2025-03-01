@@ -8,6 +8,7 @@ import { Notification } from 'src/notifcation/notification.entity';
 import { CompletedBooking } from '@booking/completed_booking/completed-booking.entity';
 import { ActiveBooking } from '@booking/active_booking/active-booking.entity';
 import { PendingBooking } from '@booking/pending_booking/pending-booking.entity';
+import { Guest } from 'src/guest/guest.entity';
 
 @ObjectType()
 export class QueryResponse {
@@ -29,6 +30,10 @@ export class QueryResponse {
   bookingReview?: BookingReview;
   @Field(() => [Notification], { nullable: true })
   notifications?: Notification[];
+  @Field(() => Guest, { nullable: true })
+  guest?: Guest;
+  @Field(() => [Guest], { nullable: true })
+  guests?: Guest[];
   @Field(() => [String], { nullable: true })
   customData?: String[];
 

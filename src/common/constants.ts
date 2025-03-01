@@ -36,7 +36,7 @@ export enum TenantAttributeName {
   LASTNAME = 'last_name',
   MIDDLENAME = 'middle_name',
   TEL = 'tel',
-  SEX = 'sex',
+  GENDER = 'gender',
   BIRTH_DAY = 'birth_day',
   DOCUMENT = 'document',
   COUNTRY = 'country',
@@ -48,6 +48,7 @@ export enum LandlordAttributeName {
   LASTNAME = 'last_name',
   MIDDLENAME = 'middle_name',
   TEL = 'tel',
+  GENDER = 'gender',
   COMPANY = 'company',
   BIRTH_DAY = 'birth_day',
   AVATAR = 'avatar',
@@ -182,5 +183,6 @@ registerEnumType(Payment, { name: 'Payment' });
 export enum Gender {
   MALE,
   FEMALE,
+  OTHER,
 }
 registerEnumType(Gender, { name: 'Gender' });

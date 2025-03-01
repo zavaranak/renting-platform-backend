@@ -1,8 +1,8 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { Gender } from 'src/common/constants';
+import { Gender } from '@common/constants';
 
 @InputType()
-export class CreateProfileInput {
+export class CreateGuestInput {
   @Field()
   tenantId: string;
 
@@ -14,6 +14,8 @@ export class CreateProfileInput {
 
   @Field({ nullable: true })
   middleName?: string;
+
+  createdAt?: number;
 
   @Field(() => Gender, { nullable: true })
   gender?: Gender;
@@ -29,7 +31,7 @@ export class CreateProfileInput {
 }
 
 @InputType()
-export class UpdateProfileInput {
+export class UpdateGuestInput {
   @Field({ nullable: true })
   firstName?: string;
 

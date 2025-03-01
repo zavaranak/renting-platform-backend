@@ -28,8 +28,8 @@ export function getRelations(info: GraphQLResolveInfo) {
   });
 
   mainFields.includes('tenant') && relations.push('tenant');
-  mainFields.includes('booking') && relations.push('booking');
-  mainFields.includes('bookings') && relations.push('bookings');
+  // mainFields.includes('booking') && relations.push('booking');
+  // mainFields.includes('bookings') && relations.push('bookings');
   mainFields.includes('landlord') && relations.push('landlord');
   mainFields.includes('places') && relations.push('places');
   mainFields.includes('place') && relations.push('place');

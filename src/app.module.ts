@@ -14,6 +14,7 @@ import { AppGateway } from './app.gateway';
 // import { NotificationService } from './notifcation/notification.service';
 import { NotificationModule } from './notifcation/notification.module';
 import { BookingModule } from '@booking/booking.module';
+import { GuestModule } from '@guest/guest.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { BookingModule } from '@booking/booking.module';
     LandlordModule,
     NotificationModule,
     BookingModule,
+    GuestModule,
     // ActiveBookingModule,
     // CompletedBookingModule,
     // PendingBookingModule,

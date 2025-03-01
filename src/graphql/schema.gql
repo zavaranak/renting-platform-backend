@@ -15,7 +15,7 @@ enum TenantAttributeNames {
   LASTNAME
   MIDDLENAME
   TEL
-  SEX
+  GENDER
   BIRTH_DAY
   DOCUMENT
   COUNTRY
@@ -130,6 +130,7 @@ enum LandlordAttributeNames {
   LASTNAME
   MIDDLENAME
   TEL
+  GENDER
   COMPANY
   BIRTH_DAY
   AVATAR
@@ -161,6 +162,7 @@ type CompletedBooking {
   tenantId: String!
   placeId: String!
   reviews: [BookingReview!]
+  guests: [String!]
 }
 
 enum BookingStatus {
@@ -216,6 +218,7 @@ type ActiveBooking {
   payment: Payment!
   placeId: String!
   paidDate: Float
+  guests: [String!]
 }
 
 enum Payment {
@@ -236,6 +239,26 @@ type PendingBooking {
   placeId: String!
   payment: Payment!
   updateBy: String!
+  guests: [String!]
+}
+
+type Guest {
+  id: String!
+  createdAt: Float!
+  tenantId: String!
+  firstName: String!
+  lastName: String!
+  middleName: String
+  gender: Gender
+  birthday: Float!
+  email: String!
+  tel: String!
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
 }
 
 type QueryResponse {
@@ -248,6 +271,8 @@ type QueryResponse {
   pendingBooking: PendingBooking
   bookingReview: BookingReview
   notifications: [Notification!]
+  guest: Guest
+  guests: [Guest!]
   customData: [String!]
   type: ActionStatus
 }
@@ -276,6 +301,8 @@ type Query {
   getCities: QueryResponse!
   getPlaces(query_many_input: QueryManyInput!): [Place!]!
   getNotifications: QueryResponse!
+  getOneGuest(value: String!, type: String!): QueryResponse
+  getGuests(value: String!, type: String!): QueryResponse
 }
 
 input QueryManyInput {
@@ -323,7 +350,7 @@ enum attributeName {
   LASTNAME
   MIDDLENAME
   TEL
-  SEX
+  GENDER
   BIRTH_DAY
   DOCUMENT
   COUNTRY
@@ -383,6 +410,9 @@ type Mutation {
   cancelPendingBooking(pendingBookingId: String!): QueryResponse!
   cancelActiveBooking(activeBookingId: String!): QueryResponse!
   completeActiveBooking(activeBookingId: String!): QueryResponse!
+  createGuest(input: CreateGuestInput!): QueryResponse!
+  updateGuest(id: String!, input: UpdateGuestInput!): QueryResponse!
+  deleteGuest(id: String!): QueryResponse!
 }
 
 input UserInput {
@@ -453,4 +483,26 @@ input BookingInput {
   tenantId: String!
   placeId: String!
   payment: Payment!
+  guests: [String!]
+}
+
+input CreateGuestInput {
+  tenantId: String!
+  firstName: String!
+  lastName: String!
+  middleName: String
+  gender: Gender
+  birthday: Float!
+  email: String!
+  tel: String!
+}
+
+input UpdateGuestInput {
+  firstName: String
+  lastName: String
+  middleName: String
+  gender: Gender
+  birthday: Float
+  email: String
+  tel: String
 }
