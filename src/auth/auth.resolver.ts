@@ -6,7 +6,7 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard, LocalAuthGuard } from './graphql.auth-guard';
 import { LandlordService } from 'src/landlord/landlord.service';
 import { TenantService } from 'src/tenant/tenant.service';
-import { QueryParams } from 'src/common/query_function';
+import { QueryParams } from '@common/query.handler';
 
 @Resolver()
 export class AuthResolver {

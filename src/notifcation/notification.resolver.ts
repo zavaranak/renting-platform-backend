@@ -3,8 +3,8 @@ import { NotificationService } from './notification.service';
 // import { Notification } from './notification.entity';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/graphql.auth-guard';
-import { QueryResponse } from 'src/common/reponse';
-import { Operator, QueryParams } from 'src/common/query_function';
+import { QueryResponse } from '@common/reponse.type';
+import { Operator, QueryParams } from '@common/query.handler';
 import { ActionStatus } from 'src/common/constants';
 
 @Resolver()

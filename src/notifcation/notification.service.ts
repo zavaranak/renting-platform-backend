@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { NotificationData, NotificationType } from 'src/common/constants';
 import { Notification } from './notification.entity';
 import { Repository, DataSource } from 'typeorm';
-import { QueryParams, queryMany } from 'src/common/query_function';
+import { QueryParams, queryMany } from '@common/query.handler';
 @Injectable()
 export class NotificationService {
   public connectedTenants = new Map<

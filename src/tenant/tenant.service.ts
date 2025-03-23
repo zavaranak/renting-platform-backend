@@ -19,11 +19,11 @@ import {
   queryOne,
   queryDistinct,
   Operator,
-} from 'src/common/query_function';
+} from '@common/query.handler';
 import { TenantAttributeInput } from './tenant_attribute_input';
-import { QueryResponse } from 'src/common/reponse';
+import { QueryResponse } from '@common/reponse.type';
 import * as bcrypt from 'bcrypt';
-import { AttributeUpdateInput } from 'src/common/attribute_update_input';
+import { AttributeUpdateInput } from '@common/updateAttribute.type';
 import dayjs from 'dayjs';
 
 @Injectable()

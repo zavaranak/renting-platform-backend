@@ -8,10 +8,10 @@ import {
   NotFoundException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
+import { queryMany, QueryParams, queryOne } from '@common/query.handler';
 import { ActionStatus, BookingStatus } from 'src/common/constants';
 import { BookingUpdateInput } from '../dto/update_booking.dto';
-import { QueryResponse } from 'src/common/reponse';
+import { QueryResponse } from '@common/reponse.type';
 import dayjs from 'dayjs';
 import { PendingBookingService } from '@booking/pending_booking/pending-booking.service';
 import { ActiveBookingService } from '@booking/active_booking/active-booking.service';

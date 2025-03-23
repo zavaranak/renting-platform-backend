@@ -12,7 +12,7 @@ import {
   AttributesStatus,
   UserStatus,
 } from 'src/common/constants';
-import { AttributeUpdateInput } from 'src/common/attribute_update_input';
+import { AttributeUpdateInput } from '@common/updateAttribute.type';
 import { LandlordAttribute } from './landlord_attribute.entity';
 import {
   Operator,
@@ -20,10 +20,10 @@ import {
   queryMany,
   queryOne,
   QueryParams,
-} from 'src/common/query_function';
+} from '@common/query.handler';
 import * as bcrypt from 'bcrypt';
 import { LandlordAttributeInput } from './landlord_attribute_input';
-import { QueryResponse } from 'src/common/reponse';
+import { QueryResponse } from '@common/reponse.type';
 import dayjs from 'dayjs';
 
 @Injectable()

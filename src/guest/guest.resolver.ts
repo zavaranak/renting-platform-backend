@@ -3,8 +3,8 @@ import { Resolver, Query, Args, Info, Mutation } from '@nestjs/graphql';
 import { Guest } from './guest.entity';
 import GuestService from './guest.service';
 import { CreateGuestInput, UpdateGuestInput } from './dto/guest.input';
-import { QueryParams } from 'src/common/query_function';
-import { QueryResponse } from 'src/common/reponse';
+import { QueryParams } from '@common/query.handler';
+import { QueryResponse } from '@common/reponse.type';
 
 @Resolver(Guest)
 export class GuestResolver {

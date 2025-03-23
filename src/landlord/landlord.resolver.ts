@@ -3,9 +3,9 @@ import { Resolver, Query, Args, Info, Mutation } from '@nestjs/graphql';
 import { Landlord } from './landlord.entity';
 import { LandlordService } from './landlord.service';
 import { GraphQLResolveInfo } from 'graphql';
-import { getRelations } from 'src/common/query_relation_handler';
-import { QueryParams, QueryManyInput } from 'src/common/query_function';
-import { QueryResponse } from 'src/common/reponse';
+import { getRelations } from '@common/queryRelation.handler';
+import { QueryParams, QueryManyInput } from '@common/query.handler';
+import { QueryResponse } from '@common/reponse.type';
 import { LandlordAttributeInput } from './landlord_attribute_input';
 import {
   LandlordAttributeName,
@@ -13,9 +13,9 @@ import {
   ActionStatus,
   PhotoExtention,
 } from 'src/common/constants';
-import { uploadFileFromStream } from 'src/common/upload_files';
+import { uploadFileFromStream } from '@common/uploadFiles.handler';
 import { extname } from 'path';
-import { AttributeUpdateInput } from 'src/common/attribute_update_input';
+import { AttributeUpdateInput } from '@common/updateAttribute.type';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import Upload from 'graphql-upload/Upload.js';
 

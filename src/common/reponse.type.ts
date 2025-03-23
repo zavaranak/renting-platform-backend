@@ -26,6 +26,12 @@ export class QueryResponse {
   activeBooking?: ActiveBooking;
   @Field(() => PendingBooking, { nullable: true })
   pendingBooking?: PendingBooking;
+  @Field(() => [CompletedBooking], { nullable: true })
+  completedBookings?: CompletedBooking[];
+  @Field(() => [ActiveBooking], { nullable: true })
+  activeBookings?: ActiveBooking[];
+  @Field(() => [PendingBooking], { nullable: true })
+  pendingBookings?: PendingBooking[];
   @Field(() => BookingReview, { nullable: true })
   bookingReview?: BookingReview;
   @Field(() => [Notification], { nullable: true })
@@ -36,7 +42,6 @@ export class QueryResponse {
   guests?: Guest[];
   @Field(() => [String], { nullable: true })
   customData?: String[];
-
   @Field(() => ActionStatus, { nullable: true })
   type: ActionStatus;
 }

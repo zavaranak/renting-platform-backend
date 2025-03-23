@@ -7,7 +7,7 @@ import {
   PlaceAttributeName,
   TenantAttributeName,
 } from './constants';
-import { RELATIONS } from './query_relation_handler';
+import { RELATIONS } from './queryRelation.handler';
 import { PendingBooking } from '@booking/pending_booking/pending-booking.entity';
 import { ActiveBooking } from '@booking/active_booking/active-booking.entity';
 
@@ -25,7 +25,6 @@ export enum Order {
 }
 
 export const MAIN_TABLE = 'mainTable';
-const attributeTable = 'attributes';
 @InputType()
 export class SelectedDate {
   @Field()
@@ -88,8 +87,6 @@ export interface QueryParams {
   orders?: QueryOrder[];
   relations?: string[];
   selectedDate?: SelectedDate;
-  // relationFields?: Map<string, string[]>;
-  // subRelationFields?: Map<string, string[]>;
 }
 
 export async function queryOne<T>(
@@ -99,17 +96,18 @@ export async function queryOne<T>(
   const { queryValue, queryType, conditions, relations, entityFields } = params;
   const queryBuilder = repository.createQueryBuilder(MAIN_TABLE);
 
-  Array.isArray(entityFields) &&
-    entityFields.length > 0 &&
+  if (Array.isArray(entityFields) && entityFields.length > 0) {
     queryBuilder.select(entityFields);
+  }
 
-  Array.isArray(relations) &&
+  if (Array.isArray(relations) && relations.length > 0) {
     relations.forEach((relation, index) => {
       queryBuilder.leftJoinAndSelect(
         `${MAIN_TABLE}.${relation}`,
         `relation${index}`,
       );
     });
+  }
 
   if (queryValue && queryType) {
     const query = `${MAIN_TABLE}.${queryType} = :queryValue`;
@@ -143,19 +141,22 @@ export async function queryMany<T>(
 
   const queryBuilder = repository.createQueryBuilder(MAIN_TABLE);
 
-  Array.isArray(entityFields) &&
-    entityFields.length > 0 &&
+  if (Array.isArray(entityFields) && entityFields.length > 0) {
     queryBuilder.select(entityFields);
+  }
 
   if (queryValue && queryType) {
     queryBuilder.where(`${MAIN_TABLE}.${queryType} = :queryValue`, {
       queryValue,
     });
   }
-  Array.isArray(relations) &&
+
+  if (Array.isArray(relations) && relations.length > 0) {
     relations.forEach((relation) => {
       queryBuilder.leftJoinAndSelect(MAIN_TABLE + '.' + relation, relation);
     });
+  }
+
   if (conditions) {
     conditions.forEach((condition) => {
       //for each condition

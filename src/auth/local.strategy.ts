@@ -6,7 +6,7 @@ import { Actions, Roles } from './dto/auth_input';
 import { EMAIL_EXISTED, NO_ACTIONS } from 'src/common/constants';
 import { LandlordService } from 'src/landlord/landlord.service';
 import * as bcrypt from 'bcrypt';
-import { MAIN_TABLE } from 'src/common/query_function';
+import { MAIN_TABLE } from '@common/query.handler';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {

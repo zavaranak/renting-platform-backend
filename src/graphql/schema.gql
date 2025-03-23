@@ -269,6 +269,9 @@ type QueryResponse {
   completedBooking: CompletedBooking
   activeBooking: ActiveBooking
   pendingBooking: PendingBooking
+  completedBookings: [CompletedBooking!]
+  activeBookings: [ActiveBooking!]
+  pendingBookings: [PendingBooking!]
   bookingReview: BookingReview
   notifications: [Notification!]
   guest: Guest
@@ -301,6 +304,12 @@ type Query {
   getCities: QueryResponse!
   getPlaces(query_many_input: QueryManyInput!): [Place!]!
   getNotifications: QueryResponse!
+  getOnePendingBooking(value: String!, type: String!): PendingBooking!
+  getManyPendingBooking(query_many_input: QueryManyInput!): [PendingBooking!]!
+  getOneActiveBooking(value: String!, type: String!): ActiveBooking!
+  getManyActiveBooking(query_many_input: QueryManyInput!): [ActiveBooking!]!
+  getOneCompletedBooking(value: String!, type: String!): CompletedBooking!
+  getManyCompletedBooking(query_many_input: QueryManyInput!): [CompletedBooking!]!
   getOneGuest(value: String!, type: String!): QueryResponse
   getGuests(value: String!, type: String!): QueryResponse
 }

@@ -4,11 +4,11 @@ import { PlaceInput } from './dto/create_place.dto';
 import { PlaceUpdateInput } from './dto/update_place.dto';
 import { Place } from './place.entity';
 import { GraphQLResolveInfo } from 'graphql';
-import { getRelations } from 'src/common/query_relation_handler';
-import { QueryParams, QueryManyInput } from 'src/common/query_function';
-import { QueryResponse } from 'src/common/reponse';
+import { getRelations } from '@common/queryRelation.handler';
+import { QueryParams, QueryManyInput } from '@common/query.handler';
+import { QueryResponse } from '@common/reponse.type';
 import { PlaceAttributeInput } from './dto/place_attribute_input';
-import { AttributeUpdateInput } from 'src/common/attribute_update_input';
+import { AttributeUpdateInput } from '@common/updateAttribute.type';
 
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import Upload from 'graphql-upload/Upload.js';

@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { BookingReview } from './booking_review.entity';
 import { BookingReviewInput } from './booking_review_input';
-import { UploadFile, uploadFilesFromStream } from 'src/common/upload_files';
+import { UploadFile, uploadFilesFromStream } from '@common/uploadFiles.handler';
 import { extname } from 'path';
 import { ActionStatus, PhotoExtention, UploadType } from 'src/common/constants';
 import { TenantService } from 'src/tenant/tenant.service';
 import { CompletedBookingService } from '@booking/completed_booking/completed-booking.service';
-import { QueryResponse } from 'src/common/reponse';
+import { QueryResponse } from '@common/reponse.type';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()

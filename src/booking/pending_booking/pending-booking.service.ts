@@ -8,10 +8,10 @@ import {
   NotFoundException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { queryMany, QueryParams, queryOne } from 'src/common/query_function';
+import { queryMany, QueryParams, queryOne } from '@common/query.handler';
 import { ActionStatus, BookingStatus } from 'src/common/constants';
 import { BookingUpdateInput } from '../dto/update_booking.dto';
-import { QueryResponse } from 'src/common/reponse';
+import { QueryResponse } from '@common/reponse.type';
 import dayjs from 'dayjs';
 import { ActiveBookingService } from '@booking/active_booking/active-booking.service';
 import { CompletedBookingService } from '@booking/completed_booking/completed-booking.service';
@@ -42,6 +42,7 @@ export class PendingBookingService {
         tenantId,
         placeId,
         payment,
+        guests,
       } = bookingInput;
       const tenantExists = await this.tenantService.checkExistById(tenantId);
       const placeExists = await this.placeService.checkExistById(placeId);
@@ -69,6 +70,7 @@ export class PendingBookingService {
         tenantId: tenantId,
         placeId: placeId,
         payment: payment,
+        guests: guests,
       };
       const newPendingBooking =
         await this.pendingBookingRepository.save(booking);

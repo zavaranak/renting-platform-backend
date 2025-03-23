@@ -25,14 +25,14 @@ import {
   queryDistinct,
   Condition,
   Operator,
-} from 'src/common/query_function';
+} from '@common/query.handler';
 import { PlaceAttributeInput } from './dto/place_attribute_input';
-import { QueryResponse } from 'src/common/reponse';
+import { QueryResponse } from '@common/reponse.type';
 import * as Upload from 'graphql-upload/Upload.js';
-import { UploadFile, uploadFilesFromStream } from 'src/common/upload_files';
+import { UploadFile, uploadFilesFromStream } from '@common/uploadFiles.handler';
 import { extname } from 'path';
 import dayjs from 'dayjs';
-import { AttributeUpdateInput } from 'src/common/attribute_update_input';
+import { AttributeUpdateInput } from '@common/updateAttribute.type';
 
 @Injectable()
 export class PlaceService {

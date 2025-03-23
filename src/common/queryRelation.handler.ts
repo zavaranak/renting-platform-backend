@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { MAIN_TABLE } from './query_function';
+import { MAIN_TABLE } from './query.handler';
 
 export const RELATIONS = [
   'tenant',

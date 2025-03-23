@@ -10,19 +10,15 @@ import { TenantService } from './tenant.service';
 import { Tenant } from './tenant.entity';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/graphql.auth-guard';
-import { getRelations } from 'src/common/query_relation_handler';
+import { getRelations } from '@common/queryRelation.handler';
 import { GraphQLResolveInfo } from 'graphql';
 import { TenantAttributeInput } from './tenant_attribute_input';
-import { QueryResponse } from 'src/common/reponse';
-import {
-  QueryParams,
-  Condition,
-  QueryManyInput,
-} from 'src/common/query_function';
+import { QueryResponse } from '@common/reponse.type';
+import { QueryParams, Condition, QueryManyInput } from '@common/query.handler';
 import { extname } from 'path';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import Upload from 'graphql-upload/Upload.js';
-import { uploadFileFromStream } from 'src/common/upload_files';
+import { uploadFileFromStream } from '@common/uploadFiles.handler';
 import {
   ActionStatus,
   PhotoExtention,
@@ -30,7 +26,7 @@ import {
   UploadType,
 } from 'src/common/constants';
 import { v4 as uuidv4 } from 'uuid';
-import { AttributeUpdateInput } from 'src/common/attribute_update_input';
+import { AttributeUpdateInput } from '@common/updateAttribute.type';
 
 @Resolver(Tenant)
 export class TenantResolver {
