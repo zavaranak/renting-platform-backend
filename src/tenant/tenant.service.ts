@@ -78,7 +78,7 @@ export class TenantService {
     const newAttributes: TenantAttribute[] = await Promise.all(
       attributes.map(async (attribute) => {
         const type =
-          attribute.name === TenantAttributeName.BIRTH_DAY ? 'date' : 'string';
+          attribute.name === TenantAttributeName.BIRTHDAY ? 'date' : 'string';
         return {
           name: attribute.name,
           value: attribute.value.toLowerCase(),
@@ -159,24 +159,24 @@ export class TenantService {
     return await queryOne(this.tenantRepository, queryParams);
   }
 
-  async updateBooking(tenantId: string, bookingId: string) {
-    try {
-      const updateCheck = await this.tenantRepository
-        .createQueryBuilder()
-        .update()
-        .set({ bookings: () => `array_append(bookings, :newBookingID)` })
-        .where(`id = :id`, { id: tenantId })
-        .setParameter('newBookingID', bookingId)
-        .execute();
-      if (updateCheck.affected === 0) {
-        throw new Error(`Tenant with id ${tenantId} not found.`);
-      }
-      return true;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  }
+  // async updateBooking(tenantId: string, bookingId: string) {
+  //   try {
+  //     const updateCheck = await this.tenantRepository
+  //       .createQueryBuilder()
+  //       .update()
+  //       .set({ bookings: () => `array_append(bookings, :newBookingID)` })
+  //       .where(`id = :id`, { id: tenantId })
+  //       .setParameter('newBookingID', bookingId)
+  //       .execute();
+  //     if (updateCheck.affected === 0) {
+  //       throw new Error(`Tenant with id ${tenantId} not found.`);
+  //     }
+  //     return true;
+  //   } catch (e) {
+  //     console.log(e);
+  //     return false;
+  //   }
+  // }
 
   async checkExist(username: string): Promise<boolean> {
     const check = await queryDistinct(this.tenantRepository, 'username', [

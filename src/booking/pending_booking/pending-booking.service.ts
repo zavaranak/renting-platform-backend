@@ -74,9 +74,6 @@ export class PendingBookingService {
       };
       const newPendingBooking =
         await this.pendingBookingRepository.save(booking);
-
-      await this.tenantService.updateBooking(tenantId, newPendingBooking.id);
-
       return {
         pendingBooking: newPendingBooking,
         message: 'Created new Booking',

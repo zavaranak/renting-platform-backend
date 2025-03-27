@@ -1,7 +1,7 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Payment, TermUnit } from 'src/common/constants';
-import { Guest } from 'src/guest/guest.entity';
+// import { Guest } from 'src/guest/guest.entity';
 
 @Entity()
 @ObjectType()
@@ -50,7 +50,7 @@ export class PendingBooking {
   @Column({ type: 'enum', enum: Payment })
   payment: Payment;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', nullable: true })
   updateBy?: string;
 

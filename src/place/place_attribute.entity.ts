@@ -17,7 +17,7 @@ export class PlaceAttribute {
   name: PlaceAttributeName;
 
   @Column({ type: 'integer', nullable: true })
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   valueNumber?: number;
 
   @Field(() => String)

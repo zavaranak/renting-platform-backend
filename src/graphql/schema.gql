@@ -16,7 +16,7 @@ enum TenantAttributeNames {
   MIDDLENAME
   TEL
   GENDER
-  BIRTH_DAY
+  BIRTHDAY
   DOCUMENT
   COUNTRY
   AVATAR
@@ -28,14 +28,13 @@ type Tenant {
   password: String
   createdAt: Float!
   status: String!
-  bookings: [String!]
   attributes: [TenantAttribute!]
 }
 
 type PlaceAttribute {
   id: String!
   name: PlaceAttributeNames!
-  valueNumber: Float!
+  valueNumber: Float
   value: String!
   place: Place!
 }
@@ -109,7 +108,6 @@ enum TermUnit {
   DAY
   WEEK
   MONTH
-  YEAR
 }
 
 enum PlaceStatus {
@@ -132,7 +130,7 @@ enum LandlordAttributeNames {
   TEL
   GENDER
   COMPANY
-  BIRTH_DAY
+  BIRTHDAY
   AVATAR
   DOCUMENT
   COUNTRY
@@ -238,7 +236,7 @@ type PendingBooking {
   tenantId: String!
   placeId: String!
   payment: Payment!
-  updateBy: String!
+  updateBy: String
   guests: [String!]
 }
 
@@ -360,7 +358,7 @@ enum attributeName {
   MIDDLENAME
   TEL
   GENDER
-  BIRTH_DAY
+  BIRTHDAY
   DOCUMENT
   COUNTRY
   AVATAR

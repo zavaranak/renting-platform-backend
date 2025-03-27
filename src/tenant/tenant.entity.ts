@@ -26,10 +26,6 @@ export class Tenant {
   @Field()
   status: UserStatus;
 
-  @Column({ type: 'varchar', array: true, nullable: true })
-  @Field(() => [String], { nullable: true })
-  bookings?: string[];
-
   @OneToMany(() => TenantAttribute, (attribute) => attribute.tenant, {
     nullable: true,
   })

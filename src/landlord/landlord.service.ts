@@ -70,9 +70,7 @@ export class LandlordService {
     const newAttributes: LandlordAttribute[] = await Promise.all(
       attributes.map(async (attribute) => {
         const type =
-          attribute.name === LandlordAttributeName.BIRTH_DAY
-            ? 'date'
-            : 'string';
+          attribute.name === LandlordAttributeName.BIRTHDAY ? 'date' : 'string';
         return {
           name: attribute.name,
           value: attribute.value.toLowerCase(),

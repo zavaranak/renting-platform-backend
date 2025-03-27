@@ -10,3 +10,6 @@ Meanwhile create new DataSource with that DataSourceOptions by method "new DataS
 
 Actually we can create a Database module, which has datasourceProviders including all INITIALIZED datasouce, then AppModule use DataBase Module as a provider.
 This way we don't event have to use TypeOrmModule.forRoot
+
+SQL
+select enumlabel from pg_enum where enumtypid = 'place_attribute_name_enum'::regtype;
