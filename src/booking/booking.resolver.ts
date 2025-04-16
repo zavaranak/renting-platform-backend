@@ -86,14 +86,7 @@ export class BookingResolver {
       entityFields: fields,
       orders: orderBy,
     };
-    const bookings =
-      await this.pendingBookingService.getManyPendingBookings(queryParams);
-    return bookings;
-    return {
-      message: `found pending bookings`,
-      type: ActionStatus.FAILED,
-      pendingBookings: bookings,
-    } as QueryResponse;
+    return await this.pendingBookingService.getManyPendingBookings(queryParams);
   }
   @Query(() => ActiveBooking)
   async getOneActiveBooking(
@@ -108,12 +101,7 @@ export class BookingResolver {
       relations: relations ? relations : [],
       entityFields: fields,
     };
-    const booking =
-      await this.activeBookingService.getOneActiveBooking(queryParams);
-    return {
-      message: `found active booking with ${type}:${value}`,
-      activeBooking: booking,
-    } as QueryResponse;
+    return await this.activeBookingService.getOneActiveBooking(queryParams);
   }
 
   @Query(() => [ActiveBooking])
@@ -135,13 +123,7 @@ export class BookingResolver {
       orders: orderBy,
       selectedDate: selectedDate,
     };
-    const bookings =
-      await this.activeBookingService.getManyActiveBookings(queryParams);
-    return {
-      message: `found active bookings`,
-      type: ActionStatus.FAILED,
-      activeBookings: bookings,
-    } as QueryResponse;
+    return await this.activeBookingService.getManyActiveBookings(queryParams);
   }
   @Query(() => CompletedBooking)
   async getOneCompletedBooking(
@@ -156,12 +138,9 @@ export class BookingResolver {
       relations: relations ? relations : [],
       entityFields: fields,
     };
-    const booking =
-      await this.completedBookingService.getOneCompletedBooking(queryParams);
-    return {
-      message: `found completed booking with ${type}:${value}`,
-      completedBooking: booking,
-    } as QueryResponse;
+    return await this.completedBookingService.getOneCompletedBooking(
+      queryParams,
+    );
   }
 
   @Query(() => [CompletedBooking])
@@ -183,12 +162,8 @@ export class BookingResolver {
       orders: orderBy,
       selectedDate: selectedDate,
     };
-    const bookings =
-      await this.completedBookingService.getManyCompletedBookings(queryParams);
-    return {
-      message: `found completed bookings`,
-      type: ActionStatus.FAILED,
-      completedBookings: bookings,
-    } as QueryResponse;
+    return await this.completedBookingService.getManyCompletedBookings(
+      queryParams,
+    );
   }
 }

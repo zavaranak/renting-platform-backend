@@ -236,7 +236,6 @@ type PendingBooking {
   tenantId: String!
   placeId: String!
   payment: Payment!
-  updateBy: String
   guests: [String!]
 }
 
