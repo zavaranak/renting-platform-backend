@@ -9,3 +9,10 @@ export class AttributeUpdateInput {
   @Field({ nullable: true })
   valueNumber?: number;
 }
+@InputType()
+export class UserAttributeUpdateInput {
+  @Field()
+  id: string;
+  @Field({ nullable: true })
+  value?: string;
+}

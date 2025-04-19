@@ -12,7 +12,10 @@ import {
   AttributesStatus,
   UserStatus,
 } from 'src/common/constants';
-import { AttributeUpdateInput } from '@common/updateAttribute.type';
+import {
+  AttributeUpdateInput,
+  UserAttributeUpdateInput,
+} from '@common/updateAttribute.type';
 import { LandlordAttribute } from './landlord_attribute.entity';
 import {
   Operator,
@@ -108,7 +111,7 @@ export class LandlordService {
     };
   }
 
-  async updateAttributes(updateInputArray: AttributeUpdateInput[]) {
+  async updateAttributes(updateInputArray: UserAttributeUpdateInput[]) {
     try {
       await Promise.all(
         updateInputArray.map(async (updateInput) => {

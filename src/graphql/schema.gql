@@ -403,7 +403,7 @@ type Mutation {
   setTenantAvatar(tenantId: String!, image: Upload!, avatarId: String): QueryResponse!
   addLandlordAtributes(landlordId: String!, attributesInput: [LandlordAttributeInput!]!): QueryResponse!
   removeLandlordAttributes(attributeIds: [String!]!): QueryResponse!
-  updateLandlordAttributes(attibuteUpdateInput: [AttributeUpdateInput!]!): QueryResponse!
+  updateLandlordAttributes(attributeUpdateInput: [UserAttributeUpdateInput!]!): QueryResponse!
   setLandlordAvatar(landlordId: String!, image: Upload!, avatarId: String): QueryResponse!
   createPlace(placeInput: PlaceInput!): QueryResponse!
   updatePlace(placeUpdateInput: PlaceUpdateInput!): QueryResponse!
@@ -450,6 +450,11 @@ scalar Upload
 input LandlordAttributeInput {
   name: LandlordAttributeNames!
   value: String!
+}
+
+input UserAttributeUpdateInput {
+  id: String!
+  value: String
 }
 
 input PlaceInput {

@@ -15,7 +15,10 @@ import {
 } from 'src/common/constants';
 import { uploadFileFromStream } from '@common/uploadFiles.handler';
 import { extname } from 'path';
-import { AttributeUpdateInput } from '@common/updateAttribute.type';
+import {
+  AttributeUpdateInput,
+  UserAttributeUpdateInput,
+} from '@common/updateAttribute.type';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import Upload from 'graphql-upload/Upload.js';
 
@@ -78,8 +81,11 @@ export class LandlordResolver {
   }
   @Mutation(() => QueryResponse)
   async updateLandlordAttributes(
-    @Args({ name: 'attibuteUpdateInput', type: () => [AttributeUpdateInput] })
-    attibuteUpdateInput: AttributeUpdateInput[],
+    @Args({
+      name: 'attributeUpdateInput',
+      type: () => [UserAttributeUpdateInput],
+    })
+    attibuteUpdateInput: UserAttributeUpdateInput[],
   ) {
     return this.landlordService.updateAttributes(attibuteUpdateInput);
   }
