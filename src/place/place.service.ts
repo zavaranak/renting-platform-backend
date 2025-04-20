@@ -69,8 +69,9 @@ export class PlaceService {
         city: placeInput.city.toLowerCase(),
         country: placeInput.country.toLowerCase(),
         type: placeInput.type,
-        area: placeInput.area,
+        area: Number(placeInput.area),
         status: PlaceStatus.FOR_RENT,
+        distanceFromCenter: Number(placeInput.distanceFromCenter),
         termUnit: placeInput.termUnit,
         landlord: landlord,
         createdAt: currentTime,
@@ -140,7 +141,10 @@ export class PlaceService {
       place.lastUpdate = dayjs().valueOf();
       for (const [key, value] of Object.entries(placeUpdateInput)) {
         if (key === 'id') continue;
-        place[key] = typeof value == 'string' ? value.toLowerCase() : value;
+        if (key === 'area' || key === 'distanceFromCenter') {
+          place[key] = Number(value);
+        } else
+          place[key] = typeof value == 'string' ? value.toLowerCase() : value;
       }
       const updatedPlace = await this.placeRepository.save({ ...place });
       return {

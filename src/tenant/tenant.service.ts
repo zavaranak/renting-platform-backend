@@ -23,7 +23,10 @@ import {
 import { TenantAttributeInput } from './tenant_attribute_input';
 import { QueryResponse } from '@common/reponse.type';
 import * as bcrypt from 'bcrypt';
-import { AttributeUpdateInput } from '@common/updateAttribute.type';
+import {
+  AttributeUpdateInput,
+  UserAttributeUpdateInput,
+} from '@common/updateAttribute.type';
 import dayjs from 'dayjs';
 
 @Injectable()
@@ -113,7 +116,7 @@ export class TenantService {
       message: 'Updated',
     };
   }
-  async updateAttributes(updateInputArray: AttributeUpdateInput[]) {
+  async updateAttributes(updateInputArray: UserAttributeUpdateInput[]) {
     try {
       await Promise.all(
         updateInputArray.map(async (updateInput) => {

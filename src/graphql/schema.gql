@@ -399,7 +399,7 @@ type Mutation {
   signUp(userInput: UserInput!): AuthResponse!
   addTenantAtributes(tenantId: String!, attributesInput: [TenantAttributeInput!]!): QueryResponse!
   removeTenantAttributes(attributeIds: [String!]!): QueryResponse!
-  updateTenantAttributes(attibuteUpdateInput: [AttributeUpdateInput!]!): QueryResponse!
+  updateTenantAttributes(attributeUpdateInput: [UserAttributeUpdateInput!]!): QueryResponse!
   setTenantAvatar(tenantId: String!, image: Upload!, avatarId: String): QueryResponse!
   addLandlordAtributes(landlordId: String!, attributesInput: [LandlordAttributeInput!]!): QueryResponse!
   removeLandlordAttributes(attributeIds: [String!]!): QueryResponse!
@@ -438,10 +438,9 @@ input TenantAttributeInput {
   value: String!
 }
 
-input AttributeUpdateInput {
+input UserAttributeUpdateInput {
   id: String!
   value: String
-  valueNumber: Float
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -452,18 +451,14 @@ input LandlordAttributeInput {
   value: String!
 }
 
-input UserAttributeUpdateInput {
-  id: String!
-  value: String
-}
-
 input PlaceInput {
   name: String!
   address: String!
   city: String!
   country: String!
-  area: Float!
+  area: String!
   landlordId: String!
+  distanceFromCenter: String!
   type: [PlaceTypes!]!
   termUnit: [TermUnit!]!
 }
@@ -471,10 +466,13 @@ input PlaceInput {
 input PlaceUpdateInput {
   id: String!
   name: String
+  country: String
   address: String
   city: String
-  area: Float
+  area: String
+  distanceFromCenter: String
   price: Float
+  termUnit: [TermUnit!]
   photos: [String!]
   type: [PlaceTypes!]
 }
@@ -483,6 +481,12 @@ input PlaceAttributeInput {
   name: PlaceAttributeNames!
   value: String!
   valueNumber: Float!
+}
+
+input AttributeUpdateInput {
+  id: String!
+  value: String
+  valueNumber: Float
 }
 
 input BookingInput {

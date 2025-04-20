@@ -14,7 +14,7 @@ import { getRelations } from '@common/queryRelation.handler';
 import { GraphQLResolveInfo } from 'graphql';
 import { TenantAttributeInput } from './tenant_attribute_input';
 import { QueryResponse } from '@common/reponse.type';
-import { QueryParams, Condition, QueryManyInput } from '@common/query.handler';
+import { QueryParams, QueryManyInput } from '@common/query.handler';
 import { extname } from 'path';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import Upload from 'graphql-upload/Upload.js';
@@ -26,7 +26,7 @@ import {
   UploadType,
 } from 'src/common/constants';
 import { v4 as uuidv4 } from 'uuid';
-import { AttributeUpdateInput } from '@common/updateAttribute.type';
+import { UserAttributeUpdateInput } from '@common/updateAttribute.type';
 
 @Resolver(Tenant)
 export class TenantResolver {
@@ -90,10 +90,13 @@ export class TenantResolver {
   }
   @Mutation(() => QueryResponse)
   async updateTenantAttributes(
-    @Args({ name: 'attibuteUpdateInput', type: () => [AttributeUpdateInput] })
-    attibuteUpdateInput: AttributeUpdateInput[],
+    @Args({
+      name: 'attributeUpdateInput',
+      type: () => [UserAttributeUpdateInput],
+    })
+    attributeUpdateInput: UserAttributeUpdateInput[],
   ) {
-    return this.tenantService.updateAttributes(attibuteUpdateInput);
+    return this.tenantService.updateAttributes(attributeUpdateInput);
   }
 
   @Mutation(() => QueryResponse)

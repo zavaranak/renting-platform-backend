@@ -11,10 +11,12 @@ export class PlaceInput {
   city: string;
   @Field()
   country: string;
-  @Field()
+  @Field(() => String)
   area: number;
   @Field()
   landlordId: string;
+  @Field(() => String)
+  distanceFromCenter: number;
   @Field(() => [PlaceTypes])
   type: PlaceTypes[];
   @Field(() => [TermUnit])
