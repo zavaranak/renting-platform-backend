@@ -469,8 +469,8 @@ input PlaceUpdateInput {
   country: String
   address: String
   city: String
-  area: String
-  distanceFromCenter: String
+  area: Float
+  distanceFromCenter: Float
   price: Float
   termUnit: [TermUnit!]
   photos: [String!]

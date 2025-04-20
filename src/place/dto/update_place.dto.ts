@@ -13,9 +13,9 @@ export class PlaceUpdateInput {
   address?: string;
   @Field({ nullable: true })
   city?: string;
-  @Field(() => String, { nullable: true })
+  @Field(() => Number, { nullable: true })
   area?: number;
-  @Field(() => String, { nullable: true })
+  @Field(() => Number, { nullable: true })
   distanceFromCenter?: number;
   @Field({ nullable: true })
   price?: number;
