@@ -94,19 +94,8 @@ export default class GuestService {
   }
 
   // Find all profiles
-  async getMany(queryParams): Promise<QueryResponse> {
+  async getMany(queryParams: QueryParams): Promise<Guest[]> {
     const guests = await queryMany(this.guestRepository, queryParams);
-    if (guests.length) {
-      return {
-        message: 'Guests found',
-        guests,
-        type: ActionStatus.SUCCESSFUL,
-      };
-    } else {
-      return {
-        message: 'Guests not found',
-        type: ActionStatus.FAILED,
-      };
-    }
+    return guests;
   }
 }

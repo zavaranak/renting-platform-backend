@@ -3,8 +3,10 @@ import { Resolver, Query, Args, Info, Mutation } from '@nestjs/graphql';
 import { Guest } from './guest.entity';
 import GuestService from './guest.service';
 import { CreateGuestInput, UpdateGuestInput } from './dto/guest.input';
-import { QueryParams } from '@common/query.handler';
+import { QueryManyInput, QueryParams } from '@common/query.handler';
 import { QueryResponse } from '@common/reponse.type';
+import { getRelations } from '@common/queryRelation.handler';
+import { GraphQLResolveInfo } from 'graphql';
 
 @Resolver(Guest)
 export class GuestResolver {
@@ -23,12 +25,21 @@ export class GuestResolver {
   }
 
   // Query: Get all profiles
-  @Query(() => QueryResponse, { nullable: true })
+  @Query(() => [Guest])
   async getGuests(
-    @Args('value') value: string,
-    @Args('type') type: string,
-  ): Promise<QueryResponse> {
-    const queryParams: QueryParams = { queryType: type, queryValue: value };
+    @Info() info: GraphQLResolveInfo,
+    // @Args('type') type: string,
+    @Args('queryManyInput') args: QueryManyInput,
+  ): Promise<Guest[]> {
+    const { relations, fields } = getRelations(info);
+    const { conditions, pagination, orderBy } = args;
+    const queryParams: QueryParams = {
+      relations: relations ? relations : [],
+      entityFields: fields,
+      conditions: conditions && conditions.length > 0 ? conditions : undefined,
+      pagination: pagination,
+      orders: orderBy,
+    };
     return this.guestService.getMany(queryParams);
   }
 

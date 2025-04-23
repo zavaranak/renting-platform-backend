@@ -18,6 +18,7 @@ export enum Operator {
   GREATER_AND_EQUAL = '>=',
   SMALLER_AND_EQUAL = '<=',
   INCLUDE = 'INCLUDE',
+  IN = 'IN',
 }
 export enum Order {
   asc = 'ASC',
@@ -169,7 +170,9 @@ export async function queryMany<T>(
         const query =
           operator == Operator.INCLUDE
             ? `:${column} = ANY(${table}.${column})`
-            : `${table}.${column} ${operator} :${column}`;
+            : operator == Operator.IN
+              ? `${table}.${column} IN (${value})`
+              : `${table}.${column} ${operator} :${column}`;
         queryBuilder.andWhere(query, {
           [column]: value,
         });
@@ -288,6 +291,10 @@ export async function queryDistinct<T>(
       if (condition.operator == Operator.INCLUDE) {
         queryBuilder.andWhere(`:${condition.key} = ANY(${condition.key})`, {
           [condition.key]: condition.value,
+        });
+      } else if (condition.operator == Operator.IN) {
+        queryBuilder.andWhere(`${condition.key} IN (${condition.value})`, {
+          // [condition.key]: condition.value,
         });
       } else {
         queryBuilder.andWhere(

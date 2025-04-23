@@ -17,13 +17,13 @@ export class PendingBooking {
   @Column({ type: 'bigint' })
   lastUpdate: number;
 
-  @Field()
-  @Column({ type: 'bigint' })
-  startAt: number;
+  @Field({ nullable: true })
+  @Column({ type: 'bigint', nullable: true })
+  startAt?: number;
 
-  @Field()
-  @Column({ type: 'bigint' })
-  endAt: number;
+  @Field({ nullable: true })
+  @Column({ type: 'bigint', nullable: true })
+  endAt?: number;
 
   @Field()
   @Column({ type: 'enum', enum: TermUnit })

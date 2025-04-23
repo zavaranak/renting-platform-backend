@@ -150,8 +150,8 @@ type CompletedBooking {
   id: String!
   createdAt: Float!
   lastUpdate: Float!
-  startAt: Float!
-  endAt: Float!
+  startAt: Float
+  endAt: Float
   termUnit: String!
   period: Float!
   status: BookingStatus!
@@ -207,8 +207,8 @@ type ActiveBooking {
   id: String!
   createdAt: Float!
   lastUpdate: Float!
-  startAt: Float!
-  endAt: Float!
+  startAt: Float
+  endAt: Float
   termUnit: TermUnit!
   period: Float!
   totalCharge: Float!
@@ -228,8 +228,8 @@ type PendingBooking {
   id: String!
   createdAt: Float!
   lastUpdate: Float!
-  startAt: Float!
-  endAt: Float!
+  startAt: Float
+  endAt: Float
   termUnit: String!
   period: Float!
   totalCharge: Float!
@@ -308,7 +308,7 @@ type Query {
   getOneCompletedBooking(value: String!, type: String!): CompletedBooking!
   getManyCompletedBooking(query_many_input: QueryManyInput!): [CompletedBooking!]!
   getOneGuest(value: String!, type: String!): QueryResponse
-  getGuests(value: String!, type: String!): QueryResponse
+  getGuests(queryManyInput: QueryManyInput!): [Guest!]!
 }
 
 input QueryManyInput {
@@ -371,6 +371,7 @@ enum operator {
   GREATER_AND_EQUAL
   SMALLER_AND_EQUAL
   INCLUDE
+  IN
 }
 
 input Pagination {
