@@ -193,9 +193,25 @@ export class PlaceService {
         type: ActionStatus.FAILED,
       };
     const imagesUrl: string[] = await uploadFilesFromStream(parsedImages);
+
+    const place = await queryOne(this.placeRepository, {
+      queryValue: placeId,
+      queryType: 'id',
+      entityFields: ['mainTable.id', 'mainTable.photos'],
+    });
+    console.log(place);
+    if (!place) {
+      return {
+        message: `Place not found`,
+        type: ActionStatus.FAILED,
+      };
+    }
+    const newPhotos =
+      place && place.photos ? [...place.photos, ...imagesUrl] : [...imagesUrl];
+
     return this.updateOne({
       id: placeId,
-      photos: imagesUrl,
+      photos: newPhotos,
     });
   }
 

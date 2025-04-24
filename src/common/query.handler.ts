@@ -94,6 +94,7 @@ export async function queryOne<T>(
   repository: Repository<T>,
   params: QueryParams,
 ): Promise<T> {
+  // console.log(params);
   const { queryValue, queryType, conditions, relations, entityFields } = params;
   const queryBuilder = repository.createQueryBuilder(MAIN_TABLE);
 
