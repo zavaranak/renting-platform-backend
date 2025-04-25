@@ -13,3 +13,6 @@ This way we don't event have to use TypeOrmModule.forRoot
 
 SQL
 select enumlabel from pg_enum where enumtypid = 'place_attribute_name_enum'::regtype;
+
+protoc generation:
+protogen.sh

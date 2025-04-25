@@ -183,3 +183,13 @@ export enum Gender {
   OTHER,
 }
 registerEnumType(Gender, { name: 'Gender' });
+
+export enum SubjectEmail {
+  BOOKING_CREATION_TENANT = 'tenant_create_booking',
+  BOOKING_CREATION_LANDLORD = 'landlord_new_booking',
+  BOOKING_CONFIRMATION = 'landlord_confirm_booking',
+  BOOKING_REJECTION = 'landlord_reject_booking',
+  BOOKING_CANCELLATION_BY_TENANT = 'tenant_cancel_booking',
+  BOOKING_CANCELLATION_BY_LANDLORD = 'landlord_cancel_booking',
+  BOOKING_COMPLETION = 'booking_completed',
+}

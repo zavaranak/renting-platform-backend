@@ -15,6 +15,7 @@ import { AppGateway } from './app.gateway';
 import { NotificationModule } from './notifcation/notification.module';
 import { BookingModule } from '@booking/booking.module';
 import { GuestModule } from '@guest/guest.module';
+import { EmailModule } from './email-by-grpc/email.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { GuestModule } from '@guest/guest.module';
     NotificationModule,
     BookingModule,
     GuestModule,
+    EmailModule,
     // ActiveBookingModule,
     // CompletedBookingModule,
     // PendingBookingModule,

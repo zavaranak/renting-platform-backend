@@ -9,12 +9,18 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { queryMany, QueryParams, queryOne } from '@common/query.handler';
-import { ActionStatus, BookingStatus } from 'src/common/constants';
+import {
+  ActionStatus,
+  BookingStatus,
+  SubjectEmail,
+} from 'src/common/constants';
 import { BookingUpdateInput } from '../dto/update_booking.dto';
 import { QueryResponse } from '@common/reponse.type';
 import dayjs from 'dayjs';
 import { ActiveBookingService } from '@booking/active_booking/active-booking.service';
 import { CompletedBookingService } from '@booking/completed_booking/completed-booking.service';
+import { EmailGrpcService } from 'src/email-by-grpc/email.service';
+import { Roles } from '@auth/dto/auth_input';
 
 @Injectable()
 export class PendingBookingService {
@@ -27,6 +33,7 @@ export class PendingBookingService {
     private completedBookingService: CompletedBookingService,
     private tenantService: TenantService,
     private placeService: PlaceService,
+    private emailService: EmailGrpcService,
   ) {
     this.pendingBookingRepository =
       this.dataSource.getRepository(PendingBooking);
@@ -45,14 +52,19 @@ export class PendingBookingService {
         guests,
       } = bookingInput;
       const tenantExists = await this.tenantService.checkExistById(tenantId);
-      const placeExists = await this.placeService.checkExistById(placeId);
+      const place = await this.placeService.getOne({
+        queryType: 'id',
+        queryValue: placeId,
+        entityFields: ['mainTable.id'],
+        relations: ['landlord'],
+      });
       if (!tenantExists) {
         return {
           message: 'Tenant does not exist',
           type: ActionStatus.FAILED,
         };
       }
-      if (!placeExists) {
+      if (!place) {
         return {
           message: 'Place does not exist',
           type: ActionStatus.FAILED,
@@ -74,6 +86,17 @@ export class PendingBookingService {
       };
       const newPendingBooking =
         await this.pendingBookingRepository.save(booking);
+
+      this.emailService.sendEmailToUser(
+        tenantId,
+        SubjectEmail.BOOKING_CREATION_TENANT,
+        Roles.TENANT,
+      );
+      this.emailService.sendEmailToUser(
+        place.landlord.id,
+        SubjectEmail.BOOKING_CREATION_LANDLORD,
+        Roles.LANDLORD,
+      );
       return {
         pendingBooking: newPendingBooking,
         message: 'Created new Booking',
@@ -164,6 +187,11 @@ export class PendingBookingService {
         result.identifiers[0].id
       ) {
         await this.pendingBookingRepository.delete({ id: bookingId });
+        this.emailService.sendEmailToUser(
+          'tenantId',
+          SubjectEmail.BOOKING_CANCELLATION_BY_TENANT,
+          Roles.TENANT,
+        );
         return {
           type: ActionStatus.SUCCESSFUL,
           message: 'Pending booking is now cancel',

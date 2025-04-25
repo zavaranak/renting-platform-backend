@@ -417,6 +417,8 @@ type Mutation {
   cancelPendingBooking(pendingBookingId: String!): QueryResponse!
   cancelActiveBooking(activeBookingId: String!): QueryResponse!
   completeActiveBooking(activeBookingId: String!): QueryResponse!
+  sendEmail(email_request: EmailRequestInput!): Boolean!
+  sendEmailTemplate(type: String!, email: String!): Boolean!
   createGuest(input: CreateGuestInput!): QueryResponse!
   updateGuest(id: String!, input: UpdateGuestInput!): QueryResponse!
   deleteGuest(id: String!): QueryResponse!
@@ -500,6 +502,12 @@ input BookingInput {
   placeId: String!
   payment: Payment!
   guests: [String!]
+}
+
+input EmailRequestInput {
+  to: String!
+  subject: String!
+  body: String!
 }
 
 input CreateGuestInput {

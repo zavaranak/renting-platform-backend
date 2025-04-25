@@ -15,6 +15,7 @@ import { QueryResponse } from '@common/reponse.type';
 import dayjs from 'dayjs';
 import { PendingBookingService } from '@booking/pending_booking/pending-booking.service';
 import { CompletedBookingService } from '@booking/completed_booking/completed-booking.service';
+import { EmailGrpcService } from 'src/email-by-grpc/email.service';
 
 @Injectable()
 export class ActiveBookingService {
@@ -24,6 +25,7 @@ export class ActiveBookingService {
     @Inject(forwardRef(() => PendingBookingService))
     private readonly pendingBookingService: PendingBookingService,
     @Inject(forwardRef(() => CompletedBookingService))
+    private readonly emailService: EmailGrpcService,
     private readonly completedBookingService: CompletedBookingService,
   ) {
     this.activeBookingRepository = this.dataSource.getRepository(ActiveBooking);
@@ -33,6 +35,7 @@ export class ActiveBookingService {
       queryType: 'id',
       queryValue: bookingId,
     });
+
     return await this.activeBookingRepository.insert(booking);
   }
 

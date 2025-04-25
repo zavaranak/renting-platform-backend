@@ -6,8 +6,9 @@ import { BookingResolver } from '@booking/booking.resolver';
 import { ActiveBookingService } from '@booking/active_booking/active-booking.service';
 import { PendingBookingService } from '@booking/pending_booking/pending-booking.service';
 import { CompletedBookingService } from '@booking/completed_booking/completed-booking.service';
+import { EmailModule } from 'src/email-by-grpc/email.module';
 @Module({
-  imports: [DatabaseModule, TenantModule, PlaceModule],
+  imports: [DatabaseModule, TenantModule, PlaceModule, EmailModule],
   providers: [
     BookingResolver,
     PendingBookingService,
