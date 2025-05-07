@@ -20,37 +20,49 @@ export class BookingResolver {
     private readonly completedBookingService: CompletedBookingService,
   ) {}
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Создание новой бронирования',
+  })
   async createBooking(@Args('bookingInput') bookingInput: BookingInput) {
     console.log(bookingInput);
     return await this.pendingBookingService.createOne(bookingInput);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Подтвержение бронирования',
+  })
   async activateBooking(@Args('pendingBookingId') pendingBookingId: string) {
     return await this.pendingBookingService.moveToActive(pendingBookingId);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Отмена бронирования в очереди',
+  })
   async cancelPendingBooking(
     @Args('pendingBookingId') pendingBookingId: string,
   ) {
     return await this.pendingBookingService.moveToCompleted(pendingBookingId);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Отмена действующего бронирования',
+  })
   async cancelActiveBooking(@Args('activeBookingId') activeBookingId: string) {
     return await this.activeBookingService.cancel(activeBookingId);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Завершение действующего бронирования',
+  })
   async completeActiveBooking(
     @Args('activeBookingId') activeBookingId: string,
   ) {
     return await this.activeBookingService.complete(activeBookingId);
   }
 
-  @Query(() => PendingBooking)
+  @Query(() => PendingBooking, {
+    description: 'Запрос одного бронирования в очереди',
+  })
   async getOnePendingBooking(
     @Args('value') value: string,
     @Args('type') type: string,
@@ -68,7 +80,9 @@ export class BookingResolver {
     return booking;
   }
 
-  @Query(() => [PendingBooking])
+  @Query(() => [PendingBooking], {
+    description: 'Запрос множества бронирований в очереди по параметрам',
+  })
   async getManyPendingBooking(
     @Info() info: GraphQLResolveInfo,
     @Args({
@@ -88,7 +102,9 @@ export class BookingResolver {
     };
     return await this.pendingBookingService.getManyPendingBookings(queryParams);
   }
-  @Query(() => ActiveBooking)
+  @Query(() => ActiveBooking, {
+    description: 'Запрос одного действующего бронирования',
+  })
   async getOneActiveBooking(
     @Args('value') value: string,
     @Args('type') type: string,
@@ -104,7 +120,9 @@ export class BookingResolver {
     return await this.activeBookingService.getOneActiveBooking(queryParams);
   }
 
-  @Query(() => [ActiveBooking])
+  @Query(() => [ActiveBooking], {
+    description: 'Запрос множества действующих бронирований по параметрам',
+  })
   async getManyActiveBooking(
     @Info() info: GraphQLResolveInfo,
     @Args({
@@ -125,7 +143,9 @@ export class BookingResolver {
     };
     return await this.activeBookingService.getManyActiveBookings(queryParams);
   }
-  @Query(() => CompletedBooking)
+  @Query(() => CompletedBooking, {
+    description: 'Запрос одного завершенного бронирования',
+  })
   async getOneCompletedBooking(
     @Args('value') value: string,
     @Args('type') type: string,
@@ -143,7 +163,9 @@ export class BookingResolver {
     );
   }
 
-  @Query(() => [CompletedBooking])
+  @Query(() => [CompletedBooking], {
+    description: 'Запрос множества завершенных бронирований по параметрам',
+  })
   async getManyCompletedBooking(
     @Info() info: GraphQLResolveInfo,
     @Args({

@@ -26,7 +26,9 @@ import Upload from 'graphql-upload/Upload.js';
 export class LandlordResolver {
   constructor(private landlordService: LandlordService) {}
 
-  @Query(() => Landlord)
+  @Query(() => Landlord, {
+    description: 'Запрос одного арендодателя',
+  })
   async getOneLandlord(
     @Args('value') value: string,
     @Args('type') type: string,
@@ -42,7 +44,9 @@ export class LandlordResolver {
     return await this.landlordService.getOne(queryParams);
   }
 
-  @Query(() => [Landlord])
+  @Query(() => [Landlord], {
+    description: 'Запрос всех арендодателей по параметрам',
+  })
   async getLandlords(
     @Info() info: GraphQLResolveInfo,
     @Args({
@@ -63,7 +67,9 @@ export class LandlordResolver {
     return await this.landlordService.getMany(queryParams);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Создание новых атрибутов арендодателя',
+  })
   async addLandlordAtributes(
     @Args('landlordId') lanlordId: string,
     @Args({ name: 'attributesInput', type: () => [LandlordAttributeInput] })
@@ -72,14 +78,18 @@ export class LandlordResolver {
     return this.landlordService.addAttributes(lanlordId, attributesInput);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Обновление атрибутов арендодателя',
+  })
   async removeLandlordAttributes(
     @Args({ name: 'attributeIds', type: () => [String] })
     attributeIds: string[],
   ) {
     return this.landlordService.deleteAttributes(attributeIds);
   }
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Обновление атрибутов арендодателя',
+  })
   async updateLandlordAttributes(
     @Args({
       name: 'attributeUpdateInput',
@@ -90,7 +100,9 @@ export class LandlordResolver {
     return this.landlordService.updateAttributes(attibuteUpdateInput);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Обновление фотографии арендодателя',
+  })
   async setLandlordAvatar(
     @Args('landlordId') landlordId: string,
     @Args('image', { type: () => GraphQLUpload }) image: Upload,

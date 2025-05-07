@@ -16,7 +16,9 @@ export class AuthResolver {
     private readonly tenantService: TenantService,
   ) {}
 
-  @Mutation(() => AuthResponse)
+  @Mutation(() => AuthResponse, {
+    description: 'Войти через логин и пароль',
+  })
   @UseGuards(LocalAuthGuard)
   async logIn(
     @Args('userInput') userInput: UserInput,
@@ -30,7 +32,9 @@ export class AuthResolver {
     }
   }
 
-  @Mutation(() => AuthResponse)
+  @Mutation(() => AuthResponse, {
+    description: 'Регистрация через логин и пароль',
+  })
   @UseGuards(LocalAuthGuard)
   async signUp(
     @Args('userInput') userInput: UserInput,
@@ -50,7 +54,9 @@ export class AuthResolver {
     }
   }
 
-  @Query(() => AuthResponse)
+  @Query(() => AuthResponse, {
+    description: 'Проверка авторизации пользователя',
+  })
   @UseGuards(JwtAuthGuard)
   async verifyUser(@Context() context: any) {
     if (!context.req.user)

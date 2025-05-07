@@ -32,7 +32,9 @@ import { UserAttributeUpdateInput } from '@common/updateAttribute.type';
 export class TenantResolver {
   constructor(private readonly tenantService: TenantService) {}
 
-  @Query(() => [Tenant])
+  @Query(() => [Tenant], {
+    description: 'Запрос всех арендаторов по параметрам',
+  })
   // @UseGuards(JwtAuthGuard)
   async getTenants(
     // @Context() context: any,
@@ -53,7 +55,9 @@ export class TenantResolver {
     };
     return this.tenantService.getMany(queryParams);
   }
-  @Query(() => Tenant)
+  @Query(() => Tenant, {
+    description: 'Запрос одного арендатора',
+  })
   @UseGuards(JwtAuthGuard)
   async getOneTenant(
     @Args('value') value: string,
@@ -72,7 +76,9 @@ export class TenantResolver {
     return this.tenantService.getOne(queryParams);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Создание новых атрибутов арендатора',
+  })
   async addTenantAtributes(
     @Args('tenantId') tenantId: string,
     @Args({ name: 'attributesInput', type: () => [TenantAttributeInput] })
@@ -81,14 +87,18 @@ export class TenantResolver {
     return this.tenantService.addAttributes(tenantId, attributesInput);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Удаление атрибутов арендатора',
+  })
   async removeTenantAttributes(
     @Args({ name: 'attributeIds', type: () => [String] })
     attributeIds: string[],
   ) {
     return this.tenantService.deleteAttributes(attributeIds);
   }
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Обновление атрибутов арендатора',
+  })
   async updateTenantAttributes(
     @Args({
       name: 'attributeUpdateInput',
@@ -99,7 +109,9 @@ export class TenantResolver {
     return this.tenantService.updateAttributes(attributeUpdateInput);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Обновление изоброжения арендатора',
+  })
   async setTenantAvatar(
     @Args('tenantId') tenantId: string,
     @Args('image', { type: () => GraphQLUpload }) image: Upload,

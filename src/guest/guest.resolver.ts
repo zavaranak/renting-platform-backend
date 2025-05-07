@@ -13,7 +13,10 @@ export class GuestResolver {
   constructor(private readonly guestService: GuestService) {}
 
   // Query: Get a profile by ID
-  @Query(() => QueryResponse, { nullable: true })
+  @Query(() => QueryResponse, {
+    description: 'Запрос одного гостя',
+    nullable: true,
+  })
   async getOneGuest(
     @Args('value') value: string,
     @Args('type') type: string,
@@ -25,7 +28,9 @@ export class GuestResolver {
   }
 
   // Query: Get all profiles
-  @Query(() => [Guest])
+  @Query(() => [Guest], {
+    description: 'Зпрос множества гостей по параметрам',
+  })
   async getGuests(
     @Info() info: GraphQLResolveInfo,
     // @Args('type') type: string,
@@ -44,7 +49,9 @@ export class GuestResolver {
   }
 
   // Mutation: Create a new profile
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Создание нового гостя',
+  })
   async createGuest(
     @Args('input') input: CreateGuestInput,
   ): Promise<QueryResponse> {
@@ -52,7 +59,9 @@ export class GuestResolver {
   }
 
   // Mutation: Update a profile
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Обновление данных гостя',
+  })
   async updateGuest(
     @Args('id') id: string,
     @Args('input') input: UpdateGuestInput,
@@ -61,7 +70,9 @@ export class GuestResolver {
   }
 
   // Mutation: Delete a profile
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Удаление гостя',
+  })
   async deleteGuest(@Args('id') id: string): Promise<QueryResponse> {
     return this.guestService.delete(id);
   }

@@ -290,24 +290,59 @@ type AuthResponse {
 }
 
 type Query {
+  """Проверка авторизации пользователя"""
   verifyUser: AuthResponse!
+
+  """Запрос всех арендаторов по параметрам"""
   getTenants(query_many_input: QueryManyInput!): [Tenant!]!
+
+  """Запрос одного арендатора"""
   getOneTenant(value: String!, type: String!): Tenant!
+
+  """Запрос одного арендодателя"""
   getOneLandlord(value: String!, type: String!): Landlord!
+
+  """Запрос всех арендодателей по параметрам"""
   getLandlords(query_many_input: QueryManyInput!): [Landlord!]!
+
+  """Запрос одного места размещения"""
   getOnePlace(value: String!, type: String!): Place!
+
+  """Запрос всех стран"""
   getCountries: QueryResponse!
+
+  """Запрос всех городов по стране"""
   getCitiesByCountryName(country_name: String): QueryResponse!
+
+  """Запрос всех городов"""
   getCities: QueryResponse!
+
+  """Запрос множества мест размещения по параметрам"""
   getPlaces(query_many_input: QueryManyInput!): [Place!]!
   getNotifications: QueryResponse!
+
+  """Запрос одного бронирования в очереди"""
   getOnePendingBooking(value: String!, type: String!): PendingBooking!
+
+  """Запрос множества бронирований в очереди по параметрам"""
   getManyPendingBooking(query_many_input: QueryManyInput!): [PendingBooking!]!
+
+  """Запрос одного действующего бронирования"""
   getOneActiveBooking(value: String!, type: String!): ActiveBooking!
+
+  """Запрос множества действующих бронирований по параметрам"""
   getManyActiveBooking(query_many_input: QueryManyInput!): [ActiveBooking!]!
+
+  """Запрос одного завершенного бронирования"""
   getOneCompletedBooking(value: String!, type: String!): CompletedBooking!
+
+  """Запрос множества завершенных бронирований по параметрам"""
   getManyCompletedBooking(query_many_input: QueryManyInput!): [CompletedBooking!]!
+
+  """Запрос одного гостя"""
   getOneGuest(value: String!, type: String!): QueryResponse
+
+  """Зпрос множества гостей по параметрам"""
   getGuests(queryManyInput: QueryManyInput!): [Guest!]!
 }
 
@@ -396,31 +431,82 @@ input SelectedDate {
 }
 
 type Mutation {
+  """Войти через логин и пароль"""
   logIn(userInput: UserInput!): AuthResponse!
+
+  """Регистрация через логин и пароль"""
   signUp(userInput: UserInput!): AuthResponse!
+
+  """Создание новых атрибутов арендатора"""
   addTenantAtributes(tenantId: String!, attributesInput: [TenantAttributeInput!]!): QueryResponse!
+
+  """Удаление атрибутов арендатора"""
   removeTenantAttributes(attributeIds: [String!]!): QueryResponse!
+
+  """Обновление атрибутов арендатора"""
   updateTenantAttributes(attributeUpdateInput: [UserAttributeUpdateInput!]!): QueryResponse!
+
+  """Обновление изоброжения арендатора"""
   setTenantAvatar(tenantId: String!, image: Upload!, avatarId: String): QueryResponse!
+
+  """Создание новых атрибутов арендодателя"""
   addLandlordAtributes(landlordId: String!, attributesInput: [LandlordAttributeInput!]!): QueryResponse!
+
+  """Обновление атрибутов арендодателя"""
   removeLandlordAttributes(attributeIds: [String!]!): QueryResponse!
+
+  """Обновление атрибутов арендодателя"""
   updateLandlordAttributes(attributeUpdateInput: [UserAttributeUpdateInput!]!): QueryResponse!
+
+  """Обновление фотографии арендодателя"""
   setLandlordAvatar(landlordId: String!, image: Upload!, avatarId: String): QueryResponse!
+
+  """Создание нового места размещения"""
   createPlace(placeInput: PlaceInput!): QueryResponse!
+
+  """Обновление места размещения"""
   updatePlace(placeUpdateInput: PlaceUpdateInput!): QueryResponse!
+
+  """Удаление места размещения"""
   addPlaceAttributes(placeId: String!, placeAttributeInput: [PlaceAttributeInput!]!): QueryResponse!
+
+  """Обновление атрибутов места размещения"""
   updatePlaceAttributes(attibuteUpdateInput: [AttributeUpdateInput!]!): QueryResponse!
+
+  """Удаление атрибутов места размещения"""
   removePlaceAttributes(attributeIds: [String!]!): QueryResponse!
+
+  """Обновление фотогафий места размещения"""
   uploadPlacePhotos(placeId: String!, images: [Upload!]!): QueryResponse!
+
+  """Создание новой бронирования"""
   createBooking(bookingInput: BookingInput!): QueryResponse!
+
+  """Подтвержение бронирования"""
   activateBooking(pendingBookingId: String!): QueryResponse!
+
+  """Отмена бронирования в очереди"""
   cancelPendingBooking(pendingBookingId: String!): QueryResponse!
+
+  """Отмена действующего бронирования"""
   cancelActiveBooking(activeBookingId: String!): QueryResponse!
+
+  """Завершение действующего бронирования"""
   completeActiveBooking(activeBookingId: String!): QueryResponse!
+
+  """Отправка email сообщения"""
   sendEmail(email_request: EmailRequestInput!): Boolean!
+
+  """Отправка email сообщения с шаблоном"""
   sendEmailTemplate(type: String!, email: String!): Boolean!
+
+  """Создание нового гостя"""
   createGuest(input: CreateGuestInput!): QueryResponse!
+
+  """Обновление данных гостя"""
   updateGuest(id: String!, input: UpdateGuestInput!): QueryResponse!
+
+  """Удаление гостя"""
   deleteGuest(id: String!): QueryResponse!
 }
 
@@ -459,9 +545,9 @@ input PlaceInput {
   address: String!
   city: String!
   country: String!
-  area: String!
   landlordId: String!
-  distanceFromCenter: String!
+  area: Float
+  distanceFromCenter: Float
   type: [PlaceTypes!]!
   termUnit: [TermUnit!]!
 }

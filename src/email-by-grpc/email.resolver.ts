@@ -9,13 +9,17 @@ registerEnumType(SubjectEmail, { name: 'SubjectEmail' });
 export class EmailResolver {
   constructor(private readonly emailService: EmailGrpcService) {}
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, {
+    description: 'Отправка email сообщения',
+  })
   async sendEmail(
     @Args('email_request') emailRequest: EmailRequestInput,
   ): Promise<any> {
     return await this.emailService.sendEmail(emailRequest);
   }
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, {
+    description: 'Отправка email сообщения с шаблоном',
+  })
   async sendEmailTemplate(
     @Args('type') type: SubjectEmail,
     @Args('email') email: string,

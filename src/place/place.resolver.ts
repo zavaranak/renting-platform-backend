@@ -17,19 +17,25 @@ import Upload from 'graphql-upload/Upload.js';
 export class PlaceResolver {
   constructor(private readonly placeService: PlaceService) {}
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Создание нового места размещения',
+  })
   async createPlace(@Args('placeInput') placeInput: PlaceInput) {
     return await this.placeService.createOne(placeInput);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Обновление места размещения',
+  })
   async updatePlace(
     @Args('placeUpdateInput') placeUpdateInput: PlaceUpdateInput,
   ) {
     return await this.placeService.updateOne(placeUpdateInput);
   }
 
-  @Query(() => Place)
+  @Query(() => Place, {
+    description: 'Запрос одного места размещения',
+  })
   async getOnePlace(
     @Args('value') value: string,
     @Args('type') type: string,
@@ -44,23 +50,31 @@ export class PlaceResolver {
     };
     return await this.placeService.getOne(queryParams);
   }
-  @Query(() => QueryResponse)
+  @Query(() => QueryResponse, {
+    description: 'Запрос всех стран',
+  })
   async getCountries() {
     return await this.placeService.getCountries();
   }
-  @Query(() => QueryResponse)
+  @Query(() => QueryResponse, {
+    description: 'Запрос всех городов по стране',
+  })
   async getCitiesByCountryName(
     @Args({ name: 'country_name', type: () => String, nullable: true })
     country?: string,
   ) {
     return await this.placeService.getCitiesByCountry(country);
   }
-  @Query(() => QueryResponse)
+  @Query(() => QueryResponse, {
+    description: 'Запрос всех городов',
+  })
   async getCities() {
     return await this.placeService.getCities();
   }
 
-  @Query(() => [Place])
+  @Query(() => [Place], {
+    description: 'Запрос множества мест размещения по параметрам',
+  })
   async getPlaces(
     @Info() info: GraphQLResolveInfo,
     @Args({
@@ -83,7 +97,9 @@ export class PlaceResolver {
     return await this.placeService.getMany(queryParams);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Удаление места размещения',
+  })
   async addPlaceAttributes(
     @Args('placeId') placeId: string,
     @Args({ name: 'placeAttributeInput', type: () => [PlaceAttributeInput] })
@@ -92,7 +108,9 @@ export class PlaceResolver {
     return await this.placeService.addAttributes(placeId, placeAttributeInput);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Обновление атрибутов места размещения',
+  })
   async updatePlaceAttributes(
     @Args({ name: 'attibuteUpdateInput', type: () => [AttributeUpdateInput] })
     attibuteUpdateInput: AttributeUpdateInput[],
@@ -100,7 +118,9 @@ export class PlaceResolver {
     return this.placeService.updateAttributes(attibuteUpdateInput);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Удаление атрибутов места размещения',
+  })
   async removePlaceAttributes(
     @Args({ name: 'attributeIds', type: () => [String] })
     attributeIds: string[],
@@ -108,7 +128,9 @@ export class PlaceResolver {
     return this.placeService.deleteAttributes(attributeIds);
   }
 
-  @Mutation(() => QueryResponse)
+  @Mutation(() => QueryResponse, {
+    description: 'Обновление фотогафий места размещения',
+  })
   async uploadPlacePhotos(
     @Args('placeId') placeId: string,
     @Args('images', { type: () => [GraphQLUpload] }) images: Upload[],
